@@ -55,7 +55,7 @@ char* l8w8jwt_base64_encode(const uint8_t* data, size_t data_length, size_t* out
  *  @note The nul terminator is NOT included in the <code>out_length</code>.
  *  @note DO NOT forget to call <code>free()</code> on the returned buffer once you're done using it!
  *
- *  @param data The base-64 encoded string to decode (obtained via {@link base64_encode}).
+ *  @param data The base-64 encoded string to decode (obtained via {@link l8w8jwt_base64_encode}).
  *  @param data_length The length of the string to decode.
  *  @param out_length Pointer to a <code>size_t</code> variable into which to write the output buffer's length.
  *
