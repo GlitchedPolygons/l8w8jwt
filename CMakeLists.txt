@@ -20,6 +20,7 @@ set(CMAKE_C_STANDARD 11)
 add_subdirectory(lib/mbedtls)
 
 set(l8w8jwt_headers
+        lib/chillbuff/include/chillbuff.h
         include/l8w8jwt/base64.h
         include/l8w8jwt/printferr.h
         )
@@ -30,6 +31,7 @@ set(l8w8jwt_sources
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})
 
+target_include_directories(l8w8jwt PRIVATE lib/chillbuff/include)
 target_include_directories(l8w8jwt PUBLIC include)
 
 if (UNIX AND NOT APPLE)
