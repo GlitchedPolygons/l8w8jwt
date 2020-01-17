@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: debian:stretch
+
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake && rm -rf /var/lib/apt/lists/*'
+      - run:
+          name: Install cmocka
+          command: 'cd tests/cmocka && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=/usr .. && make && sudo make install && cd ../..'
+      - run:
+          name: Run tests
+          command: 'bash run-tests.sh'
