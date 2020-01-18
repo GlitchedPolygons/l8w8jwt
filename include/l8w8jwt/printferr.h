@@ -17,7 +17,7 @@
 /**
  *  @file printferr.h
  *  @author Raphael Beck
- *  @brief printf() structured error messages with these useful macros.
+ *  @brief printf() structured error messages.
  */
 
 #ifndef L8W8JWT_PRINTFERR_H

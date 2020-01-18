@@ -38,7 +38,7 @@ extern "C" {
  *
  *  @note The returned buffer is nul terminated to make it easier to use as a C string.
  *  @note The nul terminator is NOT included in the <code>out_length</code>.
- *  @note DO NOT forget to call <code>free()</code> on the returned buffer once you're done using it!
+ *  @note DO NOT FORGET to call <code>free()</code> on the returned buffer once you're done using it!
  *
  *  @param data The data (array of bytes) to base-64 encode.
  *  @param data_length The length of the input data array (in case of a C string: array size - 1 in order to omit the nul terminator).
@@ -53,7 +53,7 @@ char* l8w8jwt_base64_encode(const uint8_t* data, size_t data_length, size_t* out
  *
  *  @note The returned bytes buffer is nul terminated to allow usage as a C string.
  *  @note The nul terminator is NOT included in the <code>out_length</code>.
- *  @note DO NOT forget to call <code>free()</code> on the returned buffer once you're done using it!
+ *  @note DO NOT FORGET to call <code>free()</code> on the returned buffer once you're done using it!
  *
  *  @param data The base-64 encoded string to decode (obtained via {@link l8w8jwt_base64_encode}).
  *  @param data_length The length of the string to decode.

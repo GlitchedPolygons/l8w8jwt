@@ -23,6 +23,8 @@ set(l8w8jwt_headers
         lib/chillbuff/include/chillbuff.h
         include/l8w8jwt/base64.h
         include/l8w8jwt/printferr.h
+        include/l8w8jwt/l8w8jwt.h
+        include/l8w8jwt/l8w8jwt_hs256.h
         )
 
 set(l8w8jwt_sources
