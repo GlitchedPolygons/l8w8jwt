@@ -15,7 +15,7 @@
 */
 
 /**
- *  @file l8w8jwt_hs256.h
+ *  @file hs256.h
  *  @author Raphael Beck
  *  @brief Encode and decode Json Web Tokens using the HMACSHA256 algo.
  */

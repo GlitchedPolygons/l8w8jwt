@@ -24,11 +24,13 @@ set(l8w8jwt_headers
         include/l8w8jwt/base64.h
         include/l8w8jwt/printferr.h
         include/l8w8jwt/l8w8jwt.h
-        include/l8w8jwt/l8w8jwt_hs256.h
+        include/l8w8jwt/claim.h
+        include/l8w8jwt/hs256.h
         )
 
 set(l8w8jwt_sources
         src/base64.c
+        src/hs256.c
         )
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})

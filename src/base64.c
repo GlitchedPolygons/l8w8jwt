@@ -10,7 +10,7 @@
 
 The above mentioned README can be found under:  http://web.mit.edu/freebsd/head/contrib/wpa/
 
-Here's a full paste of it (09. December 2019), in case the URL goes numb:
+Here's a full paste of it (18. January 2020), in case the URL goes numb:
 
 wpa_supplicant and hostapd
 --------------------------
@@ -73,7 +73,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /*
 
-http://web.mit.edu/freebsd/head/contrib/wpa/COPYING  (at the time of writing, 09. December 2019)
+http://web.mit.edu/freebsd/head/contrib/wpa/COPYING  (at the time of writing, 18. January 2020)
 
 wpa_supplicant and hostapd
 --------------------------
@@ -106,8 +106,9 @@ after February 11, 2012 is no longer under the GPL v2 option.
 #include "l8w8jwt/printferr.h"
 
 static const uint8_t TABLE[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static const uint8_t URL_SAFE_TABLE[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-char* l8w8jwt_base64_encode(const uint8_t* data, const size_t data_length, size_t* out_length)
+char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data_length, size_t* out_length)
 {
     if (data == NULL || data_length == 0)
     {
@@ -149,13 +150,14 @@ char* l8w8jwt_base64_encode(const uint8_t* data, const size_t data_length, size_
     end = data + data_length;
 
     int line_length = 0;
+    const uint8_t* table = url ? URL_SAFE_TABLE : TABLE;
 
     while (end - in >= 3)
     {
-        *pos++ = TABLE[in[0] >> 2];
-        *pos++ = TABLE[((in[0] & 0x03) << 4) | (in[1] >> 4)];
-        *pos++ = TABLE[((in[1] & 0x0f) << 2) | (in[2] >> 6)];
-        *pos++ = TABLE[in[2] & 0x3f];
+        *pos++ = table[in[0] >> 2];
+        *pos++ = table[((in[0] & 0x03) << 4) | (in[1] >> 4)];
+        *pos++ = table[((in[1] & 0x0f) << 2) | (in[2] >> 6)];
+        *pos++ = table[in[2] & 0x3f];
 
         in += 3;
 
@@ -169,20 +171,20 @@ char* l8w8jwt_base64_encode(const uint8_t* data, const size_t data_length, size_
 
     if (end - in)
     {
-        *pos++ = TABLE[in[0] >> 2];
+        *pos++ = table[in[0] >> 2];
 
         if (end - in == 1)
         {
-            *pos++ = TABLE[(in[0] & 0x03) << 4];
-            *pos++ = '=';
+            *pos++ = table[(in[0] & 0x03) << 4];
+            *pos++ = url ? '\0' : '=';
         }
         else
         {
-            *pos++ = TABLE[((in[0] & 0x03) << 4) | (in[1] >> 4)];
-            *pos++ = TABLE[(in[1] & 0x0f) << 2];
+            *pos++ = table[((in[0] & 0x03) << 4) | (in[1] >> 4)];
+            *pos++ = table[(in[1] & 0x0f) << 2];
         }
 
-        *pos++ = '=';
+        *pos++ = url ? '\0' : '=';
         line_length += 4;
     }
 
@@ -197,7 +199,7 @@ char* l8w8jwt_base64_encode(const uint8_t* data, const size_t data_length, size_
     return (char*)out;
 }
 
-uint8_t* l8w8jwt_base64_decode(const char* data, size_t data_length, size_t* out_length)
+uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, size_t* out_length)
 {
     if (data == NULL || data_length == 0)
     {
@@ -218,11 +220,12 @@ uint8_t* l8w8jwt_base64_decode(const char* data, size_t data_length, size_t* out
 
     size_t i;
     uint8_t dtable[256], *out, *pos, block[4], tmp;
+    const uint8_t* table = url ? URL_SAFE_TABLE : TABLE;
 
     memset(dtable, 0x80, 256);
     for (i = 0; i < sizeof(TABLE) - 1; i++)
     {
-        dtable[TABLE[i]] = (uint8_t)i;
+        dtable[table[i]] = (uint8_t)i;
     }
 
     dtable['='] = 0;

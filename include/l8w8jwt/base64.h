@@ -18,7 +18,9 @@
  *  @file base64.h
  *  @author Raphael Beck
  *  @brief Base-64 encode and decode strings/bytes. <p>
- *  @warning The caller is responsible for freeing the returned buffers!
+ *  @warning The caller is responsible for freeing the returned buffers! <p>
+ *  Pass <code>true</code> as first parameter if you want to use base64url encoding instead of base64.
+ *  @see https://en.wikipedia.org/wiki/Base64#URL_applications
  */
 
 #ifndef L8W8JWT_BASE64_H
@@ -30,6 +32,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 
 /**
  *  Encodes a byte array to a base-64 string. <p>
@@ -40,13 +43,14 @@ extern "C" {
  *  @note The nul terminator is NOT included in the <code>out_length</code>.
  *  @note DO NOT FORGET to call <code>free()</code> on the returned buffer once you're done using it!
  *
+ *  @param url base64url encode instead of base64?
  *  @param data The data (array of bytes) to base-64 encode.
  *  @param data_length The length of the input data array (in case of a C string: array size - 1 in order to omit the nul terminator).
  *  @param out_length Pointer to a <code>size_t</code> variable containing the length of the output buffer minus the nul terminator.
  *
  *  @return Base-64 encoded string, or <code>NULL</code> in case of a failure (errors are <code>printf</code>'ed).
  */
-char* l8w8jwt_base64_encode(const uint8_t* data, size_t data_length, size_t* out_length);
+char* l8w8jwt_base64_encode(bool url, const uint8_t* data, size_t data_length, size_t* out_length);
 
 /**
  *  Decodes a base-64 encoded string to an array of bytes. <p>
@@ -55,13 +59,14 @@ char* l8w8jwt_base64_encode(const uint8_t* data, size_t data_length, size_t* out
  *  @note The nul terminator is NOT included in the <code>out_length</code>.
  *  @note DO NOT FORGET to call <code>free()</code> on the returned buffer once you're done using it!
  *
+ *  @param url Decode using base64url instead of base64?
  *  @param data The base-64 encoded string to decode (obtained via {@link l8w8jwt_base64_encode}).
  *  @param data_length The length of the string to decode.
  *  @param out_length Pointer to a <code>size_t</code> variable into which to write the output buffer's length.
  *
  *  @return The decoded bytes; <code>NULL</code> in case of a failure (errors are <code>printf</code>'ed).
  */
-uint8_t* l8w8jwt_base64_decode(const char* data, size_t data_length, size_t* out_length);
+uint8_t* l8w8jwt_base64_decode(bool url, const char* data, size_t data_length, size_t* out_length);
 
 #ifdef __cplusplus
 } // extern "C"
