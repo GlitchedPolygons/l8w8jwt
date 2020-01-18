@@ -47,10 +47,13 @@ int l8w8jwt_encode_hs256(struct l8w8jwt_claim* claims, const size_t claims_count
     printf("\n%s", tmp);
 
     size_t tmp2;
-    printf("\n%s", l8w8jwt_base64_encode(true, tmp, 32, &tmp2));
+    char* ee = l8w8jwt_base64_encode(true, tmp, 32, &tmp2);
+    printf("\n%s", ee);
+    free(ee);
 
     unsigned char* ss = l8w8jwt_base64_decode(true, "Gmlw_dPyBS-autswceWkocF9ELiEHKeS86-MHgG8MhY", strlen("Gmlw_dPyBS-autswceWkocF9ELiEHKeS86-MHgG8MhY"), &tmp2);
     printf("\n%s", ss);
+    free(ss);
 
     return L8W8JWT_SUCCESS;
 }

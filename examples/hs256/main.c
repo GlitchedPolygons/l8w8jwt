@@ -16,7 +16,10 @@
 
 #include "l8w8jwt/hs256.h"
 
-int main(void){
-    l8w8jwt_encode_hs256();
+int main(void)
+{
+    char* jwt;
+    size_t jwt_length;
+    l8w8jwt_encode_hs256(NULL, 0, "test", 4, &jwt, &jwt_length);
     return 0;
 }

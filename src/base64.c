@@ -122,11 +122,6 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
         return NULL;
     }
 
-    uint8_t* out;
-    uint8_t* pos;
-    const uint8_t* in;
-    const uint8_t* end;
-
     size_t olen = data_length * 4 / 3 + 4;
 
     olen += olen / 72;
@@ -138,16 +133,16 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
         return NULL;
     }
 
-    out = malloc(olen);
+    uint8_t* out = malloc(olen);
     if (out == NULL)
     {
         l8w8jwt_printferr("Allocation failed - out of memory!");
         return NULL;
     }
 
-    in = data;
-    pos = out;
-    end = data + data_length;
+    uint8_t* pos = out;
+    uint8_t* in = (uint8_t*)data;
+    uint8_t* end = (uint8_t*)data + data_length;
 
     int line_length = 0;
     const uint8_t* table = url ? URL_SAFE_TABLE : TABLE;
@@ -219,17 +214,18 @@ uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_len
     }
 
     size_t i;
-    uint8_t dtable[256], *out, *pos, block[4], tmp;
+    size_t count = 0;
+    uint8_t dtable[256];
     const uint8_t* table = url ? URL_SAFE_TABLE : TABLE;
 
     memset(dtable, 0x80, 256);
+
     for (i = 0; i < 64; i++)
     {
         dtable[table[i]] = (uint8_t)i;
     }
 
     dtable['='] = 0;
-    size_t count = 0;
 
     for (i = 0; i < data_length; i++)
     {
@@ -240,6 +236,8 @@ uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_len
     if (count == 0 || (!url && count % 4))
         return NULL;
 
+    uint8_t* out;
+    uint8_t* pos;
     size_t olen = count / 4 * 3;
     pos = out = malloc(olen + 1);
 
@@ -251,6 +249,8 @@ uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_len
 
     count = 0;
     int pad = 0;
+    uint8_t tmp;
+    uint8_t block[4];
 
     for (i = 0; i < data_length; i++)
     {
