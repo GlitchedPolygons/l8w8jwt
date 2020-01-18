@@ -162,7 +162,7 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
         in += 3;
 
         line_length += 4;
-        if (line_length >= 72)
+        if (line_length >= 72 && !url)
         {
             *pos++ = '\n';
             line_length = 0;
@@ -188,7 +188,7 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
         line_length += 4;
     }
 
-    if (line_length)
+    if (line_length && !url)
     {
         *pos++ = '\n';
     }
@@ -223,7 +223,7 @@ uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_len
     const uint8_t* table = url ? URL_SAFE_TABLE : TABLE;
 
     memset(dtable, 0x80, 256);
-    for (i = 0; i < sizeof(TABLE) - 1; i++)
+    for (i = 0; i < 64; i++)
     {
         dtable[table[i]] = (uint8_t)i;
     }
@@ -237,7 +237,7 @@ uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_len
             count++;
     }
 
-    if (count == 0 || count % 4)
+    if (count == 0 || (!url && count % 4))
         return NULL;
 
     size_t olen = count / 4 * 3;

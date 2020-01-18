@@ -34,6 +34,8 @@ int l8w8jwt_encode_hs256()
     unsigned char tmp[32];
     int r = mbedtls_md_hmac(&mbedtls_sha256_info, "test", 4, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0In0", 56, tmp);
 
+    printf("\n%s", tmp);
+
     size_t tmp2;
     printf("\n%s", l8w8jwt_base64_encode(true, tmp, 32, &tmp2));
 
