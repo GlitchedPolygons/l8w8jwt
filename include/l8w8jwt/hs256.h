@@ -27,9 +27,12 @@
 extern "C" {
 #endif
 
-int l8w8jwt_encode_hs256();
+#include "l8w8jwt/claim.h"
+#include "l8w8jwt/retcodes.h"
 
-int l8w8jwt_decode_hs256();
+int l8w8jwt_encode_hs256(struct l8w8jwt_claim* claims, size_t claims_count, const unsigned char* secret_key, size_t secret_key_length, char** out, size_t* out_length);
+
+
 
 #ifdef __cplusplus
 } // extern "C"

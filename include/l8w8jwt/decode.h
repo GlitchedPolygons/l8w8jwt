@@ -15,22 +15,26 @@
 */
 
 /**
- *  @file l8w8jwt.h
+ *  @file decode.h
  *  @author Raphael Beck
- *  @brief Core functions for l8w8jwt. Use this to decode!
+ *  @brief Core decode function for l8w8jwt. Use this to decode, then verify using the specific implementation (e.g. HS256, etc...)!
  */
 
-#ifndef L8W8JWT_H
-#define L8W8JWT_H
+#ifndef L8W8JWT_DECODE_H
+#define L8W8JWT_DECODE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "l8w8jwt/claim.h"
+#include "l8w8jwt/retcodes.h"
+
+    // TODO: write the decode function!
 int l8w8jwt_decode();
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
-#endif // L8W8JWT_H
+#endif // L8W8JWT_DECODE_H

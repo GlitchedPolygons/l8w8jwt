@@ -21,9 +21,10 @@ add_subdirectory(lib/mbedtls)
 
 set(l8w8jwt_headers
         lib/chillbuff/include/chillbuff.h
+        include/l8w8jwt/retcodes.h
         include/l8w8jwt/base64.h
         include/l8w8jwt/printferr.h
-        include/l8w8jwt/l8w8jwt.h
+        include/l8w8jwt/decode.h
         include/l8w8jwt/claim.h
         include/l8w8jwt/hs256.h
         )

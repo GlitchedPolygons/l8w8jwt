@@ -26,13 +26,23 @@ extern "C" {
 #include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
 
-int l8w8jwt_encode_hs256()
+int l8w8jwt_encode_hs256(struct l8w8jwt_claim* claims, const size_t claims_count, const unsigned char* secret_key, const size_t secret_key_length, char** out, size_t* out_length)
 {
+    if ((claims != NULL && claims_count == 0) || secret_key_length == 0)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
+    if (secret_key == NULL || out == NULL || out_length == NULL)
+    {
+        return L8W8JWT_NULL_ARG;
+    }
+
     mbedtls_md_context_t ctx;
     const mbedtls_md_info_t* md_info = &mbedtls_sha256_info;
 
     unsigned char tmp[32];
-    int r = mbedtls_md_hmac(&mbedtls_sha256_info, "test", 4, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0In0", 56, tmp);
+    int r = mbedtls_md_hmac(&mbedtls_sha256_info, secret_key, secret_key_length, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0In0", 56, tmp);
 
     printf("\n%s", tmp);
 
@@ -42,7 +52,7 @@ int l8w8jwt_encode_hs256()
     unsigned char* ss = l8w8jwt_base64_decode(true, "Gmlw_dPyBS-autswceWkocF9ELiEHKeS86-MHgG8MhY", strlen("Gmlw_dPyBS-autswceWkocF9ELiEHKeS86-MHgG8MhY"), &tmp2);
     printf("\n%s", ss);
 
-    return 0;
+    return L8W8JWT_SUCCESS;
 }
 
 #ifdef __cplusplus
