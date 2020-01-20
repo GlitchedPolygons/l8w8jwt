@@ -51,11 +51,11 @@ int main(void)
             .type = L8W8JWT_CLAIM_TYPE_BOOLEAN
         },
         {
-            .key = "alive",
-            .key_length = strlen("alive"),
-            .value = "true",
-            .value_length = strlen("true"),
-            .type = L8W8JWT_CLAIM_TYPE_BOOLEAN
+            .key = "nulltest",
+            .key_length = strlen("nulltest"),
+            .value = "null",
+            .value_length = strlen("null"),
+            .type = L8W8JWT_CLAIM_TYPE_NULL
         }
     };
 
