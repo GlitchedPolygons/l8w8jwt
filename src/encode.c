@@ -137,17 +137,17 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
 
     if (params->iat)
     {
-        snprintf(iat, sizeof(iat), "%"PRIu64"", (uint8_t)params->iat);
+        snprintf(iat, sizeof(iat), "%"PRIu64"", (uint64_t)params->iat);
     }
 
     if (params->nbf)
     {
-        snprintf(nbf, sizeof(nbf), "%"PRIu64"", (uint8_t)params->nbf);
+        snprintf(nbf, sizeof(nbf), "%"PRIu64"", (uint64_t)params->nbf);
     }
 
     if (params->exp)
     {
-        snprintf(exp, sizeof(exp), "%"PRIu64"", (uint8_t)params->exp);
+        snprintf(exp, sizeof(exp), "%"PRIu64"", (uint64_t)params->exp);
     }
 
     struct l8w8jwt_claim claims[] =

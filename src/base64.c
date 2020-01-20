@@ -164,6 +164,7 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
         }
     }
 
+    int sub = 0;
     if (end - in)
     {
         *pos++ = table[in[0] >> 2];
@@ -172,6 +173,10 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
         {
             *pos++ = table[(in[0] & 0x03) << 4];
             *pos++ = url ? '\0' : '=';
+            if (url)
+            {
+                sub++;
+            }
         }
         else
         {
@@ -181,6 +186,10 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
 
         *pos++ = url ? '\0' : '=';
         line_length += 4;
+        if (url)
+        {
+            sub++;
+        }
     }
 
     if (line_length && !url)
@@ -189,7 +198,7 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
     }
 
     *pos = '\0';
-    *out_length = pos - out;
+    *out_length = (pos - out) - sub;
 
     return (char*)out;
 }

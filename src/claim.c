@@ -61,15 +61,17 @@ int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims,
         {
             continue;
         }
+
+        if (i > 0)
+        {
+            chillbuff_push_back(stringbuilder, ",", 1);
+        }
+
         chillbuff_push_back(stringbuilder, "\"", 1);
         chillbuff_push_back(stringbuilder, claim.key, claim.key_length ? claim.key_length : strlen(claim.key));
         chillbuff_push_back(stringbuilder, "\":\"", 3);
         chillbuff_push_back(stringbuilder, claim.value, claim.value_length ? claim.value_length : strlen(claim.value));
         chillbuff_push_back(stringbuilder, "\"", 1);
-        if (i != claims_count - 1)
-        {
-            chillbuff_push_back(stringbuilder, ",", 1);
-        }
     }
 
     return L8W8JWT_SUCCESS;

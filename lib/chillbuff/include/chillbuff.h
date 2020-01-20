@@ -62,7 +62,7 @@ extern "C" {
 #define CHILLBUFF_OVERFLOW 400
 
 /** @private */
-void (*_chillbuff_error_callback)(const char*) = NULL;
+static void (*_chillbuff_error_callback)(const char*) = NULL;
 
 /**
  * How should the chillbuff's underlying array grow in size

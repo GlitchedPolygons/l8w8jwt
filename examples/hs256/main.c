@@ -14,8 +14,9 @@
    limitations under the License.
 */
 
-#include "l8w8jwt/hs256.h"
+#include <stdio.h>
 #include <string.h>
+#include "l8w8jwt/hs256.h"
 
 int main(void)
 {
@@ -23,19 +24,26 @@ int main(void)
     size_t jwt_length;
 
     struct l8w8jwt_encoding_params params = {
+
             .sub = "Gordon Freeman",
             .sub_length = strlen("Gordon Freeman"),
+
             .iss = "Black Mesa",
             .iss_length = strlen("Black Mesa"),
+
             .iat = time(NULL),
             .exp = time(NULL) + 600,
+
             .secret_key = (unsigned char*)"test key",
-            .secret_key_length = 8,
+            .secret_key_length = strlen("test key"),
+
             .out = &jwt,
             .out_length = &jwt_length
     };
 
-    l8w8jwt_encode_hs256(&params);
+    int r = l8w8jwt_encode_hs256(&params);
+    printf("\nl8w8jwt_encode_hs256 function returned %s (code %d).\n\nCreated token: %s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
 
+    free(jwt);
     return 0;
 }

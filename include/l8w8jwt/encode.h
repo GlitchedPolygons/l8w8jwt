@@ -30,7 +30,6 @@ extern "C" {
 #include <time.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "chillbuff.h"
 #include "l8w8jwt/claim.h"
 #include "l8w8jwt/retcodes.h"
 

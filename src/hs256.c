@@ -69,8 +69,8 @@ int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params)
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    *(encoding_params->out)[stringbuilder.length] = '\0';
     *(encoding_params->out_length) = stringbuilder.length;
+    (*(encoding_params->out))[stringbuilder.length] = '\0';
     memcpy(*(encoding_params->out), stringbuilder.array, stringbuilder.length);
 
     chillbuff_free(&stringbuilder);
