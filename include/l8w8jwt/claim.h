@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 #include <stdlib.h>
+#include "chillbuff.h"
 
 /**
  * Struct containing a jwt claim key-value pair.<p>
@@ -43,48 +44,40 @@ struct l8w8jwt_claim
     char* key;
 
     /**
+     * key string length. <p>
+     * Set this to <code>0</code> if you want to make the encoder use <code>strlen(key)</code> instead.
+     */
+    size_t key_length;
+
+    /**
      * The claim's value.<p>
      * NUL-terminated C-string!
      */
     char* value;
-};
 
-/**
- * Frees a single (!) l8w8jwt_claim instance that was allocated on the heap.
- * @param claim The claims whose memory you want to reclaim. Hah.
- */
-static inline void l8w8jwt_free_claim(struct l8w8jwt_claim* claim)
-{
-    if (claim != NULL)
-    {
-        free(claim->key);
-        free(claim->value);
-        free(claim);
-    }
-}
+    /**
+     * value string length. <p>
+     * Set this to <code>0</code> if you want to make the encoder use <code>strlen(value)</code> instead.
+     */
+    size_t value_length;
+};
 
 /**
  * Frees a heap-allocated array of <code>l8w8jwt_claim</code>s.
  * @param claims The claims to free.
  * @param claims_count The size of the passed claims array.
  */
-static inline void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count)
-{
-    if (claims != NULL && claims_count > 0)
-    {
-        for (size_t i = 0; i < claims_count; i++)
-        {
-            struct l8w8jwt_claim* claim = &(claims[i]);
+void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, size_t claims_count);
 
-            if (claim == NULL)
-                continue;
-
-            free(claim->key);
-            free(claim->value);
-        }
-        free(claims);
-    }
-}
+/**
+ * Writes a bunch of JWT claims into a chillbuff stringbuilder. <p>
+ * Curly braces and trailing commas won't be written; only the "key":"value" pairs!
+ * @param stringbuilder The buffer into which to write the claims.
+ * @param claims The l8w8jwt_claim array of claims to write.
+ * @param claims_count The claims array size.
+ * @return Return code as specified inside retcodes.h
+ */
+int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims, size_t claims_count);
 
 #ifdef __cplusplus
 } // extern "C"

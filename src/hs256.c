@@ -20,41 +20,60 @@ extern "C" {
 
 #include "l8w8jwt/hs256.h"
 #include "l8w8jwt/base64.h"
-
-#include <stdio.h>
+#include "chillbuff.h"
 #include <string.h>
+#include <inttypes.h>
 #include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
 
-int l8w8jwt_encode_hs256(struct l8w8jwt_claim* claims, const size_t claims_count, const unsigned char* secret_key, const size_t secret_key_length, char** out, size_t* out_length)
+int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params)
 {
-    if ((claims != NULL && claims_count == 0) || secret_key_length == 0)
+    int r = validate_encoding_params(encoding_params);
+    if (r != L8W8JWT_SUCCESS)
     {
-        return L8W8JWT_INVALID_ARG;
+        return r;
     }
 
-    if (secret_key == NULL || out == NULL || out_length == NULL)
+    chillbuff stringbuilder;
+    if (chillbuff_init(&stringbuilder, 256, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
     {
-        return L8W8JWT_NULL_ARG;
+        return L8W8JWT_OUT_OF_MEM;
     }
 
-    mbedtls_md_context_t ctx;
-    const mbedtls_md_info_t* md_info = &mbedtls_sha256_info;
+    r = encode(&stringbuilder, 0, encoding_params);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        chillbuff_free(&stringbuilder);
+        return r;
+    }
 
-    unsigned char tmp[32];
-    int r = mbedtls_md_hmac(&mbedtls_sha256_info, secret_key, secret_key_length, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0In0", 56, tmp);
+    uint8_t signature_bytes[32];
+    if (mbedtls_md_hmac(&mbedtls_sha256_info, encoding_params->secret_key, encoding_params->secret_key_length, (const unsigned char*)stringbuilder.array, stringbuilder.length, (unsigned char*)signature_bytes) != 0)
+    {
+        chillbuff_free(&stringbuilder);
+        return L8W8JWT_HS256_SIGNATURE_FAILURE;
+    }
 
-    printf("\n%s", tmp);
+    size_t signature_length;
+    char* signature = l8w8jwt_base64_encode(true, signature_bytes, sizeof(signature_bytes), &signature_length);
 
-    size_t tmp2;
-    char* ee = l8w8jwt_base64_encode(true, tmp, 32, &tmp2);
-    printf("\n%s", ee);
-    free(ee);
+    chillbuff_push_back(&stringbuilder, ".", 1);
+    chillbuff_push_back(&stringbuilder, signature, signature_length);
 
-    unsigned char* ss = l8w8jwt_base64_decode(true, "Gmlw_dPyBS-autswceWkocF9ELiEHKeS86-MHgG8MhY", strlen("Gmlw_dPyBS-autswceWkocF9ELiEHKeS86-MHgG8MhY"), &tmp2);
-    printf("\n%s", ss);
-    free(ss);
+    free(signature);
 
+    *(encoding_params->out) = malloc(stringbuilder.length + 1);
+    if (*(encoding_params->out) == NULL)
+    {
+        chillbuff_free(&stringbuilder);
+        return L8W8JWT_OUT_OF_MEM;
+    }
+
+    *(encoding_params->out)[stringbuilder.length] = '\0';
+    *(encoding_params->out_length) = stringbuilder.length;
+    memcpy(*(encoding_params->out), stringbuilder.array, stringbuilder.length);
+
+    chillbuff_free(&stringbuilder);
     return L8W8JWT_SUCCESS;
 }
 

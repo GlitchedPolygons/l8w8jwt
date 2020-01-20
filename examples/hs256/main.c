@@ -15,11 +15,27 @@
 */
 
 #include "l8w8jwt/hs256.h"
+#include <string.h>
 
 int main(void)
 {
     char* jwt;
     size_t jwt_length;
-    l8w8jwt_encode_hs256(NULL, 0, "test", 4, &jwt, &jwt_length);
+
+    struct l8w8jwt_encoding_params params = {
+            .sub = "Gordon Freeman",
+            .sub_length = strlen("Gordon Freeman"),
+            .iss = "Black Mesa",
+            .iss_length = strlen("Black Mesa"),
+            .iat = time(NULL),
+            .exp = time(NULL) + 600,
+            .secret_key = (unsigned char*)"test key",
+            .secret_key_length = 8,
+            .out = &jwt,
+            .out_length = &jwt_length
+    };
+
+    l8w8jwt_encode_hs256(&params);
+
     return 0;
 }

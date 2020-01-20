@@ -32,6 +32,7 @@ add_executable(l8w8jwt_example_es512 es512/main.c)
 
 add_executable(l8w8jwt_example_ps256 ps256/main.c)
 add_executable(l8w8jwt_example_ps384 ps384/main.c)
+add_executable(l8w8jwt_example_ps512 ps512/main.c)
 
 target_link_libraries(l8w8jwt_example_hs256 PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_hs384 PRIVATE l8w8jwt)
@@ -47,3 +48,4 @@ target_link_libraries(l8w8jwt_example_es512 PRIVATE l8w8jwt)
 
 target_link_libraries(l8w8jwt_example_ps256 PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_ps384 PRIVATE l8w8jwt)
+target_link_libraries(l8w8jwt_example_ps512 PRIVATE l8w8jwt)

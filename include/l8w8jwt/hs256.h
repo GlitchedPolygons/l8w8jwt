@@ -27,12 +27,14 @@
 extern "C" {
 #endif
 
-#include "l8w8jwt/claim.h"
-#include "l8w8jwt/retcodes.h"
+#include "l8w8jwt/encode.h"
 
-int l8w8jwt_encode_hs256(struct l8w8jwt_claim* claims, size_t claims_count, const unsigned char* secret_key, size_t secret_key_length, char** out, size_t* out_length);
-
-
+/**
+ * Creates an HS256 signed Json-Web-Token.
+ * @param encoding_params Parameters used for token creation containing headers, signing key, output string pointer (where the token will be written into), etc...
+ * @return Return code as specified inside retcodes.h
+ */
+int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params);
 
 #ifdef __cplusplus
 } // extern "C"
