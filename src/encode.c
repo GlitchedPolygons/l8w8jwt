@@ -152,13 +152,13 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
 
     struct l8w8jwt_claim claims[] =
     {
-        { .key = *iat ? "iat" : NULL, .key_length = 3, .value = iat, .value_length = 0 }, // Setting l8w8jwt_claim::value_length to 0 makes the encoder use strlen, which in this case is fine.
-        { .key = *nbf ? "nbf" : NULL, .key_length = 3, .value = nbf, .value_length = 0 },
-        { .key = *exp ? "exp" : NULL, .key_length = 3, .value = exp, .value_length = 0 },
-        { .key = params->sub ? "sub" : NULL, .key_length = 3, .value = params->sub, .value_length = params->sub_length },
-        { .key = params->iss ? "iss" : NULL, .key_length = 3, .value = params->iss, .value_length = params->iss_length },
-        { .key = params->aud ? "aud" : NULL, .key_length = 3, .value = params->aud, .value_length = params->aud_length },
-        { .key = params->jti ? "jti" : NULL, .key_length = 3, .value = params->jti, .value_length = params->jti_length },
+        { .key = *iat ? "iat" : NULL, .key_length = 3, .value = iat, .value_length = 0, .type = 1 }, // Setting l8w8jwt_claim::value_length to 0 makes the encoder use strlen, which in this case is fine.
+        { .key = *nbf ? "nbf" : NULL, .key_length = 3, .value = nbf, .value_length = 0, .type = 1 },
+        { .key = *exp ? "exp" : NULL, .key_length = 3, .value = exp, .value_length = 0, .type = 1 },
+        { .key = params->sub ? "sub" : NULL, .key_length = 3, .value = params->sub, .value_length = params->sub_length, .type = 0 },
+        { .key = params->iss ? "iss" : NULL, .key_length = 3, .value = params->iss, .value_length = params->iss_length, .type = 0 },
+        { .key = params->aud ? "aud" : NULL, .key_length = 3, .value = params->aud, .value_length = params->aud_length, .type = 0 },
+        { .key = params->jti ? "jti" : NULL, .key_length = 3, .value = params->jti, .value_length = params->jti_length, .type = 0 },
     };
 
     chillbuff_push_back(&buff, "{", 1);

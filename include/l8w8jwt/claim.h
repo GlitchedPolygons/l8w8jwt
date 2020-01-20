@@ -30,6 +30,15 @@ extern "C" {
 #include <stdlib.h>
 #include "chillbuff.h"
 
+#define L8W8JWT_CLAIM_TYPE_STRING 0
+#define L8W8JWT_CLAIM_TYPE_INTEGER 1
+#define L8W8JWT_CLAIM_TYPE_NUMBER 2
+#define L8W8JWT_CLAIM_TYPE_BOOLEAN 3
+#define L8W8JWT_CLAIM_TYPE_NULL 4
+#define L8W8JWT_CLAIM_TYPE_ARRAY 5
+#define L8W8JWT_CLAIM_TYPE_OBJECT 6
+#define L8W8JWT_CLAIM_TYPE_OTHER 7
+
 /**
  * Struct containing a jwt claim key-value pair.<p>
  * If allocated on the heap by the decode function,
@@ -60,6 +69,11 @@ struct l8w8jwt_claim
      * Set this to <code>0</code> if you want to make the encoder use <code>strlen(value)</code> instead.
      */
     size_t value_length;
+
+    /**
+     * Claim type. 0 = string, 1 = integer, 2 = number, 3 = boolean, 4 = null
+     */
+    int type;
 };
 
 /**
