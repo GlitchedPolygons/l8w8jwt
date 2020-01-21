@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-#include "l8w8jwt/hs256.h"
+#include "l8w8jwt/hs384.h"
 #include "l8w8jwt/base64.h"
 #include "chillbuff.h"
 #include <string.h>
@@ -26,7 +26,7 @@ extern "C" {
 #include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
 
-int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params)
+int l8w8jwt_encode_hs384(struct l8w8jwt_encoding_params* encoding_params)
 {
     int r = validate_encoding_params(encoding_params);
     if (r != L8W8JWT_SUCCESS)
@@ -35,25 +35,27 @@ int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params)
     }
 
     chillbuff stringbuilder;
-    r = chillbuff_init(&stringbuilder, 256, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    r = chillbuff_init(&stringbuilder, 512, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
     {
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    r = encode(&stringbuilder, L8W8JWT_ALG_HS256, encoding_params);
+    r = encode(&stringbuilder, L8W8JWT_ALG_HS384, encoding_params);
     if (r != L8W8JWT_SUCCESS)
     {
         chillbuff_free(&stringbuilder);
         return r;
     }
 
-    uint8_t signature_bytes[32];
-    r = mbedtls_md_hmac(&mbedtls_sha256_info, encoding_params->secret_key, encoding_params->secret_key_length, (const unsigned char*)stringbuilder.array, stringbuilder.length, (unsigned char*)signature_bytes);
+    uint8_t signature_bytes[48];
+    memset(signature_bytes, '\0', sizeof(signature_bytes));
+
+    r = mbedtls_md_hmac(&mbedtls_sha384_info, encoding_params->secret_key, encoding_params->secret_key_length, (const unsigned char*)stringbuilder.array, stringbuilder.length, (unsigned char*)signature_bytes);
     if (r != 0)
     {
         chillbuff_free(&stringbuilder);
-        return L8W8JWT_HS256_SIGNATURE_FAILURE;
+        return L8W8JWT_HS384_SIGNATURE_FAILURE;
     }
 
     char* signature;

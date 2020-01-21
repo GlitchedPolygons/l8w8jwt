@@ -75,32 +75,41 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
 
     switch (alg)
     {
-        case 0:
+        case L8W8JWT_ALG_HS256:
             chillbuff_push_back(&buff, "{\"alg\":\"HS256\",\"typ\":\"JWT\"", 26);
             break;
-        case 1:
+        case L8W8JWT_ALG_HS384:
             chillbuff_push_back(&buff, "{\"alg\":\"HS384\",\"typ\":\"JWT\"", 26);
             break;
-        case 2:
+        case L8W8JWT_ALG_HS512:
             chillbuff_push_back(&buff, "{\"alg\":\"HS512\",\"typ\":\"JWT\"", 26);
             break;
-        case 3:
+        case L8W8JWT_ALG_RS256:
             chillbuff_push_back(&buff, "{\"alg\":\"RS256\",\"typ\":\"JWT\"", 26);
             break;
-        case 4:
+        case L8W8JWT_ALG_RS384:
             chillbuff_push_back(&buff, "{\"alg\":\"RS384\",\"typ\":\"JWT\"", 26);
             break;
-        case 5:
+        case L8W8JWT_ALG_RS512:
             chillbuff_push_back(&buff, "{\"alg\":\"RS512\",\"typ\":\"JWT\"", 26);
             break;
-        case 6:
+        case L8W8JWT_ALG_PS256:
             chillbuff_push_back(&buff, "{\"alg\":\"PS256\",\"typ\":\"JWT\"", 26);
             break;
-        case 7:
+        case L8W8JWT_ALG_PS384:
             chillbuff_push_back(&buff, "{\"alg\":\"PS384\",\"typ\":\"JWT\"", 26);
             break;
-        case 8:
+        case L8W8JWT_ALG_PS512:
             chillbuff_push_back(&buff, "{\"alg\":\"PS512\",\"typ\":\"JWT\"", 26);
+            break;
+        case L8W8JWT_ALG_ES256:
+            chillbuff_push_back(&buff, "{\"alg\":\"ES256\",\"typ\":\"JWT\"", 26);
+            break;
+        case L8W8JWT_ALG_ES384:
+            chillbuff_push_back(&buff, "{\"alg\":\"ES384\",\"typ\":\"JWT\"", 26);
+            break;
+        case L8W8JWT_ALG_ES512:
+            chillbuff_push_back(&buff, "{\"alg\":\"ES512\",\"typ\":\"JWT\"", 26);
             break;
         default:
             chillbuff_free(&buff);
@@ -149,7 +158,8 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
         snprintf(iatnbfexp + 42, 21, "%"PRIu64"", (uint64_t)params->exp);
     }
 
-    struct l8w8jwt_claim claims[] = {
+    struct l8w8jwt_claim claims[] =
+    {
         // Setting l8w8jwt_claim::value_length to 0 makes the encoder use strlen, which in this case is fine.
         { .key = *(iatnbfexp + 00) ? "iat" : NULL, .key_length = 3, .value = iatnbfexp + 00, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
         { .key = *(iatnbfexp + 21) ? "nbf" : NULL, .key_length = 3, .value = iatnbfexp + 21, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },

@@ -153,6 +153,19 @@ struct l8w8jwt_encoding_params
     size_t* out_length;
 };
 
+#define L8W8JWT_ALG_HS256 0
+#define L8W8JWT_ALG_HS384 1
+#define L8W8JWT_ALG_HS512 2
+#define L8W8JWT_ALG_RS256 3
+#define L8W8JWT_ALG_RS384 4
+#define L8W8JWT_ALG_RS512 5
+#define L8W8JWT_ALG_PS256 6
+#define L8W8JWT_ALG_PS384 7
+#define L8W8JWT_ALG_PS512 8
+#define L8W8JWT_ALG_ES256 9
+#define L8W8JWT_ALG_ES384 10
+#define L8W8JWT_ALG_ES512 11
+
 /**
  * Validates a set of l8w8jwt_encoding_params.
  * @param params The l8w8jwt_encoding_params to validate.
@@ -165,7 +178,7 @@ int validate_encoding_params(struct l8w8jwt_encoding_params* params);
  * An example output could be: <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ</code> <p>
  * As you can see the signature is missing: use the algorithm-specific l8w8jwt functions to encode tokens that include the signature part at the end.
  * @param stringbuilder The stringbuilder instance into which to write the encoded JWT header + payload.
- * @param alg The signature algorithm ID. [0;2] = HS256/384/512 | [3;5] = RS256/384/512 | [6;8] = PS256/384/512
+ * @param alg The signature algorithm ID. [0;2] = HS256/384/512 | [3;5] = RS256/384/512 | [6;8] = PS256/384/512 | [9;11] = ES256/384/512
  * @param params The token encoding parameters (e.g. "iss", "exp", etc...).
  * @return Return code as defined in retcodes.h
  */
