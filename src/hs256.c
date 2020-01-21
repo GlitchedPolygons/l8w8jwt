@@ -35,7 +35,8 @@ int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params)
     }
 
     chillbuff stringbuilder;
-    if (chillbuff_init(&stringbuilder, 256, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
+    r = chillbuff_init(&stringbuilder, 256, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
     {
         return L8W8JWT_OUT_OF_MEM;
     }
@@ -48,7 +49,8 @@ int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params)
     }
 
     uint8_t signature_bytes[32];
-    if (mbedtls_md_hmac(&mbedtls_sha256_info, encoding_params->secret_key, encoding_params->secret_key_length, (const unsigned char*)stringbuilder.array, stringbuilder.length, (unsigned char*)signature_bytes) != 0)
+    r = mbedtls_md_hmac(&mbedtls_sha256_info, encoding_params->secret_key, encoding_params->secret_key_length, (const unsigned char*)stringbuilder.array, stringbuilder.length, (unsigned char*)signature_bytes);
+    if (r != 0)
     {
         chillbuff_free(&stringbuilder);
         return L8W8JWT_HS256_SIGNATURE_FAILURE;

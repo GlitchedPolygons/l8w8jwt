@@ -67,7 +67,8 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
     }
 
     chillbuff buff;
-    if (chillbuff_init(&buff, 256, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE) != CHILLBUFF_SUCCESS)
+    r = chillbuff_init(&buff, 256, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
     {
         return L8W8JWT_OUT_OF_MEM;
     }

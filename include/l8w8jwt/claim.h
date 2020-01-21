@@ -47,7 +47,7 @@ extern "C" {
 struct l8w8jwt_claim
 {
     /**
-     * The token claim key (e.g. "iss", "iat", "sub", etc...).<p>
+     * The token claim key (e.g. "iss", "iat", "sub", etc...). <p>
      * NUL-terminated C-string!
      */
     char* key;
@@ -59,8 +59,7 @@ struct l8w8jwt_claim
     size_t key_length;
 
     /**
-     * The claim's value.<p>
-     * NUL-terminated C-string!
+     * The claim's value as a NUL-terminated C-string.
      */
     char* value;
 
@@ -71,10 +70,13 @@ struct l8w8jwt_claim
     size_t value_length;
 
     /**
-     * Claim type. 0 = string, 1 = integer, 2 = number, 3 = boolean, 4 = null
+     * Claim type. <p>
+     * 0 = string, 1 = integer, 2 = number, 3 = boolean, 4 = null, 5 = array, 6 = object, 7 = other.
      */
     int type;
 };
+
+#define L8W8JWT_BOOLEAN_CLAIM(key,value) struct l8w8jwt_claim
 
 /**
  * Frees a heap-allocated array of <code>l8w8jwt_claim</code>s.

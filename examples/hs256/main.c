@@ -27,6 +27,17 @@ int main(void)
     char iss[] = "Administrator";
     char aud[] = "Black Mesa";
 
+    struct l8w8jwt_claim header_claims[] =
+    {
+        {
+            .key = "kid",
+            .key_length = 3,
+            .value = "some-key-id-here-012345",
+            .value_length = strlen("some-key-id-here-012345"),
+            .type = L8W8JWT_CLAIM_TYPE_STRING
+        }
+    };
+
     struct l8w8jwt_claim payload_claims[] =
     {
         {
@@ -42,6 +53,13 @@ int main(void)
             .value = "27",
             .value_length = strlen("27"),
             .type = L8W8JWT_CLAIM_TYPE_INTEGER
+        },
+        {
+            .key = "size",
+            .key_length = strlen("size"),
+            .value = "1.85",
+            .value_length = strlen("1.85"),
+            .type = L8W8JWT_CLAIM_TYPE_NUMBER
         },
         {
             .key = "alive",
@@ -72,6 +90,9 @@ int main(void)
 
         .iat = time(NULL),
         .exp = time(NULL) + 600,
+
+        .additional_header_claims = header_claims,
+        .additional_header_claims_count = sizeof(header_claims) / sizeof(struct l8w8jwt_claim),
 
         .additional_payload_claims = payload_claims,
         .additional_payload_claims_count = sizeof(payload_claims) / sizeof(struct l8w8jwt_claim),
