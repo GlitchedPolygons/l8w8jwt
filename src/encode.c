@@ -73,39 +73,34 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    chillbuff_push_back(&buff, "{", 1);
-
     switch (alg)
     {
-        case -1:
-            chillbuff_push_back(&buff, "\"alg\":\"none\",\"typ\":\"JWT\"", 24);
-            break;
         case 0:
-            chillbuff_push_back(&buff, "\"alg\":\"HS256\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"HS256\",\"typ\":\"JWT\"", 26);
             break;
         case 1:
-            chillbuff_push_back(&buff, "\"alg\":\"HS384\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"HS384\",\"typ\":\"JWT\"", 26);
             break;
         case 2:
-            chillbuff_push_back(&buff, "\"alg\":\"HS512\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"HS512\",\"typ\":\"JWT\"", 26);
             break;
         case 3:
-            chillbuff_push_back(&buff, "\"alg\":\"RS256\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"RS256\",\"typ\":\"JWT\"", 26);
             break;
         case 4:
-            chillbuff_push_back(&buff, "\"alg\":\"RS384\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"RS384\",\"typ\":\"JWT\"", 26);
             break;
         case 5:
-            chillbuff_push_back(&buff, "\"alg\":\"RS512\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"RS512\",\"typ\":\"JWT\"", 26);
             break;
         case 6:
-            chillbuff_push_back(&buff, "\"alg\":\"PS256\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"PS256\",\"typ\":\"JWT\"", 26);
             break;
         case 7:
-            chillbuff_push_back(&buff, "\"alg\":\"PS384\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"PS384\",\"typ\":\"JWT\"", 26);
             break;
         case 8:
-            chillbuff_push_back(&buff, "\"alg\":\"PS512\",\"typ\":\"JWT\"", 25);
+            chillbuff_push_back(&buff, "{\"alg\":\"PS512\",\"typ\":\"JWT\"", 26);
             break;
         default:
             chillbuff_free(&buff);
@@ -120,46 +115,42 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
 
     chillbuff_push_back(&buff, "}", 1);
 
-    size_t header_length;
-    char* header = l8w8jwt_base64_encode(true, buff.array, buff.length, &header_length);
+    size_t segment_length;
+    char* segment = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment_length);
 
-    chillbuff_push_back(stringbuilder, header, header_length);
+    chillbuff_push_back(stringbuilder, segment, segment_length);
 
-    free(header);
+    free(segment);
     chillbuff_clear(&buff);
 
-    char iat[32];
-    char nbf[32];
-    char exp[32];
-
-    memset(iat, '\0', sizeof(iat));
-    memset(nbf, '\0', sizeof(nbf));
-    memset(exp, '\0', sizeof(exp));
+    char iatnbfexp[64];
+    memset(iatnbfexp, '\0', sizeof(iatnbfexp));
 
     if (params->iat)
     {
-        snprintf(iat, sizeof(iat), "%"PRIu64"", (uint64_t)params->iat);
+        snprintf(iatnbfexp + 00, 21, "%"PRIu64"", (uint64_t)params->iat);
     }
 
     if (params->nbf)
     {
-        snprintf(nbf, sizeof(nbf), "%"PRIu64"", (uint64_t)params->nbf);
+        snprintf(iatnbfexp + 21, 21, "%"PRIu64"", (uint64_t)params->nbf);
     }
 
     if (params->exp)
     {
-        snprintf(exp, sizeof(exp), "%"PRIu64"", (uint64_t)params->exp);
+        snprintf(iatnbfexp + 42, 21, "%"PRIu64"", (uint64_t)params->exp);
     }
 
     struct l8w8jwt_claim claims[] =
     {
-        { .key = *iat ? "iat" : NULL, .key_length = 3, .value = iat, .value_length = 0, .type = 1 }, // Setting l8w8jwt_claim::value_length to 0 makes the encoder use strlen, which in this case is fine.
-        { .key = *nbf ? "nbf" : NULL, .key_length = 3, .value = nbf, .value_length = 0, .type = 1 },
-        { .key = *exp ? "exp" : NULL, .key_length = 3, .value = exp, .value_length = 0, .type = 1 },
-        { .key = params->sub ? "sub" : NULL, .key_length = 3, .value = params->sub, .value_length = params->sub_length, .type = 0 },
-        { .key = params->iss ? "iss" : NULL, .key_length = 3, .value = params->iss, .value_length = params->iss_length, .type = 0 },
-        { .key = params->aud ? "aud" : NULL, .key_length = 3, .value = params->aud, .value_length = params->aud_length, .type = 0 },
-        { .key = params->jti ? "jti" : NULL, .key_length = 3, .value = params->jti, .value_length = params->jti_length, .type = 0 },
+        // Setting l8w8jwt_claim::value_length to 0 makes the encoder use strlen, which in this case is fine.
+        { .key = *(iatnbfexp +00) ? "iat" : NULL, .key_length = 3, .value = iatnbfexp +00, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
+        { .key = *(iatnbfexp +21) ? "nbf" : NULL, .key_length = 3, .value = iatnbfexp +21, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
+        { .key = *(iatnbfexp +42) ? "exp" : NULL, .key_length = 3, .value = iatnbfexp +42, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
+        { .key = params->sub ? "sub" : NULL, .key_length = 3, .value = params->sub, .value_length = params->sub_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
+        { .key = params->iss ? "iss" : NULL, .key_length = 3, .value = params->iss, .value_length = params->iss_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
+        { .key = params->aud ? "aud" : NULL, .key_length = 3, .value = params->aud, .value_length = params->aud_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
+        { .key = params->jti ? "jti" : NULL, .key_length = 3, .value = params->jti, .value_length = params->jti_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
     };
 
     chillbuff_push_back(&buff, "{", 1);
@@ -174,13 +165,12 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
 
     chillbuff_push_back(&buff, "}", 1);
 
-    size_t payload_length;
-    char* payload = l8w8jwt_base64_encode(true, buff.array, buff.length, &payload_length);
+    segment = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment_length);
 
     chillbuff_push_back(stringbuilder, ".", 1);
-    chillbuff_push_back(stringbuilder, payload, payload_length);
+    chillbuff_push_back(stringbuilder, segment, segment_length);
 
-    free(payload);
+    free(segment);
     chillbuff_free(&buff);
 
     return L8W8JWT_SUCCESS;

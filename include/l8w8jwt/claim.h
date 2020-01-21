@@ -76,8 +76,6 @@ struct l8w8jwt_claim
     int type;
 };
 
-#define L8W8JWT_BOOLEAN_CLAIM(key,value) struct l8w8jwt_claim
-
 /**
  * Frees a heap-allocated array of <code>l8w8jwt_claim</code>s.
  * @param claims The claims to free.
