@@ -23,10 +23,6 @@ int main(void)
     char* jwt;
     size_t jwt_length;
 
-    char sub[] = "Gordon Freeman";
-    char iss[] = "Administrator";
-    char aud[] = "Black Mesa";
-
     struct l8w8jwt_claim header_claims[] =
     {
         {
@@ -79,14 +75,14 @@ int main(void)
 
     struct l8w8jwt_encoding_params params =
     {
-        .sub = sub,
-        .sub_length = strlen(sub),
+        .sub = "Gordon Freeman",
+        .sub_length = strlen("Gordon Freeman"),
 
-        .iss = iss,
-        .iss_length = strlen(iss),
+        .iss = "Black Mesa",
+        .iss_length = strlen("Black Mesa"),
 
-        .aud = aud,
-        .aud_length = strlen(aud),
+        .aud = "Administrator",
+        .aud_length = strlen("Administrator"),
 
         .iat = time(NULL),
         .exp = time(NULL) + 600,
