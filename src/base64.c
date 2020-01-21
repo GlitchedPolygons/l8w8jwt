@@ -103,23 +103,21 @@ after February 11, 2012 is no longer under the GPL v2 option.
 #include <stdio.h>
 #include <stdlib.h>
 #include "l8w8jwt/base64.h"
-#include "l8w8jwt/printferr.h"
+#include "l8w8jwt/retcodes.h"
 
 static const uint8_t TABLE[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static const uint8_t URL_SAFE_TABLE[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data_length, size_t* out_length)
+int l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data_length, char** out, size_t* out_length)
 {
-    if (data == NULL || data_length == 0)
+    if (out == NULL || data == NULL || out_length == NULL)
     {
-        l8w8jwt_printferr("The \"data\" input buffer was NULL or empty; nothing to encode!");
-        return NULL;
+        return L8W8JWT_NULL_ARG;
     }
 
-    if (out_length == NULL)
+    if (data_length == 0)
     {
-        l8w8jwt_printferr("The \"out_length\" pointer parameter is NULL; please provide something to write the output length into.");
-        return NULL;
+        return L8W8JWT_INVALID_ARG;
     }
 
     size_t olen = data_length * 4 / 3 + 4;
@@ -129,18 +127,16 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
 
     if (olen < data_length)
     {
-        l8w8jwt_printferr("Integer overflow!");
-        return NULL;
+        return L8W8JWT_OVERFLOW;
     }
 
-    uint8_t* out = malloc(olen);
-    if (out == NULL)
+    *out = malloc(olen);
+    if (*out == NULL)
     {
-        l8w8jwt_printferr("Allocation failed - out of memory!");
-        return NULL;
+        return L8W8JWT_OUT_OF_MEM;
     }
 
-    uint8_t* pos = out;
+    uint8_t* pos = (uint8_t*)(*out);
     uint8_t* in = (uint8_t*)data;
     uint8_t* end = (uint8_t*)data + data_length;
 
@@ -198,23 +194,21 @@ char* l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t da
     }
 
     *pos = '\0';
-    *out_length = (pos - out) - sub;
+    *out_length = (pos - (uint8_t*)*out) - sub;
 
-    return (char*)out;
+    return L8W8JWT_SUCCESS;
 }
 
-uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, size_t* out_length)
+int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, uint8_t** out, size_t* out_length)
 {
-    if (data == NULL || data_length == 0)
+    if (data == NULL || out_length == NULL)
     {
-        l8w8jwt_printferr("The \"data\" parameter is NULL; nothing to decode!");
-        return NULL;
+        return L8W8JWT_NULL_ARG;
     }
 
-    if (out_length == NULL)
+    if (data_length == 0)
     {
-        l8w8jwt_printferr("The \"out_length\" parameter is NULL! Please pass a pointer to write the output buffer's length into.");
-        return NULL;
+        return L8W8JWT_INVALID_ARG;
     }
 
     if (*(data + data_length - 1) == '\0')
@@ -243,17 +237,14 @@ uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_len
     }
 
     if (count == 0 || (!url && count % 4))
-        return NULL;
+        return L8W8JWT_INVALID_ARG;
 
-    uint8_t* out;
-    uint8_t* pos;
     size_t olen = count / 4 * 3;
-    pos = out = malloc(olen + 1);
+    uint8_t* pos = *out = malloc(olen + 1);
 
-    if (out == NULL)
+    if (*out == NULL)
     {
-        l8w8jwt_printferr("Allocation failed - out of memory!");
-        return NULL;
+        return L8W8JWT_OUT_OF_MEM;
     }
 
     count = 0;
@@ -292,19 +283,19 @@ uint8_t* l8w8jwt_base64_decode(const bool url, const char* data, size_t data_len
                 }
                 else
                 {
-                    l8w8jwt_printferr("Invalid padding!");
-                    free(out);
-                    return NULL;
+                    free(*out);
+                    *out = NULL;
+                    return L8W8JWT_INVALID_ARG; // Invalid padding...
                 }
                 break;
             }
         }
     }
 
-    *out_length = pos - out;
+    *out_length = pos - *out;
     *pos = '\0';
 
-    return out;
+    return L8W8JWT_SUCCESS;
 }
 
 /*

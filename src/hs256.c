@@ -56,8 +56,15 @@ int l8w8jwt_encode_hs256(struct l8w8jwt_encoding_params* encoding_params)
         return L8W8JWT_HS256_SIGNATURE_FAILURE;
     }
 
+    char* signature;
     size_t signature_length;
-    char* signature = l8w8jwt_base64_encode(true, signature_bytes, sizeof(signature_bytes), &signature_length);
+
+    r = l8w8jwt_base64_encode(true, signature_bytes, sizeof(signature_bytes), &signature, &signature_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        chillbuff_free(&stringbuilder);
+        return r;
+    }
 
     chillbuff_push_back(&stringbuilder, ".", 1);
     chillbuff_push_back(&stringbuilder, signature, signature_length);

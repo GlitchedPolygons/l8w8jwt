@@ -48,6 +48,11 @@ extern "C" {
 #define L8W8JWT_OUT_OF_MEM 300
 
 /**
+ * Not good...
+ */
+#define L8W8JWT_OVERFLOW 310
+
+/**
  * Returned if signing a JWT using the HMAC + SHA256 algorithm failed.
  */
 #define L8W8JWT_HS256_SIGNATURE_FAILURE 400

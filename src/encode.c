@@ -115,12 +115,20 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
 
     chillbuff_push_back(&buff, "}", 1);
 
+    char* segment;
     size_t segment_length;
-    char* segment = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment_length);
+
+    r = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment, &segment_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        chillbuff_free(&buff);
+        return r;
+    }
 
     chillbuff_push_back(stringbuilder, segment, segment_length);
 
     free(segment);
+    segment = NULL;
     chillbuff_clear(&buff);
 
     char iatnbfexp[64];
@@ -141,12 +149,11 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
         snprintf(iatnbfexp + 42, 21, "%"PRIu64"", (uint64_t)params->exp);
     }
 
-    struct l8w8jwt_claim claims[] =
-    {
+    struct l8w8jwt_claim claims[] = {
         // Setting l8w8jwt_claim::value_length to 0 makes the encoder use strlen, which in this case is fine.
-        { .key = *(iatnbfexp +00) ? "iat" : NULL, .key_length = 3, .value = iatnbfexp +00, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
-        { .key = *(iatnbfexp +21) ? "nbf" : NULL, .key_length = 3, .value = iatnbfexp +21, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
-        { .key = *(iatnbfexp +42) ? "exp" : NULL, .key_length = 3, .value = iatnbfexp +42, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
+        { .key = *(iatnbfexp + 00) ? "iat" : NULL, .key_length = 3, .value = iatnbfexp + 00, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
+        { .key = *(iatnbfexp + 21) ? "nbf" : NULL, .key_length = 3, .value = iatnbfexp + 21, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
+        { .key = *(iatnbfexp + 42) ? "exp" : NULL, .key_length = 3, .value = iatnbfexp + 42, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
         { .key = params->sub ? "sub" : NULL, .key_length = 3, .value = params->sub, .value_length = params->sub_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
         { .key = params->iss ? "iss" : NULL, .key_length = 3, .value = params->iss, .value_length = params->iss_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
         { .key = params->aud ? "aud" : NULL, .key_length = 3, .value = params->aud, .value_length = params->aud_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
@@ -165,7 +172,12 @@ int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* pa
 
     chillbuff_push_back(&buff, "}", 1);
 
-    segment = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment_length);
+    r = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment, &segment_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        chillbuff_free(&buff);
+        return r;
+    }
 
     chillbuff_push_back(stringbuilder, ".", 1);
     chillbuff_push_back(stringbuilder, segment, segment_length);
