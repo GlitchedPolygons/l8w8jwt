@@ -30,13 +30,44 @@ extern "C" {
 #include <stdlib.h>
 #include "chillbuff.h"
 
+/**
+ * JWT claim value is a string (e.g. <code>"iss": "glitchedpolygons.com"</code>).
+ */
 #define L8W8JWT_CLAIM_TYPE_STRING 0
+
+/**
+ * JWT claim value is an integer (e.g. <code>"exp": 1579610629</code>)
+ */
 #define L8W8JWT_CLAIM_TYPE_INTEGER 1
+
+/**
+ * JWT claim value type number (e.g. <code>"size": 1.85</code>).
+ */
 #define L8W8JWT_CLAIM_TYPE_NUMBER 2
+
+/**
+ * JWT claim value is a boolean (e.g. <code>"done": true</code>).
+ */
 #define L8W8JWT_CLAIM_TYPE_BOOLEAN 3
+
+/**
+ * JWT claim value is null (e.g. <code>"ref": null</code>).
+ */
 #define L8W8JWT_CLAIM_TYPE_NULL 4
+
+/**
+ * JWT claim value type JSON array (e.g. <code>"ids": [2, 4, 8, 16]</code>).
+ */
 #define L8W8JWT_CLAIM_TYPE_ARRAY 5
+
+/**
+ * JWT claim value type is a JSON object (e.g. <code>"objs": { "name": "GMan", "id": 420 }</code>).
+ */
 #define L8W8JWT_CLAIM_TYPE_OBJECT 6
+
+/**
+ * JWT claim value is some other type.
+ */
 #define L8W8JWT_CLAIM_TYPE_OTHER 7
 
 /**
@@ -70,8 +101,9 @@ struct l8w8jwt_claim
     size_t value_length;
 
     /**
-     * Claim type. <p>
+     * The type of the claim's value. <p>
      * 0 = string, 1 = integer, 2 = number, 3 = boolean, 4 = null, 5 = array, 6 = object, 7 = other.
+     * @see https://www.w3schools.com/js/js_json_datatypes.asp
      */
     int type;
 };
