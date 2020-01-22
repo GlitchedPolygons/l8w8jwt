@@ -26,18 +26,12 @@ set(l8w8jwt_headers
         include/l8w8jwt/claim.h
         include/l8w8jwt/encode.h
         include/l8w8jwt/decode.h
-        include/l8w8jwt/hs256.h
-        include/l8w8jwt/hs384.h
-        include/l8w8jwt/hs512.h
         )
 
 set(l8w8jwt_sources
         src/base64.c
         src/claim.c
         src/encode.c
-        src/hs256.c
-        src/hs384.c
-        src/hs512.c
         )
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})

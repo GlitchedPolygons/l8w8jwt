@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "l8w8jwt/hs256.h"
+#include "l8w8jwt/encode.h"
 
 int main(void)
 {
@@ -75,6 +75,8 @@ int main(void)
 
     struct l8w8jwt_encoding_params params =
     {
+        .alg = L8W8JWT_ALG_HS256,
+
         .sub = "Gordon Freeman",
         .sub_length = strlen("Gordon Freeman"),
 
@@ -100,7 +102,7 @@ int main(void)
         .out_length = &jwt_length
     };
 
-    int r = l8w8jwt_encode_hs256(&params);
+    int r = encode(&params);
     printf("\nl8w8jwt_encode_hs256 function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
 
     free(jwt);

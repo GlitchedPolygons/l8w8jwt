@@ -34,10 +34,76 @@ extern "C" {
 #include "l8w8jwt/retcodes.h"
 
 /**
+ * HMAC-SHA256 signing algorithm.
+ */
+#define L8W8JWT_ALG_HS256 0
+
+/**
+ * HMAC-SHA384 signing algorithm.
+ */
+#define L8W8JWT_ALG_HS384 1
+
+/**
+ * HMAC-SHA512 signing algorithm.
+ */
+#define L8W8JWT_ALG_HS512 2
+
+/**
+ * RSASSA-PKCS1-v1_5-SHA256 signing algorithm.
+ */
+#define L8W8JWT_ALG_RS256 3
+
+/**
+ * RSASSA-PKCS1-v1_5-SHA384 signing algorithm.
+ */
+#define L8W8JWT_ALG_RS384 4
+
+/**
+ * RSASSA-PKCS1-v1_5-SHA512 signing algorithm.
+ */
+#define L8W8JWT_ALG_RS512 5
+
+/**
+ * RSASSA-PSS MGF1 SHA-256 signing algorithm.
+ */
+#define L8W8JWT_ALG_PS256 6
+
+/**
+ * RSASSA-PSS MGF1 SHA-384 signing algorithm.
+ */
+#define L8W8JWT_ALG_PS384 7
+
+/**
+ * RSASSA-PSS MGF1 SHA-512 signing algorithm.
+ */
+#define L8W8JWT_ALG_PS512 8
+
+/**
+ * ECDSA + P-256 + SHA256 signing algorithm.
+ */
+#define L8W8JWT_ALG_ES256 9
+
+/**
+ * ECDSA + P-384 + SHA384 signing algorithm.
+ */
+#define L8W8JWT_ALG_ES384 10
+
+/**
+ * ECDSA + P-521 + SHA512 signing algorithm.
+ */
+#define L8W8JWT_ALG_ES512 11
+
+/**
  * Struct containing the parameters to use for creating a JWT with l8w8jwt.
  */
 struct l8w8jwt_encoding_params
 {
+    /**
+     * The signature algorithm ID. <p>
+     * [0;2] = HS256/384/512 | [3;5] = RS256/384/512 | [6;8] = PS256/384/512 | [9;11] = ES256/384/512
+     */
+    int alg;
+
     /**
      * [OPTIONAL] The issue claim (who issued the JWT?). Can be omitted by setting this to <code>NULL</code>.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.1
@@ -153,19 +219,6 @@ struct l8w8jwt_encoding_params
     size_t* out_length;
 };
 
-#define L8W8JWT_ALG_HS256 0
-#define L8W8JWT_ALG_HS384 1
-#define L8W8JWT_ALG_HS512 2
-#define L8W8JWT_ALG_RS256 3
-#define L8W8JWT_ALG_RS384 4
-#define L8W8JWT_ALG_RS512 5
-#define L8W8JWT_ALG_PS256 6
-#define L8W8JWT_ALG_PS384 7
-#define L8W8JWT_ALG_PS512 8
-#define L8W8JWT_ALG_ES256 9
-#define L8W8JWT_ALG_ES384 10
-#define L8W8JWT_ALG_ES512 11
-
 /**
  * Validates a set of l8w8jwt_encoding_params.
  * @param params The l8w8jwt_encoding_params to validate.
@@ -174,15 +227,13 @@ struct l8w8jwt_encoding_params
 int validate_encoding_params(struct l8w8jwt_encoding_params* params);
 
 /**
- * Encodes a JWT header and payload into a stringbuilder WITHOUT the signature. <p>
- * An example output could be: <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ</code> <p>
- * As you can see the signature is missing: use the algorithm-specific l8w8jwt functions to encode tokens that include the signature part at the end.
- * @param stringbuilder The stringbuilder instance into which to write the encoded JWT header + payload.
- * @param alg The signature algorithm ID. [0;2] = HS256/384/512 | [3;5] = RS256/384/512 | [6;8] = PS256/384/512 | [9;11] = ES256/384/512
- * @param params The token encoding parameters (e.g. "iss", "exp", etc...).
+ * Creates, signs and encodes a Json-Web-Token. <p>
+ * An example output could be: <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1NiJ9.eyJpYXQiOjE1Nzk2NDUzNTUsImV4cCI6MTU3OTY0NTk1NSwic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciJ9.uk4EEoq0ql_SguLto5EWzklakpzO-6GE2U26crB8vUY</code> <p>
+ * @param params The token encoding parameters (e.g. "alg", "iss", "exp", etc...).
  * @return Return code as defined in retcodes.h
+ * @see l8w8jwt_encoding_params
  */
-int encode(chillbuff* stringbuilder, int alg, struct l8w8jwt_encoding_params* params);
+int encode(struct l8w8jwt_encoding_params* params);
 
 #ifdef __cplusplus
 } // extern "C"
