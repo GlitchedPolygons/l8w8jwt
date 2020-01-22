@@ -27,31 +27,6 @@ extern "C" {
 #include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
 
-int validate_encoding_params(struct l8w8jwt_encoding_params* params)
-{
-    if (params == NULL || params->secret_key == NULL || params->out == NULL || params->out_length == NULL)
-    {
-        return L8W8JWT_NULL_ARG;
-    }
-
-    if (params->secret_key_length == 0)
-    {
-        return L8W8JWT_INVALID_ARG;
-    }
-
-    if ((params->additional_payload_claims != NULL && params->additional_payload_claims_count == 0))
-    {
-        return L8W8JWT_INVALID_ARG;
-    }
-
-    if ((params->additional_header_claims != NULL && params->additional_header_claims_count == 0))
-    {
-        return L8W8JWT_INVALID_ARG;
-    }
-
-    return L8W8JWT_SUCCESS;
-}
-
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
 {
     int r;
@@ -250,6 +225,31 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params) {}
 static int jwt_ps(struct l8w8jwt_encoding_params* params) {}
 
 static int jwt_es(struct l8w8jwt_encoding_params* params) {}
+
+int validate_encoding_params(struct l8w8jwt_encoding_params* params)
+{
+    if (params == NULL || params->secret_key == NULL || params->out == NULL || params->out_length == NULL)
+    {
+        return L8W8JWT_NULL_ARG;
+    }
+
+    if (params->secret_key_length == 0)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
+    if ((params->additional_payload_claims != NULL && params->additional_payload_claims_count == 0))
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
+    if ((params->additional_header_claims != NULL && params->additional_header_claims_count == 0))
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
+    return L8W8JWT_SUCCESS;
+}
 
 int encode(struct l8w8jwt_encoding_params* params)
 {
