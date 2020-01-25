@@ -112,6 +112,11 @@ extern "C" {
  */
 #define L8W8JWT_PS512_SIGNATURE_FAILURE 1500
 
+/**
+ * If one of the SHA-2 functions fails (e.g. SHA-256).
+ */
+#define L8W8JWT_SHA2_FAILURE 1600
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

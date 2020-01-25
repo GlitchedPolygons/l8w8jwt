@@ -19,13 +19,16 @@ extern "C" {
 #endif
 
 #include "l8w8jwt/encode.h"
-#include "l8w8jwt/retcodes.h"
 #include "l8w8jwt/base64.h"
+#include "l8w8jwt/retcodes.h"
 
+#include <stdbool.h>
 #include <inttypes.h>
-#include <mbedtls/rsa.h>
 #include <mbedtls/md.h>
+#include <mbedtls/pk.h>
 #include <mbedtls/md_internal.h>
+#include <mbedtls/sha256.h>
+#include <mbedtls/rsa.h>
 
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
 {
@@ -220,7 +223,57 @@ static int jwt_hs(struct l8w8jwt_encoding_params* params)
     return L8W8JWT_SUCCESS;
 }
 
-static int jwt_rs(struct l8w8jwt_encoding_params* params) {}
+static int jwt_rs(struct l8w8jwt_encoding_params* params)
+{
+    int r;
+    chillbuff stringbuilder;
+
+    r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
+    {
+        return L8W8JWT_OUT_OF_MEM;
+    }
+
+    unsigned char sig[MBEDTLS_MPI_MAX_SIZE];
+    memset(sig, '\0', sizeof(sig));
+
+    unsigned char hash[MBEDTLS_MPI_MAX_SIZE];
+    memset(hash, '\0', sizeof(hash));
+
+    const int hash_length = params->alg == L8W8JWT_ALG_RS256 ? 32 : params->alg == L8W8JWT_ALG_RS384 ? 48 : 64;
+    const mbedtls_md_type_t hash_alg = params->alg == L8W8JWT_ALG_RS256 ? MBEDTLS_MD_SHA256 : params->alg == L8W8JWT_ALG_RS384 ? MBEDTLS_MD_SHA384 : MBEDTLS_MD_SHA512;
+
+    mbedtls_pk_context ctx;
+    mbedtls_pk_init(&ctx);
+
+    mbedtls_rsa_context rsa;
+    mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
+
+    mbedtls_pk_parse_key(&ctx, params->secret_key, params->secret_key_length, NULL, 0);
+
+    r = write_header_and_payload(&stringbuilder, params);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        goto exit;
+    }
+
+    r = mbedtls_sha256_ret((const unsigned char*)stringbuilder.array, stringbuilder.length, hash, false);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_SHA2_FAILURE;
+        goto exit;
+    }
+
+    mbedtls_rsa_rsassa_pkcs1_v15_sign(&rsa, NULL, NULL, MBEDTLS_RSA_PRIVATE, hash_alg, hash_length, hash, sig);
+
+    chillbuff_push_back(&stringbuilder, ".", 1);
+
+exit:
+    chillbuff_free(&stringbuilder);
+    mbedtls_rsa_free(&rsa);
+    mbedtls_pk_free(&ctx);
+    return r;
+}
 
 static int jwt_ps(struct l8w8jwt_encoding_params* params) {}
 

@@ -198,7 +198,7 @@ struct l8w8jwt_encoding_params
     size_t additional_payload_claims_count;
 
     /**
-     * The secret key to use for signing the token (e.g. if you chose HS256 as algorithm, this will be the HMAC secret; for RS512 this will be the private RSA key, PEM-formatted, etc...).
+     * The secret key to use for signing the token (e.g. if you chose HS256 as algorithm, this will be the HMAC secret WITHOUT NUL-terminator; for RS512 this will be the private RSA key WITH NUL-terminator, PEM-formatted, etc...).
      */
     unsigned char* secret_key;
 
