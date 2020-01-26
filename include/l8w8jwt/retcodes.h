@@ -53,79 +53,24 @@ extern "C" {
 #define L8W8JWT_OVERFLOW 310
 
 /**
- * Returned if signing a JWT using the HMAC + SHA256 algorithm failed.
+ * Returned if signing a JWT failed.
  */
-#define L8W8JWT_HS256_SIGNATURE_FAILURE 400
-
-/**
- * Returned if signing a JWT using the HMAC + SHA384 algorithm failed.
- */
-#define L8W8JWT_HS384_SIGNATURE_FAILURE 500
-
-/**
- * Returned if signing a JWT using the HMAC + SHA512 algorithm failed.
- */
-#define L8W8JWT_HS512_SIGNATURE_FAILURE 600
-
-/**
- * Returned if signing a JWT using the RSASSA-PKCS1-v1_5 + SHA256 algorithm failed.
- */
-#define L8W8JWT_RS256_SIGNATURE_FAILURE 700
-
-/**
- * Returned if signing a JWT using the RSASSA-PKCS1-v1_5 + SHA384 algorithm failed.
- */
-#define L8W8JWT_RS384_SIGNATURE_FAILURE 800
-
-/**
- * Returned if signing a JWT using the RSASSA-PKCS1-v1_5 + SHA512 algorithm failed.
- */
-#define L8W8JWT_RS512_SIGNATURE_FAILURE 900
-
-/**
- * Returned if signing a JWT using the ECDSA + P-256 + SHA256 algorithm failed.
- */
-#define L8W8JWT_ES256_SIGNATURE_FAILURE 1000
-
-/**
- * Returned if signing a JWT using the ECDSA + P-384 + SHA384 algorithm failed.
- */
-#define L8W8JWT_ES384_SIGNATURE_FAILURE 1100
-
-/**
- * Returned if signing a JWT using the ECDSA + P-521 + SHA512 algorithm failed.
- */
-#define L8W8JWT_ES512_SIGNATURE_FAILURE 1200
-
-/**
- * Returned if signing a JWT using the RSASSA-PSS MGF1 SHA-256 algorithm failed.
- */
-#define L8W8JWT_PS256_SIGNATURE_FAILURE 1300
-
-/**
- * Returned if signing a JWT using the RSASSA-PSS MGF1 SHA-384 algorithm failed.
- */
-#define L8W8JWT_PS384_SIGNATURE_FAILURE 1400
-
-/**
- * Returned if signing a JWT using the RSASSA-PSS MGF1 SHA-512 algorithm failed.
- */
-#define L8W8JWT_PS512_SIGNATURE_FAILURE 1500
+#define L8W8JWT_SIGNATURE_FAILURE 400
 
 /**
  * If one of the SHA-2 functions fails (e.g. SHA-256).
  */
-#define L8W8JWT_SHA2_FAILURE 1600
+#define L8W8JWT_SHA2_FAILURE 410
 
 /**
  * Returned if some PEM-formatted key string couldn't be parsed.
  */
-#define L8W8JWT_KEY_PARSE_FAILURE 1700
+#define L8W8JWT_KEY_PARSE_FAILURE 420
 
 /**
  * Base64(URL) encoding or decoding error.
  */
-#define L8W8JWT_BASE64_FAILURE 1800
+#define L8W8JWT_BASE64_FAILURE 450
 
 #ifdef __cplusplus
 } // extern "C"

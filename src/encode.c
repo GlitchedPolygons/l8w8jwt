@@ -24,11 +24,9 @@ extern "C" {
 
 #include <stdbool.h>
 #include <inttypes.h>
-#include <mbedtls/md.h>
 #include <mbedtls/pk.h>
+#include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
-#include <mbedtls/sha256.h>
-#include <mbedtls/sha512.h>
 #include <mbedtls/rsa.h>
 
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
@@ -191,7 +189,7 @@ static int jwt_hs(struct l8w8jwt_encoding_params* params)
     if (r != 0)
     {
         chillbuff_free(&stringbuilder);
-        return params->alg == L8W8JWT_ALG_HS256 ? L8W8JWT_HS256_SIGNATURE_FAILURE : params->alg == L8W8JWT_ALG_HS384 ? L8W8JWT_HS384_SIGNATURE_FAILURE : L8W8JWT_HS512_SIGNATURE_FAILURE;
+        return L8W8JWT_SIGNATURE_FAILURE;
     }
 
     char* signature;
@@ -267,22 +265,16 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     switch (params->alg)
     {
         case L8W8JWT_ALG_RS256:
-        case L8W8JWT_ALG_ES256:
-        case L8W8JWT_ALG_PS256:
             md_length = 32;
             md_type = MBEDTLS_MD_SHA256;
             md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
             break;
         case L8W8JWT_ALG_RS384:
-        case L8W8JWT_ALG_ES384:
-        case L8W8JWT_ALG_PS384:
             md_length = 48;
             md_type = MBEDTLS_MD_SHA384;
             md_info = (mbedtls_md_info_t*)(&mbedtls_sha384_info);
             break;
         case L8W8JWT_ALG_RS512:
-        case L8W8JWT_ALG_ES512:
-        case L8W8JWT_ALG_PS512:
             md_length = 64;
             md_type = MBEDTLS_MD_SHA512;
             md_info = (mbedtls_md_info_t*)(&mbedtls_sha512_info);
@@ -311,7 +303,7 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     r = mbedtls_pk_sign(&ctx, md_type, hash, md_length, signature, &signature_length, NULL, NULL);
     if (r != L8W8JWT_SUCCESS)
     {
-        r = L8W8JWT_RS256_SIGNATURE_FAILURE;
+        r = L8W8JWT_SIGNATURE_FAILURE;
         goto exit;
     }
 
