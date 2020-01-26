@@ -117,6 +117,16 @@ extern "C" {
  */
 #define L8W8JWT_SHA2_FAILURE 1600
 
+/**
+ * Returned if some PEM-formatted key string couldn't be parsed.
+ */
+#define L8W8JWT_KEY_PARSE_FAILURE 1700
+
+/**
+ * Base64(URL) encoding or decoding error.
+ */
+#define L8W8JWT_BASE64_FAILURE 1800
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

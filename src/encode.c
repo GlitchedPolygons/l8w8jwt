@@ -28,6 +28,7 @@ extern "C" {
 #include <mbedtls/pk.h>
 #include <mbedtls/md_internal.h>
 #include <mbedtls/sha256.h>
+#include <mbedtls/sha512.h>
 #include <mbedtls/rsa.h>
 
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
@@ -234,22 +235,24 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    unsigned char sig[MBEDTLS_MPI_MAX_SIZE];
-    memset(sig, '\0', sizeof(sig));
+    if (params->secret_key_length > 8192)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
 
-    unsigned char hash[MBEDTLS_MPI_MAX_SIZE];
-    memset(hash, '\0', sizeof(hash));
-
-    const int hash_length = params->alg == L8W8JWT_ALG_RS256 ? 32 : params->alg == L8W8JWT_ALG_RS384 ? 48 : 64;
-    const mbedtls_md_type_t hash_alg = params->alg == L8W8JWT_ALG_RS256 ? MBEDTLS_MD_SHA256 : params->alg == L8W8JWT_ALG_RS384 ? MBEDTLS_MD_SHA384 : MBEDTLS_MD_SHA512;
+    unsigned char key[8192];
+    memset(key, '\0', sizeof(key));
+    memcpy(key, params->secret_key, params->secret_key_length);
 
     mbedtls_pk_context ctx;
     mbedtls_pk_init(&ctx);
 
-    mbedtls_rsa_context rsa;
-    mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
-
-    mbedtls_pk_parse_key(&ctx, params->secret_key, params->secret_key_length, NULL, 0);
+    r = mbedtls_pk_parse_key(&ctx, key, strlen((const char*)key) + 1, params->secret_key_pw, params->secret_key_pw_length);
+    if (r != 0)
+    {
+        r = L8W8JWT_KEY_PARSE_FAILURE;
+        goto exit;
+    }
 
     r = write_header_and_payload(&stringbuilder, params);
     if (r != L8W8JWT_SUCCESS)
@@ -257,20 +260,92 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
         goto exit;
     }
 
-    r = mbedtls_sha256_ret((const unsigned char*)stringbuilder.array, stringbuilder.length, hash, false);
+    size_t md_length;
+    mbedtls_md_type_t md_type;
+    mbedtls_md_info_t* md_info;
+
+    switch (params->alg)
+    {
+        case L8W8JWT_ALG_RS256:
+        case L8W8JWT_ALG_ES256:
+        case L8W8JWT_ALG_PS256:
+            md_length = 32;
+            md_type = MBEDTLS_MD_SHA256;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
+            break;
+        case L8W8JWT_ALG_RS384:
+        case L8W8JWT_ALG_ES384:
+        case L8W8JWT_ALG_PS384:
+            md_length = 48;
+            md_type = MBEDTLS_MD_SHA384;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha384_info);
+            break;
+        case L8W8JWT_ALG_RS512:
+        case L8W8JWT_ALG_ES512:
+        case L8W8JWT_ALG_PS512:
+            md_length = 64;
+            md_type = MBEDTLS_MD_SHA512;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha512_info);
+            break;
+        default:
+            r = L8W8JWT_INVALID_ARG;
+            goto exit;
+    }
+
+    unsigned char hash[MBEDTLS_MPI_MAX_SIZE];
+    memset(hash, '\0', sizeof(hash));
+
+    /* Hash the JWT header + payload. */
+    r = mbedtls_md(md_info, (const unsigned char*)stringbuilder.array, stringbuilder.length, hash);
     if (r != L8W8JWT_SUCCESS)
     {
         r = L8W8JWT_SHA2_FAILURE;
         goto exit;
     }
 
-    mbedtls_rsa_rsassa_pkcs1_v15_sign(&rsa, NULL, NULL, MBEDTLS_RSA_PRIVATE, hash_alg, hash_length, hash, sig);
+    size_t signature_length;
+    unsigned char signature[MBEDTLS_MPI_MAX_SIZE];
+    memset(signature, '\0', sizeof(signature));
+
+    /* Sign the hash using the provided private key. */
+    r = mbedtls_pk_sign(&ctx, md_type, hash, md_length, signature, &signature_length, NULL, NULL);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_RS256_SIGNATURE_FAILURE;
+        goto exit;
+    }
+
+    char* signature_string;
+    size_t signature_string_length;
+
+    /* Base64URL-encode the signature and append the result to the JWT header + payload to finalize the token. */
+    r = l8w8jwt_base64_encode(true, (uint8_t*)signature, signature_length, &signature_string, &signature_string_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_BASE64_FAILURE;
+        goto exit;
+    }
 
     chillbuff_push_back(&stringbuilder, ".", 1);
+    chillbuff_push_back(&stringbuilder, signature_string, signature_string_length);
+
+    free(signature_string);
+
+    *(params->out) = malloc(stringbuilder.length + 1);
+    if (*(params->out) == NULL)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
+    }
+
+    *(params->out_length) = stringbuilder.length;
+    (*(params->out))[stringbuilder.length] = '\0';
+    memcpy(*(params->out), stringbuilder.array, stringbuilder.length);
+
+    r = L8W8JWT_SUCCESS;
 
 exit:
     chillbuff_free(&stringbuilder);
-    mbedtls_rsa_free(&rsa);
     mbedtls_pk_free(&ctx);
     return r;
 }

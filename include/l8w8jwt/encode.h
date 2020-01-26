@@ -208,6 +208,18 @@ struct l8w8jwt_encoding_params
     size_t secret_key_length;
 
     /**
+     * If the secret key requires a password for usage, please assign it to this field. <p>
+     * You can only omit this when using JWT algorithms "HS256", "HS384" or "HS512".
+     * Every other alg requires you to at least set this to <code>NULL</code>.
+     */
+    unsigned char* secret_key_pw;
+
+    /**
+     * The secret key's password length (if there is any). If there's none, set this to zero!
+     */
+    size_t secret_key_pw_length;
+
+    /**
      * Where the encoded token should be written into
      * (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!).
      */
