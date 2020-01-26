@@ -61,7 +61,7 @@ int l8w8jwt_base64_encode(bool url, const uint8_t* data, size_t data_length, cha
  *  @note DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!
  *
  *  @param url Decode using base64url instead of base64?
- *  @param data The base-64 encoded string to decode (obtained via {@link l8w8jwt_base64_encode}).
+ *  @param data The base-64 encoded string to decode (obtained via {@link #l8w8jwt_base64_encode}).
  *  @param data_length The length of the string to decode.
  *  @param out Output where the decoded bytes should be written into (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!).
  *  @param out_length Pointer to a <code>size_t</code> variable into which to write the output buffer's length.

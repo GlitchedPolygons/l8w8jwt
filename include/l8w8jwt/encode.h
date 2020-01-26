@@ -209,8 +209,8 @@ struct l8w8jwt_encoding_params
 
     /**
      * If the secret key requires a password for usage, please assign it to this field. <p>
-     * You can only omit this when using JWT algorithms "HS256", "HS384" or "HS512".
-     * Every other alg requires you to at least set this to <code>NULL</code>.
+     * You can only omit this when using JWT algorithms "HS256", "HS384" or "HS512" (it's ignored in that case actually). <p>
+     * Every other algorithm requires you to at least set this to <code>NULL</code> if the {@link #secret_key} isn't password-protected.
      */
     unsigned char* secret_key_pw;
 
