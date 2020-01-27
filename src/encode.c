@@ -538,9 +538,9 @@ static int jwt_es(struct l8w8jwt_encoding_params* params)
     r = L8W8JWT_SUCCESS;
 
 exit:
+    mbedtls_pk_free(&pk);
     mbedtls_mpi_free(&sig_r);
     mbedtls_mpi_free(&sig_s);
-    mbedtls_pk_free(&pk);
     mbedtls_ecdsa_free(&ecdsa);
     mbedtls_entropy_free(&entropy);
     mbedtls_ctr_drbg_free(&ctr_drbg);
