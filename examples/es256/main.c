@@ -18,15 +18,20 @@
 #include <string.h>
 #include "l8w8jwt/encode.h"
 
+/*
+ * This keypair was generated using the following command:
+ * openssl ecparam -name prime256v1 -genkey -noout -out private.pem && openssl ec -in private.pem -pubout -out public.pem
+ */
+
 static const char ECDSA_PRIVATE_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
-                                        "MHcCAQEEIIunumTnDGx1PqEmSKD8GU66F4+8C/ZeNKxzS1pSfTYwoAoGCCqGSM49\n"
-                                        "AwEHoUQDQgAEYc1SGzPvoZXaWg37MI97xt2jz05CBXt5xc/6Hj2mLwtztAfB2C1K\n"
-                                        "LP2EEAW0Rotc/ipkDibdXaD5UgmmxWkDQw==\n"
+                                        "MHcCAQEEILvM6E7mLOdndALDyFc3sOgUTb6iVjgwRBtBwYZngSuwoAoGCCqGSM49\n"
+                                        "AwEHoUQDQgAEMlFGAIxe+/zLanxz4bOxTI6daFBkNGyQ+P4bc/RmNEq1NpsogiMB\n"
+                                        "5eXC7jUcD/XqxP9HCIhdRBcQHx7aOo3ayQ==\n"
                                         "-----END EC PRIVATE KEY-----";
 
 static const char ECDSA_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
-                                       "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEYc1SGzPvoZXaWg37MI97xt2jz05C\n"
-                                       "BXt5xc/6Hj2mLwtztAfB2C1KLP2EEAW0Rotc/ipkDibdXaD5UgmmxWkDQw==\n"
+                                       "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMlFGAIxe+/zLanxz4bOxTI6daFBk\n"
+                                       "NGyQ+P4bc/RmNEq1NpsogiMB5eXC7jUcD/XqxP9HCIhdRBcQHx7aOo3ayQ==\n"
                                        "-----END PUBLIC KEY-----";
 
 int main(void)
