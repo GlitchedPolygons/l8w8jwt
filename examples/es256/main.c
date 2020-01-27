@@ -18,11 +18,16 @@
 #include <string.h>
 #include "l8w8jwt/encode.h"
 
-static const char ECDSA_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
-                                "MHcCAQEEIJqnreIHxjO4HO9IzqOxs4AxuEGj+9t67tiuXTOIAYl5oAoGCCqGSM49\n"
-                                "AwEHoUQDQgAEp5NHhytvanP0lccJTcNkKzakUDMKbbXlyHTBFFc36qzxRVJsXB86\n"
-                                "1RKs9Fe2hGNYqFLDq6UGa8IBwhSOg1BL4g==\n"
-                                "-----END EC PRIVATE KEY-----";
+static const char ECDSA_PRIVATE_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
+                                        "MHcCAQEEIIunumTnDGx1PqEmSKD8GU66F4+8C/ZeNKxzS1pSfTYwoAoGCCqGSM49\n"
+                                        "AwEHoUQDQgAEYc1SGzPvoZXaWg37MI97xt2jz05CBXt5xc/6Hj2mLwtztAfB2C1K\n"
+                                        "LP2EEAW0Rotc/ipkDibdXaD5UgmmxWkDQw==\n"
+                                        "-----END EC PRIVATE KEY-----";
+
+static const char ECDSA_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
+                                       "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEYc1SGzPvoZXaWg37MI97xt2jz05C\n"
+                                       "BXt5xc/6Hj2mLwtztAfB2C1KLP2EEAW0Rotc/ipkDibdXaD5UgmmxWkDQw==\n"
+                                       "-----END PUBLIC KEY-----";
 
 int main(void)
 {
@@ -71,8 +76,8 @@ int main(void)
         .additional_payload_claims = payload_claims,
         .additional_payload_claims_count = sizeof(payload_claims) / sizeof(struct l8w8jwt_claim),
 
-        .secret_key = (unsigned char*)ECDSA_KEY,
-        .secret_key_length = strlen(ECDSA_KEY),
+        .secret_key = (unsigned char*)ECDSA_PRIVATE_KEY,
+        .secret_key_length = strlen(ECDSA_PRIVATE_KEY),
 
         .secret_key_pw = NULL,
         .secret_key_pw_length = 0,

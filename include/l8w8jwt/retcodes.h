@@ -68,6 +68,11 @@ extern "C" {
 #define L8W8JWT_KEY_PARSE_FAILURE 420
 
 /**
+ * Returned if you passed the wrong private or public key type (e.g. trying to use an RSA key for ECDSA tokens, etc...).
+ */
+#define L8W8JWT_WRONG_KEY_TYPE 450
+
+/**
  * Base64(URL) encoding or decoding error.
  */
 #define L8W8JWT_BASE64_FAILURE 450

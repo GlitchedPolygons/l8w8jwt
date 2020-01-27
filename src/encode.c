@@ -30,6 +30,8 @@ extern "C" {
 #include <mbedtls/rsa.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
+#include <mbedtls/pk_internal.h>
+#include <mbedtls/asn1write.h>
 
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
 {
@@ -267,6 +269,13 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
         goto exit;
     }
 
+    r = mbedtls_pk_get_type(&ctx);
+    if (r != MBEDTLS_PK_RSA && r != MBEDTLS_PK_RSA_ALT)
+    {
+        r = L8W8JWT_WRONG_KEY_TYPE;
+        goto exit;
+    }
+
     r = write_header_and_payload(&stringbuilder, params);
     if (r != L8W8JWT_SUCCESS)
     {
@@ -361,7 +370,167 @@ exit:
 
 static int jwt_ps(struct l8w8jwt_encoding_params* params) {}
 
-static int jwt_es(struct l8w8jwt_encoding_params* params) {}
+static int jwt_es(struct l8w8jwt_encoding_params* params)
+{
+    int r;
+    chillbuff stringbuilder;
+
+    r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
+    {
+        return L8W8JWT_OUT_OF_MEM;
+    }
+
+    if (params->secret_key_length > 4096)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
+    unsigned char key[4096];
+    memset(key, '\0', sizeof(key));
+    memcpy(key, params->secret_key, params->secret_key_length);
+
+    mbedtls_pk_context pk_ctx;
+    mbedtls_pk_init(&pk_ctx);
+    //mbedtls_pk_setup(&pk_ctx, &mbedtls_ecdsa_info);
+
+    mbedtls_ecdsa_context ctx;
+    mbedtls_ecdsa_init(&ctx);
+
+    mbedtls_entropy_context entropy;
+    mbedtls_entropy_init(&entropy);
+
+    mbedtls_ctr_drbg_context ctr_drbg;
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+
+    mbedtls_mpi sig_r, sig_s;
+    mbedtls_mpi_init(&sig_r);
+    mbedtls_mpi_init(&sig_s);
+
+    r = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char*)"l8w8jwt_mbedtls_pers.!#@", 24);
+    if (r != 0)
+    {
+        r = L8W8JWT_MBEDTLS_CTR_DRBG_SEED_FAILURE;
+        goto exit;
+    }
+
+    r = mbedtls_pk_parse_key(&pk_ctx, key, strlen((const char*)key) + 1, params->secret_key_pw, params->secret_key_pw_length);
+    if (r != 0)
+    {
+        r = L8W8JWT_KEY_PARSE_FAILURE;
+        goto exit;
+    }
+
+    r = mbedtls_pk_get_type(&pk_ctx);
+    if (r != MBEDTLS_PK_ECKEY && r != MBEDTLS_PK_ECKEY_DH && r != MBEDTLS_PK_ECDSA)
+    {
+        r = L8W8JWT_WRONG_KEY_TYPE;
+        goto exit;
+    }
+
+    r = mbedtls_ecdsa_from_keypair(&ctx, mbedtls_pk_ec(pk_ctx));
+    if (r != 0)
+    {
+        r = L8W8JWT_KEY_PARSE_FAILURE;
+        goto exit;
+    }
+
+    r = write_header_and_payload(&stringbuilder, params);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        goto exit;
+    }
+
+    mbedtls_md_type_t md_type;
+    mbedtls_md_info_t* md_info;
+
+    switch (params->alg)
+    {
+        case L8W8JWT_ALG_ES256:
+            md_type = MBEDTLS_MD_SHA256;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
+            break;
+        case L8W8JWT_ALG_ES384:
+            md_type = MBEDTLS_MD_SHA384;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha384_info);
+            break;
+        case L8W8JWT_ALG_ES512:
+            md_type = MBEDTLS_MD_SHA512;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha512_info);
+            break;
+        default:
+            r = L8W8JWT_INVALID_ARG;
+            goto exit;
+    }
+
+    unsigned char hash[MBEDTLS_MPI_MAX_SIZE];
+    memset(hash, '\0', sizeof(hash));
+
+    /* Hash the JWT header + payload. */
+    r = mbedtls_md(md_info, (const unsigned char*)stringbuilder.array, stringbuilder.length, hash);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_SHA2_FAILURE;
+        goto exit;
+    }
+
+    size_t signature_length;
+    unsigned char signature[MBEDTLS_ECDSA_MAX_LEN];
+    memset(signature, '\0', sizeof(signature));
+
+    /* Sign the hash using the provided private key. */
+    // r = mbedtls_ecdsa_write_signature(&ctx, md_type, hash, 0, signature, &signature_length, mbedtls_ctr_drbg_random, &ctr_drbg);
+
+    r = mbedtls_ecdsa_sign_det(&ctx.grp, &sig_r, &sig_s, &ctx.d, hash, 32, md_type);
+    unsigned char bb[64];
+    mbedtls_mpi_write_binary(&sig_r,bb,32);
+    mbedtls_mpi_write_binary(&sig_s,bb+32,32);
+    // r = mbedtls_pk_sign(&pk_ctx, md_type, hash, 0, signature, &signature_length, mbedtls_ctr_drbg_random, &ctr_drbg);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_SIGNATURE_FAILURE;
+        goto exit;
+    }
+
+    char* signature_string;
+    size_t signature_string_length;
+
+    /* Base64URL-encode the signature and append the result to the JWT header + payload to finalize the token. */
+    r = l8w8jwt_base64_encode(true, (uint8_t*)bb, 64, &signature_string, &signature_string_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_BASE64_FAILURE;
+        goto exit;
+    }
+
+    chillbuff_push_back(&stringbuilder, ".", 1);
+    chillbuff_push_back(&stringbuilder, signature_string, signature_string_length);
+
+    free(signature_string);
+
+    *(params->out) = malloc(stringbuilder.length + 1);
+    if (*(params->out) == NULL)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
+    }
+
+    *(params->out_length) = stringbuilder.length;
+    (*(params->out))[stringbuilder.length] = '\0';
+    memcpy(*(params->out), stringbuilder.array, stringbuilder.length);
+
+    r = L8W8JWT_SUCCESS;
+
+exit:
+    mbedtls_mpi_free(&sig_r);
+    mbedtls_mpi_free(&sig_s);
+    mbedtls_pk_free(&pk_ctx);
+    mbedtls_ecdsa_free(&ctx);
+    chillbuff_free(&stringbuilder);
+    mbedtls_entropy_free(&entropy);
+    mbedtls_ctr_drbg_free(&ctr_drbg);
+    return r;
+}
 
 int validate_encoding_params(struct l8w8jwt_encoding_params* params)
 {
