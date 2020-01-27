@@ -72,6 +72,11 @@ extern "C" {
  */
 #define L8W8JWT_BASE64_FAILURE 450
 
+/**
+ * When the <code>mbedtls_ctr_drbg_seed()</code> function fails...
+ */
+#define L8W8JWT_MBEDTLS_CTR_DRBG_SEED_FAILURE 500
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

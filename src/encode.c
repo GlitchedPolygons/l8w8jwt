@@ -28,6 +28,8 @@ extern "C" {
 #include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
 #include <mbedtls/rsa.h>
+#include <mbedtls/entropy.h>
+#include <mbedtls/ctr_drbg.h>
 
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
 {
@@ -245,6 +247,19 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     mbedtls_pk_context ctx;
     mbedtls_pk_init(&ctx);
 
+    mbedtls_entropy_context entropy;
+    mbedtls_entropy_init(&entropy);
+
+    mbedtls_ctr_drbg_context ctr_drbg;
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+
+    r = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char*)"l8w8jwt_mbedtls_pers.!#@", 24);
+    if (r != 0)
+    {
+        r = L8W8JWT_MBEDTLS_CTR_DRBG_SEED_FAILURE;
+        goto exit;
+    }
+
     r = mbedtls_pk_parse_key(&ctx, key, strlen((const char*)key) + 1, params->secret_key_pw, params->secret_key_pw_length);
     if (r != 0)
     {
@@ -300,7 +315,7 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     memset(signature, '\0', sizeof(signature));
 
     /* Sign the hash using the provided private key. */
-    r = mbedtls_pk_sign(&ctx, md_type, hash, md_length, signature, &signature_length, NULL, NULL);
+    r = mbedtls_pk_sign(&ctx, md_type, hash, md_length, signature, &signature_length, mbedtls_ctr_drbg_random, &ctr_drbg);
     if (r != L8W8JWT_SUCCESS)
     {
         r = L8W8JWT_SIGNATURE_FAILURE;
@@ -337,8 +352,10 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     r = L8W8JWT_SUCCESS;
 
 exit:
-    chillbuff_free(&stringbuilder);
     mbedtls_pk_free(&ctx);
+    chillbuff_free(&stringbuilder);
+    mbedtls_entropy_free(&entropy);
+    mbedtls_ctr_drbg_free(&ctr_drbg);
     return r;
 }
 

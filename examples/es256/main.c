@@ -19,9 +19,9 @@
 #include "l8w8jwt/encode.h"
 
 static const char ECDSA_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
-                                "MHcCAQEEIJX+87WJ7Gh19sohyZnhxZeXYNOcuGv4Q+8MLge4UkaZoAoGCCqGSM49\n"
-                                "AwEHoUQDQgAEikc5m6C2xtDWeeAeT18WElO37zvFOz8p4kAlhvgIHN23XIClNESg\n"
-                                "KVmLgSSq2asqiwdrU5YHbcHFkgdABM1SPA==\n"
+                                "MHcCAQEEIJqnreIHxjO4HO9IzqOxs4AxuEGj+9t67tiuXTOIAYl5oAoGCCqGSM49\n"
+                                "AwEHoUQDQgAEp5NHhytvanP0lccJTcNkKzakUDMKbbXlyHTBFFc36qzxRVJsXB86\n"
+                                "1RKs9Fe2hGNYqFLDq6UGa8IBwhSOg1BL4g==\n"
                                 "-----END EC PRIVATE KEY-----";
 
 int main(void)
