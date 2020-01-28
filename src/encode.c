@@ -231,15 +231,15 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     int r;
     chillbuff stringbuilder;
 
+    if (params->secret_key_length > 8192)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
     r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
     {
         return L8W8JWT_OUT_OF_MEM;
-    }
-
-    if (params->secret_key_length > 8192)
-    {
-        return L8W8JWT_INVALID_ARG;
     }
 
     unsigned char key[8192];
@@ -374,12 +374,15 @@ exit:
     return r;
 }
 
-static int jwt_ps(struct l8w8jwt_encoding_params* params) {}
-
-static int jwt_es(struct l8w8jwt_encoding_params* params)
+static int jwt_ps(struct l8w8jwt_encoding_params* params)
 {
     int r;
     chillbuff stringbuilder;
+
+    if (params->secret_key_length > 8192)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
 
     r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
@@ -387,9 +390,160 @@ static int jwt_es(struct l8w8jwt_encoding_params* params)
         return L8W8JWT_OUT_OF_MEM;
     }
 
+    unsigned char key[8192];
+    memset(key, '\0', sizeof(key));
+    memcpy(key, params->secret_key, params->secret_key_length);
+
+    mbedtls_pk_context pk;
+    mbedtls_pk_init(&pk);
+
+    mbedtls_entropy_context entropy;
+    mbedtls_entropy_init(&entropy);
+
+    mbedtls_ctr_drbg_context ctr_drbg;
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+
+    r = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char*)"l8w8jwt_mbedtls_pers.!#@", 24);
+    if (r != 0)
+    {
+        r = L8W8JWT_MBEDTLS_CTR_DRBG_SEED_FAILURE;
+        goto exit;
+    }
+
+    r = mbedtls_pk_parse_key(&pk, key, strlen((const char*)key) + 1, params->secret_key_pw, params->secret_key_pw_length);
+    if (r != 0)
+    {
+        r = L8W8JWT_KEY_PARSE_FAILURE;
+        goto exit;
+    }
+
+    r = mbedtls_pk_get_type(&pk);
+    if (r != MBEDTLS_PK_RSA && r != MBEDTLS_PK_RSA_ALT && r != MBEDTLS_PK_RSASSA_PSS)
+    {
+        r = L8W8JWT_WRONG_KEY_TYPE;
+        goto exit;
+    }
+
+    if (!mbedtls_pk_can_do(&pk, MBEDTLS_PK_RSA) && !mbedtls_pk_can_do(&pk, MBEDTLS_PK_RSASSA_PSS))
+    {
+        r = L8W8JWT_WRONG_KEY_TYPE;
+        goto exit;
+    }
+
+    if (mbedtls_pk_get_bitlen(&pk) < 2048) /* Weak keys are forbidden! */
+    {
+        r = L8W8JWT_WRONG_KEY_TYPE;
+        goto exit;
+    }
+
+    r = write_header_and_payload(&stringbuilder, params);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        goto exit;
+    }
+
+    size_t md_length;
+    mbedtls_md_type_t md_type;
+    mbedtls_md_info_t* md_info;
+
+    switch (params->alg)
+    {
+        case L8W8JWT_ALG_PS256:
+            md_length = 32;
+            md_type = MBEDTLS_MD_SHA256;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
+            break;
+        case L8W8JWT_ALG_PS384:
+            md_length = 48;
+            md_type = MBEDTLS_MD_SHA384;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha384_info);
+            break;
+        case L8W8JWT_ALG_PS512:
+            md_length = 64;
+            md_type = MBEDTLS_MD_SHA512;
+            md_info = (mbedtls_md_info_t*)(&mbedtls_sha512_info);
+            break;
+        default:
+            r = L8W8JWT_INVALID_ARG;
+            goto exit;
+    }
+
+    unsigned char hash[64];
+    memset(hash, '\0', sizeof(hash));
+
+    /* Hash the JWT header + payload. */
+    r = mbedtls_md(md_info, (const unsigned char*)stringbuilder.array, stringbuilder.length, hash);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_SHA2_FAILURE;
+        goto exit;
+    }
+
+    unsigned char signature[4096];
+    memset(signature, '\0', sizeof(signature));
+
+    mbedtls_rsa_context* rsa = mbedtls_pk_rsa(pk);
+    rsa->hash_id = md_type;
+    rsa->padding = MBEDTLS_RSA_PKCS_V21;
+
+    r = mbedtls_rsa_rsassa_pss_sign(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PRIVATE, md_type, md_length, hash, signature);
+    if (r != 0)
+    {
+        r = L8W8JWT_SIGNATURE_FAILURE;
+        goto exit;
+    }
+
+    char* signature_string;
+    size_t signature_string_length;
+
+    /* Base64URL-encode the signature and append the result to the JWT header + payload to finalize the token. */
+    r = l8w8jwt_base64_encode(true, (uint8_t*)signature, 512, &signature_string, &signature_string_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_BASE64_FAILURE;
+        goto exit;
+    }
+
+    chillbuff_push_back(&stringbuilder, ".", 1);
+    chillbuff_push_back(&stringbuilder, signature_string, signature_string_length);
+
+    free(signature_string);
+
+    *(params->out) = malloc(stringbuilder.length + 1);
+    if (*(params->out) == NULL)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
+    }
+
+    *(params->out_length) = stringbuilder.length;
+    (*(params->out))[stringbuilder.length] = '\0';
+    memcpy(*(params->out), stringbuilder.array, stringbuilder.length);
+
+    r = L8W8JWT_SUCCESS;
+
+exit:
+    mbedtls_pk_free(&pk);
+    chillbuff_free(&stringbuilder);
+    mbedtls_entropy_free(&entropy);
+    mbedtls_ctr_drbg_free(&ctr_drbg);
+    return r;
+}
+
+static int jwt_es(struct l8w8jwt_encoding_params* params)
+{
+    int r;
+    chillbuff stringbuilder;
+
     if (params->secret_key_length > 4096)
     {
         return L8W8JWT_INVALID_ARG;
+    }
+
+    r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
+    {
+        return L8W8JWT_OUT_OF_MEM;
     }
 
     unsigned char key[4096];

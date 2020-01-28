@@ -97,5 +97,5 @@ int main(void)
     printf("\nl8w8jwt_encode_es384 function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
 
     free(jwt);
-    return r;
+    return 0;
 }
