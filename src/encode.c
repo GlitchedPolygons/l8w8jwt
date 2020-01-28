@@ -430,7 +430,8 @@ static int jwt_ps(struct l8w8jwt_encoding_params* params)
         goto exit;
     }
 
-    if (mbedtls_pk_get_bitlen(&pk) < 2048) /* Weak keys are forbidden! */
+    const size_t pk_bits = mbedtls_pk_get_bitlen(&pk);
+    if (pk_bits < 2048) /* Weak keys are forbidden! */
     {
         r = L8W8JWT_WRONG_KEY_TYPE;
         goto exit;
@@ -497,7 +498,7 @@ static int jwt_ps(struct l8w8jwt_encoding_params* params)
     size_t signature_string_length;
 
     /* Base64URL-encode the signature and append the result to the JWT header + payload to finalize the token. */
-    r = l8w8jwt_base64_encode(true, (uint8_t*)signature, 512, &signature_string, &signature_string_length);
+    r = l8w8jwt_base64_encode(true, (uint8_t*)signature, pk_bits / 8, &signature_string, &signature_string_length);
     if (r != L8W8JWT_SUCCESS)
     {
         r = L8W8JWT_BASE64_FAILURE;
