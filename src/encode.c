@@ -270,7 +270,13 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     }
 
     r = mbedtls_pk_get_type(&ctx);
-    if (r != MBEDTLS_PK_RSA && r != MBEDTLS_PK_RSA_ALT)
+    if (r != MBEDTLS_PK_RSA && r != MBEDTLS_PK_RSA_ALT && !mbedtls_pk_can_do(&ctx, MBEDTLS_PK_RSA) && !mbedtls_pk_can_do(&ctx, MBEDTLS_PK_RSA_ALT))
+    {
+        r = L8W8JWT_WRONG_KEY_TYPE;
+        goto exit;
+    }
+
+    if (mbedtls_pk_get_bitlen(&ctx) < 2048) /* Weak keys are forbidden! */
     {
         r = L8W8JWT_WRONG_KEY_TYPE;
         goto exit;
@@ -308,7 +314,7 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
             goto exit;
     }
 
-    unsigned char hash[MBEDTLS_MPI_MAX_SIZE];
+    unsigned char hash[64];
     memset(hash, '\0', sizeof(hash));
 
     /* Hash the JWT header + payload. */
@@ -320,7 +326,7 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
     }
 
     size_t signature_length;
-    unsigned char signature[MBEDTLS_MPI_MAX_SIZE];
+    unsigned char signature[2048];
     memset(signature, '\0', sizeof(signature));
 
     /* Sign the hash using the provided private key. */
@@ -421,7 +427,7 @@ static int jwt_es(struct l8w8jwt_encoding_params* params)
     }
 
     r = mbedtls_pk_get_type(&pk);
-    if (r != MBEDTLS_PK_ECKEY && r != MBEDTLS_PK_ECKEY_DH && r != MBEDTLS_PK_ECDSA)
+    if (r != MBEDTLS_PK_ECKEY && r != MBEDTLS_PK_ECKEY_DH && r != MBEDTLS_PK_ECDSA && !mbedtls_pk_can_do(&pk, MBEDTLS_PK_ECDSA))
     {
         r = L8W8JWT_WRONG_KEY_TYPE;
         goto exit;
@@ -449,25 +455,35 @@ static int jwt_es(struct l8w8jwt_encoding_params* params)
     {
         case L8W8JWT_ALG_ES256:
             md_length = 32;
-            signature_length = 64;
             md_type = MBEDTLS_MD_SHA256;
             md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
+            signature_length = 64;
+            r = mbedtls_pk_get_bitlen(&pk) == 256;
             break;
         case L8W8JWT_ALG_ES384:
             md_length = 48;
-            signature_length = 96;
             md_type = MBEDTLS_MD_SHA384;
             md_info = (mbedtls_md_info_t*)(&mbedtls_sha384_info);
+            signature_length = 96;
+            r = mbedtls_pk_get_bitlen(&pk) == 384;
             break;
         case L8W8JWT_ALG_ES512:
             md_length = 64;
-            signature_length = 132;
             md_type = MBEDTLS_MD_SHA512;
             md_info = (mbedtls_md_info_t*)(&mbedtls_sha512_info);
+            signature_length = 132;
+            r = mbedtls_pk_get_bitlen(&pk) == 521;
             break;
         default:
             r = L8W8JWT_INVALID_ARG;
             goto exit;
+    }
+
+    /* Ensure that the passed key size is valid and compatible with the selected JWT alg. */
+    if (!r)
+    {
+        r = L8W8JWT_WRONG_KEY_TYPE;
+        goto exit;
     }
 
     unsigned char hash[64];
