@@ -158,7 +158,7 @@ struct l8w8jwt_decoding_params
 };
 
 // TODO: write the decode function!
-int l8w8jwt_decode();
+int l8w8jwt_decode(struct l8w8jwt_decoding_params* params);
 
 #ifdef __cplusplus
 } // extern "C"
