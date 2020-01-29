@@ -84,6 +84,16 @@ extern "C" {
  */
 #define L8W8JWT_MBEDTLS_CTR_DRBG_SEED_FAILURE 500
 
+/**
+ * This value is returned when the JWT's signature couldn't be verified using the provided key.
+ */
+#define L8W8JWT_SIGNATURE_VERIFICATION_FAILURE 600
+
+/**
+ * Returned if the token is invalid (format-wise).
+ */
+#define L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT 700
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

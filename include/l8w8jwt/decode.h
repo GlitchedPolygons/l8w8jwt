@@ -145,6 +145,16 @@ struct l8w8jwt_decoding_params
      * Length of the {@link #verification_key}
      */
     size_t verification_key_length;
+
+    /**
+     * Where the decoded claims should be written into (will be dereferenced + allocated, so make sure to pass a fresh pointer!).
+     */
+    struct l8w8jwt_claim** out;
+
+    /**
+     * Where to write the decoded claims count into. This will have the value of how many claims the decoded token contains.
+     */
+    size_t* out_length;
 };
 
 // TODO: write the decode function!
