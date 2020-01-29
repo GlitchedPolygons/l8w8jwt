@@ -137,7 +137,7 @@ struct l8w8jwt_decoding_params
 
     /**
      * The key to use for verifying the token's signature
-     * (e.g. if you chose HS256 as algorithm, this will be the HMAC secret WITHOUT NUL-terminator; for RS512 this will be the public RSA key WITH the NUL-terminator, PEM-formatted, etc...).
+     * (e.g. if you chose HS256 as algorithm, this will be the HMAC secret; for RS512 this will be the PEM-formatted public RSA key, etc...).
      */
     unsigned char* verification_key;
 
