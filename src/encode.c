@@ -32,6 +32,8 @@ extern "C" {
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/pk_internal.h>
 
+#define L8W8JWT_MAX_PEM_KEY_LENGTH 8192
+
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
 {
     int r;
@@ -228,10 +230,6 @@ static int jwt_hs(struct l8w8jwt_encoding_params* params)
 static int jwt_rs(struct l8w8jwt_encoding_params* params)
 {
     size_t key_length = params->secret_key_length;
-    if (key_length > 8192)
-    {
-        return L8W8JWT_INVALID_ARG;
-    }
 
     chillbuff stringbuilder;
     int r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
@@ -240,7 +238,7 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    unsigned char key[8192];
+    unsigned char key[L8W8JWT_MAX_PEM_KEY_LENGTH];
     memset(key, '\0', sizeof(key));
     memcpy(key, params->secret_key, key_length);
 
@@ -380,11 +378,6 @@ exit:
 static int jwt_ps(struct l8w8jwt_encoding_params* params)
 {
     size_t key_length = params->secret_key_length;
-    if (key_length > 8192)
-    {
-        return L8W8JWT_INVALID_ARG;
-    }
-
     chillbuff stringbuilder;
     int r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
@@ -392,7 +385,7 @@ static int jwt_ps(struct l8w8jwt_encoding_params* params)
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    unsigned char key[8192];
+    unsigned char key[L8W8JWT_MAX_PEM_KEY_LENGTH];
     memset(key, '\0', sizeof(key));
     memcpy(key, params->secret_key, params->secret_key_length);
 
@@ -540,12 +533,6 @@ exit:
 
 static int jwt_es(struct l8w8jwt_encoding_params* params)
 {
-    size_t key_length = params->secret_key_length;
-    if (key_length > 4096)
-    {
-        return L8W8JWT_INVALID_ARG;
-    }
-
     chillbuff stringbuilder;
     int r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
@@ -553,7 +540,8 @@ static int jwt_es(struct l8w8jwt_encoding_params* params)
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    unsigned char key[4096];
+    size_t key_length = params->secret_key_length;
+    unsigned char key[L8W8JWT_MAX_PEM_KEY_LENGTH];
     memset(key, '\0', sizeof(key));
     memcpy(key, params->secret_key, params->secret_key_length);
 
@@ -740,6 +728,20 @@ int validate_encoding_params(struct l8w8jwt_encoding_params* params)
     if (params->secret_key_length == 0)
     {
         return L8W8JWT_INVALID_ARG;
+    }
+
+    switch (params->alg)
+    {
+        case L8W8JWT_ALG_HS256:
+        case L8W8JWT_ALG_HS384:
+        case L8W8JWT_ALG_HS512:
+            break;
+
+        default:
+            if (params->secret_key_length > L8W8JWT_MAX_PEM_KEY_LENGTH)
+            {
+                return L8W8JWT_INVALID_ARG;
+            }
     }
 
     if ((params->additional_payload_claims != NULL && params->additional_payload_claims_count == 0))
