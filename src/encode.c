@@ -31,7 +31,6 @@ extern "C" {
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/pk_internal.h>
-#include <mbedtls/asn1write.h>
 
 static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
 {

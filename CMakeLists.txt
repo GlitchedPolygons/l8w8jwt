@@ -22,6 +22,7 @@ add_subdirectory(lib/mbedtls)
 set(l8w8jwt_headers
         lib/chillbuff/include/chillbuff.h
         include/l8w8jwt/retcodes.h
+        include/l8w8jwt/algs.h
         include/l8w8jwt/base64.h
         include/l8w8jwt/claim.h
         include/l8w8jwt/encode.h
@@ -32,6 +33,7 @@ set(l8w8jwt_sources
         src/base64.c
         src/claim.c
         src/encode.c
+        src/decode.c
         )
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})

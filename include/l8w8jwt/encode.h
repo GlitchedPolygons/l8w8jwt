@@ -30,68 +30,9 @@ extern "C" {
 #include <time.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "l8w8jwt/algs.h"
 #include "l8w8jwt/claim.h"
 #include "l8w8jwt/retcodes.h"
-
-/**
- * HMAC-SHA256 signing algorithm.
- */
-#define L8W8JWT_ALG_HS256 0
-
-/**
- * HMAC-SHA384 signing algorithm.
- */
-#define L8W8JWT_ALG_HS384 1
-
-/**
- * HMAC-SHA512 signing algorithm.
- */
-#define L8W8JWT_ALG_HS512 2
-
-/**
- * RSASSA-PKCS1-v1_5-SHA256 signing algorithm.
- */
-#define L8W8JWT_ALG_RS256 3
-
-/**
- * RSASSA-PKCS1-v1_5-SHA384 signing algorithm.
- */
-#define L8W8JWT_ALG_RS384 4
-
-/**
- * RSASSA-PKCS1-v1_5-SHA512 signing algorithm.
- */
-#define L8W8JWT_ALG_RS512 5
-
-/**
- * RSASSA-PSS MGF1 SHA-256 signing algorithm.
- */
-#define L8W8JWT_ALG_PS256 6
-
-/**
- * RSASSA-PSS MGF1 SHA-384 signing algorithm.
- */
-#define L8W8JWT_ALG_PS384 7
-
-/**
- * RSASSA-PSS MGF1 SHA-512 signing algorithm.
- */
-#define L8W8JWT_ALG_PS512 8
-
-/**
- * ECDSA + P-256 + SHA256 signing algorithm.
- */
-#define L8W8JWT_ALG_ES256 9
-
-/**
- * ECDSA + P-384 + SHA384 signing algorithm.
- */
-#define L8W8JWT_ALG_ES384 10
-
-/**
- * ECDSA + P-521 + SHA512 signing algorithm.
- */
-#define L8W8JWT_ALG_ES512 11
 
 /**
  * Struct containing the parameters to use for creating a JWT with l8w8jwt.
@@ -105,7 +46,7 @@ struct l8w8jwt_encoding_params
     int alg;
 
     /**
-     * [OPTIONAL] The issue claim (who issued the JWT?). Can be omitted by setting this to <code>NULL</code>.
+     * [OPTIONAL] The issuer claim (who issued the JWT?). Can be omitted by setting this to <code>NULL</code>.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.1
      */
     char* iss;
