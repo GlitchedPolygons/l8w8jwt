@@ -94,6 +94,6 @@ int main(void)
     int r = encode(&params);
     printf("\nl8w8jwt_encode_es256 function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
 
-    free(jwt);
+    free(jwt); /* Never forget to free the jwt string! */
     return 0;
 }
