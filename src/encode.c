@@ -227,15 +227,14 @@ static int jwt_hs(struct l8w8jwt_encoding_params* params)
 
 static int jwt_rs(struct l8w8jwt_encoding_params* params)
 {
-    int r;
-    chillbuff stringbuilder;
-
-    if (params->secret_key_length > 8192)
+    size_t key_length = params->secret_key_length;
+    if (key_length > 8192)
     {
         return L8W8JWT_INVALID_ARG;
     }
 
-    r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    chillbuff stringbuilder;
+    int r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
     {
         return L8W8JWT_OUT_OF_MEM;
@@ -243,7 +242,12 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
 
     unsigned char key[8192];
     memset(key, '\0', sizeof(key));
-    memcpy(key, params->secret_key, params->secret_key_length);
+    memcpy(key, params->secret_key, key_length);
+
+    if (key[key_length - 1] != '\0')
+    {
+        key_length++;
+    }
 
     mbedtls_pk_context ctx;
     mbedtls_pk_init(&ctx);
@@ -261,7 +265,7 @@ static int jwt_rs(struct l8w8jwt_encoding_params* params)
         goto exit;
     }
 
-    r = mbedtls_pk_parse_key(&ctx, key, strlen((const char*)key) + 1, params->secret_key_pw, params->secret_key_pw_length);
+    r = mbedtls_pk_parse_key(&ctx, key, key_length, params->secret_key_pw, params->secret_key_pw_length);
     if (r != 0)
     {
         r = L8W8JWT_KEY_PARSE_FAILURE;
@@ -375,15 +379,14 @@ exit:
 
 static int jwt_ps(struct l8w8jwt_encoding_params* params)
 {
-    int r;
-    chillbuff stringbuilder;
-
-    if (params->secret_key_length > 8192)
+    size_t key_length = params->secret_key_length;
+    if (key_length > 8192)
     {
         return L8W8JWT_INVALID_ARG;
     }
 
-    r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    chillbuff stringbuilder;
+    int r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
     {
         return L8W8JWT_OUT_OF_MEM;
@@ -392,6 +395,11 @@ static int jwt_ps(struct l8w8jwt_encoding_params* params)
     unsigned char key[8192];
     memset(key, '\0', sizeof(key));
     memcpy(key, params->secret_key, params->secret_key_length);
+
+    if (key[key_length - 1] != '\0')
+    {
+        key_length++;
+    }
 
     mbedtls_pk_context pk;
     mbedtls_pk_init(&pk);
@@ -409,7 +417,7 @@ static int jwt_ps(struct l8w8jwt_encoding_params* params)
         goto exit;
     }
 
-    r = mbedtls_pk_parse_key(&pk, key, strlen((const char*)key) + 1, params->secret_key_pw, params->secret_key_pw_length);
+    r = mbedtls_pk_parse_key(&pk, key, key_length, params->secret_key_pw, params->secret_key_pw_length);
     if (r != 0)
     {
         r = L8W8JWT_KEY_PARSE_FAILURE;
@@ -532,15 +540,14 @@ exit:
 
 static int jwt_es(struct l8w8jwt_encoding_params* params)
 {
-    int r;
-    chillbuff stringbuilder;
-
-    if (params->secret_key_length > 4096)
+    size_t key_length = params->secret_key_length;
+    if (key_length > 4096)
     {
         return L8W8JWT_INVALID_ARG;
     }
 
-    r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
+    chillbuff stringbuilder;
+    int r = chillbuff_init(&stringbuilder, 1024, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
     {
         return L8W8JWT_OUT_OF_MEM;
@@ -549,6 +556,11 @@ static int jwt_es(struct l8w8jwt_encoding_params* params)
     unsigned char key[4096];
     memset(key, '\0', sizeof(key));
     memcpy(key, params->secret_key, params->secret_key_length);
+
+    if (key[key_length - 1] != '\0')
+    {
+        key_length++;
+    }
 
     mbedtls_pk_context pk;
     mbedtls_pk_init(&pk);
@@ -573,7 +585,7 @@ static int jwt_es(struct l8w8jwt_encoding_params* params)
         goto exit;
     }
 
-    r = mbedtls_pk_parse_key(&pk, key, strlen((const char*)key) + 1, params->secret_key_pw, params->secret_key_pw_length);
+    r = mbedtls_pk_parse_key(&pk, key, key_length, params->secret_key_pw, params->secret_key_pw_length);
     if (r != 0)
     {
         r = L8W8JWT_KEY_PARSE_FAILURE;
