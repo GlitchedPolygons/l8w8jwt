@@ -17,7 +17,7 @@
 /**
  *  @file base64.h
  *  @author Raphael Beck
- *  @brief Base-64 encode and decode strings/bytes. <p>
+ *  @brief Base-64 l8w8jwt_encode and decode strings/bytes. <p>
  *  @warning The caller is responsible for freeing the returned buffers! <p>
  *  Pass <code>true</code> as first parameter if you want to use base64url encoding instead of base64.
  *  @see https://en.wikipedia.org/wiki/Base64#URL_applications
@@ -43,8 +43,8 @@ extern "C" {
  *  @note The NUL terminator is NOT included in the <code>out_length</code>.
  *  @note DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!
  *
- *  @param url base64url encode instead of base64?
- *  @param data The data (array of bytes) to base-64 encode.
+ *  @param url base64url l8w8jwt_encode instead of base64?
+ *  @param data The data (array of bytes) to base-64 l8w8jwt_encode.
  *  @param data_length The length of the input data array (in case of a C string: array size - 1 in order to omit the NUL terminator).
  *  @param out Output where the base-64 encoded string should be written into (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!).
  *  @param out_length Pointer to a <code>size_t</code> variable containing the length of the output buffer minus the NUL terminator.

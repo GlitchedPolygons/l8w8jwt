@@ -95,7 +95,7 @@ int main(void)
         .out_length = &jwt_length
     };
 
-    int r = encode(&params);
+    int r = l8w8jwt_encode(&params);
     printf("\nl8w8jwt_encode_es512 function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
 
     free(jwt);

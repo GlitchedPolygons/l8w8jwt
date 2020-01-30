@@ -69,7 +69,7 @@ $(function() {
 <div class="title">encode.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="encode_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">   Copyright 2020 Raphael Beck</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
@@ -146,9 +146,9 @@ $(function() {
 <div class="line"><a name="l00173"></a><span class="lineno"><a class="line" href="structl8w8jwt__encoding__params.html#a06c545ea2dd26dbcd3a8a7182c85b745">  173</a></span>&#160;    <span class="keywordtype">size_t</span>* <a class="code" href="structl8w8jwt__encoding__params.html#a06c545ea2dd26dbcd3a8a7182c85b745">out_length</a>;</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;};</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="keywordtype">int</span> <a class="code" href="encode_8h.html#a1c457f67187473a7bcdeae1cfc80a24e">validate_encoding_params</a>(<span class="keyword">struct</span> <a class="code" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a>* params);</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="keywordtype">int</span> l8w8jwt_validate_encoding_params(<span class="keyword">struct</span> <a class="code" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a>* params);</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="keywordtype">int</span> <a class="code" href="encode_8h.html#a005bb80df95542d0e40938614951056a">encode</a>(<span class="keyword">struct</span> <a class="code" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a>* params);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="keywordtype">int</span> l8w8jwt_encode(<span class="keyword">struct</span> <a class="code" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a>* params);</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;} <span class="comment">// extern &quot;C&quot;</span></div>
@@ -176,11 +176,9 @@ $(function() {
 <div class="ttc" id="astructl8w8jwt__encoding__params_html_a5bf39d6b8874a581a6787b9784403c44"><div class="ttname"><a href="structl8w8jwt__encoding__params.html#a5bf39d6b8874a581a6787b9784403c44">l8w8jwt_encoding_params::alg</a></div><div class="ttdeci">int alg</div><div class="ttdef"><b>Definition:</b> encode.h:46</div></div>
 <div class="ttc" id="astructl8w8jwt__encoding__params_html_ac3e119df4134e8401a7a5f6cba382eb8"><div class="ttname"><a href="structl8w8jwt__encoding__params.html#ac3e119df4134e8401a7a5f6cba382eb8">l8w8jwt_encoding_params::iss</a></div><div class="ttdeci">char * iss</div><div class="ttdef"><b>Definition:</b> encode.h:52</div></div>
 <div class="ttc" id="aclaim_8h_html"><div class="ttname"><a href="claim_8h.html">claim.h</a></div><div class="ttdoc">JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt-claims.</div></div>
-<div class="ttc" id="aencode_8h_html_a1c457f67187473a7bcdeae1cfc80a24e"><div class="ttname"><a href="encode_8h.html#a1c457f67187473a7bcdeae1cfc80a24e">validate_encoding_params</a></div><div class="ttdeci">int validate_encoding_params(struct l8w8jwt_encoding_params *params)</div></div>
 <div class="ttc" id="astructl8w8jwt__encoding__params_html_a8b8679a552ccdcaab45582bd5247ae41"><div class="ttname"><a href="structl8w8jwt__encoding__params.html#a8b8679a552ccdcaab45582bd5247ae41">l8w8jwt_encoding_params::nbf</a></div><div class="ttdeci">time_t nbf</div><div class="ttdef"><b>Definition:</b> encode.h:107</div></div>
 <div class="ttc" id="astructl8w8jwt__encoding__params_html_a376070b013b0157e49c9286e889fdf1a"><div class="ttname"><a href="structl8w8jwt__encoding__params.html#a376070b013b0157e49c9286e889fdf1a">l8w8jwt_encoding_params::sub</a></div><div class="ttdeci">char * sub</div><div class="ttdef"><b>Definition:</b> encode.h:63</div></div>
 <div class="ttc" id="aretcodes_8h_html"><div class="ttname"><a href="retcodes_8h.html">retcodes.h</a></div><div class="ttdoc">Macros for possible integer codes returned by the various l8w8jwt functions.</div></div>
-<div class="ttc" id="aencode_8h_html_a005bb80df95542d0e40938614951056a"><div class="ttname"><a href="encode_8h.html#a005bb80df95542d0e40938614951056a">encode</a></div><div class="ttdeci">int encode(struct l8w8jwt_encoding_params *params)</div></div>
 <div class="ttc" id="astructl8w8jwt__encoding__params_html_a76e20b9285d52accb63ac5fc1dc924f7"><div class="ttname"><a href="structl8w8jwt__encoding__params.html#a76e20b9285d52accb63ac5fc1dc924f7">l8w8jwt_encoding_params::secret_key_length</a></div><div class="ttdeci">size_t secret_key_length</div><div class="ttdef"><b>Definition:</b> encode.h:150</div></div>
 <div class="ttc" id="astructl8w8jwt__encoding__params_html_aff53956be385bd146899b80c44ae9484"><div class="ttname"><a href="structl8w8jwt__encoding__params.html#aff53956be385bd146899b80c44ae9484">l8w8jwt_encoding_params::out</a></div><div class="ttdeci">char ** out</div><div class="ttdef"><b>Definition:</b> encode.h:168</div></div>
 <div class="ttc" id="astructl8w8jwt__encoding__params_html_a0338f8a3e6b0a267dfcae8e2081811ab"><div class="ttname"><a href="structl8w8jwt__encoding__params.html#a0338f8a3e6b0a267dfcae8e2081811ab">l8w8jwt_encoding_params::jti_length</a></div><div class="ttdeci">size_t jti_length</div><div class="ttdef"><b>Definition:</b> encode.h:91</div></div>

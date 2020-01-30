@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>l8w8jwt: include/l8w8jwt/encode.h File Reference</title>
+<title>l8w8jwt: include/l8w8jwt/l8w8jwt_encode.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,11 +69,11 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">encode.h File Reference</div>  </div>
+<div class="title">l8w8jwt_encode.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Core encode function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing.  
+<p>Core l8w8jwt_encode function for l8w8jwt. Use this to l8w8jwt_encode a JWT header + payload WITHOUT signing.
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
@@ -82,11 +82,11 @@ $(function() {
 <code>#include &quot;<a class="el" href="claim_8h_source.html">l8w8jwt/claim.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="retcodes_8h_source.html">l8w8jwt/retcodes.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for encode.h:</div>
+Include dependency graph for l8w8jwt_encode.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="encode_8h__incl.png" border="0" usemap="#include_2l8w8jwt_2encode_8h" alt=""/></div>
 <map name="include_2l8w8jwt_2encode_8h" id="include_2l8w8jwt_2encode_8h">
-<area shape="rect" title="Core encode function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="191,5,358,32"/>
+<area shape="rect" title="Core encode function for l8w8jwt. Use this to l8w8jwt_encode a JWT header + payload WITHOUT signing." alt="" coords="191,5,358,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,64,107"/>
 <area shape="rect" title=" " alt="" coords="89,80,157,107"/>
 <area shape="rect" title=" " alt="" coords="181,80,256,107"/>
@@ -107,23 +107,23 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1c457f67187473a7bcdeae1cfc80a24e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a1c457f67187473a7bcdeae1cfc80a24e">validate_encoding_params</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
+<tr class="memitem:a1c457f67187473a7bcdeae1cfc80a24e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a1c457f67187473a7bcdeae1cfc80a24e">l8w8jwt_validate_encoding_params</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
 <tr class="separator:a1c457f67187473a7bcdeae1cfc80a24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a005bb80df95542d0e40938614951056a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a005bb80df95542d0e40938614951056a">encode</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
+<tr class="memitem:a005bb80df95542d0e40938614951056a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a005bb80df95542d0e40938614951056a">l8w8jwt_encode</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
 <tr class="separator:a005bb80df95542d0e40938614951056a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Core encode function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing. </p>
+<div class="textblock"><p>Core l8w8jwt_encode function for l8w8jwt. Use this to l8w8jwt_encode a JWT header + payload WITHOUT signing. </p>
 <dl class="section author"><dt>Author</dt><dd>Raphael Beck </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a005bb80df95542d0e40938614951056a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a005bb80df95542d0e40938614951056a">&#9670;&nbsp;</a></span>encode()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a005bb80df95542d0e40938614951056a">&#9670;&nbsp;</a></span>l8w8jwt_encode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int encode </td>
+          <td class="memname">int l8w8jwt_encode </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>
@@ -145,13 +145,13 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a1c457f67187473a7bcdeae1cfc80a24e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c457f67187473a7bcdeae1cfc80a24e">&#9670;&nbsp;</a></span>validate_encoding_params()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c457f67187473a7bcdeae1cfc80a24e">&#9670;&nbsp;</a></span>l8w8jwt_validate_encoding_params()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int validate_encoding_params </td>
+          <td class="memname">int l8w8jwt_validate_encoding_params </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>

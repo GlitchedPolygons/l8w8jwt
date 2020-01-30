@@ -15,9 +15,9 @@
 */
 
 /**
- *  @file encode.h
+ *  @file l8w8jwt_encode.h
  *  @author Raphael Beck
- *  @brief Core encode function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing.
+ *  @brief Core encode function for l8w8jwt. Use this to l8w8jwt_encode a JWT header + payload WITHOUT signing.
  */
 
 #ifndef L8W8JWT_ENCODE_H
@@ -178,7 +178,7 @@ struct l8w8jwt_encoding_params
  * @param params The l8w8jwt_encoding_params to validate.
  * @return Return code as defined in retcodes.h
  */
-int validate_encoding_params(struct l8w8jwt_encoding_params* params);
+int l8w8jwt_validate_encoding_params(struct l8w8jwt_encoding_params* params);
 
 /**
  * Creates, signs and encodes a Json-Web-Token. <p>
@@ -187,7 +187,7 @@ int validate_encoding_params(struct l8w8jwt_encoding_params* params);
  * @return Return code as defined in retcodes.h
  * @see l8w8jwt_encoding_params
  */
-int encode(struct l8w8jwt_encoding_params* params);
+int l8w8jwt_encode(struct l8w8jwt_encoding_params* params);
 
 #ifdef __cplusplus
 } // extern "C"

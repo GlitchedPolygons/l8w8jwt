@@ -523,7 +523,7 @@ static int write_token(chillbuff* stringbuilder, struct l8w8jwt_encoding_params*
     return L8W8JWT_SUCCESS;
 }
 
-int validate_encoding_params(struct l8w8jwt_encoding_params* params)
+int l8w8jwt_validate_encoding_params(struct l8w8jwt_encoding_params* params)
 {
     if (params == NULL || params->secret_key == NULL || params->out == NULL || params->out_length == NULL)
     {
@@ -548,12 +548,12 @@ int validate_encoding_params(struct l8w8jwt_encoding_params* params)
     return L8W8JWT_SUCCESS;
 }
 
-int encode(struct l8w8jwt_encoding_params* params)
+int l8w8jwt_encode(struct l8w8jwt_encoding_params* params)
 {
     int r;
     chillbuff stringbuilder;
 
-    r = validate_encoding_params(params);
+    r = l8w8jwt_validate_encoding_params(params);
     if (r != L8W8JWT_SUCCESS)
     {
         return r;

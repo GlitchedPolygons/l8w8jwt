@@ -1051,7 +1051,7 @@ HHC_LOCATION           =
 GENERATE_CHI           = NO
 
 # If the GENERATE_HTMLHELP tag is set to YES, the CHM_INDEX_ENCODING
-# is used to encode HtmlHelp index (hhk), content (hhc) and project file
+# is used to l8w8jwt_encode HtmlHelp index (hhk), content (hhc) and project file
 # content.
 
 CHM_INDEX_ENCODING     =

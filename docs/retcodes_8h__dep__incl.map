@@ -1,5 +1,5 @@
 <map id="include/l8w8jwt/retcodes.h" name="include/l8w8jwt/retcodes.h">
 <area shape="rect" id="node1" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="96,5,271,32"/>
 <area shape="rect" id="node2" href="$decode_8h.html" title="Core decode function for l8w8jwt. Use this to decode and verify a JWT&#39;s signature!" alt="" coords="5,80,172,107"/>
-<area shape="rect" id="node3" href="$encode_8h.html" title="Core encode function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="196,80,363,107"/>
+<area shape="rect" id="node3" href="$encode_8h_source.html" title=" " alt="" coords="196,80,363,107"/>
 </map>

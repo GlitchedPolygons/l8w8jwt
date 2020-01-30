@@ -1,5 +1,5 @@
 <map id="include/l8w8jwt/encode.h" name="include/l8w8jwt/encode.h">
-<area shape="rect" id="node1" title="Core encode function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="191,5,358,32"/>
+<area shape="rect" id="node1" title="Core encode function for l8w8jwt. Use this to l8w8jwt_encode a JWT header + payload WITHOUT signing." alt="" coords="191,5,358,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,80,64,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="89,80,157,107"/>
 <area shape="rect" id="node4" title=" " alt="" coords="181,80,256,107"/>

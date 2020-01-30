@@ -223,6 +223,13 @@ struct l8w8jwt_decoding_params
 };
 
 /**
+ * Validates a set of l8w8jwt_decoding_params.
+ * @param params The l8w8jwt_decoding_params to validate.
+ * @return Return code as defined in retcodes.h
+ */
+int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
+
+/**
  * Decode (and validate) a JWT using specific parameters. <p>
  * The resulting l8w8jwt_validation_result written into the passed "out" pointer
  * contains validation failure flags (see the {@link #l8w8jwt_validation_result} enum docs for more details). <p>

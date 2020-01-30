@@ -33,6 +33,23 @@ extern "C" {
 #include <mbedtls/pk_internal.h>
 #include <mbedtls/asn1write.h>
 
+#define L8W8JWT_MAX_KEY_SIZE 8192
+
+int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
+{
+    if (params == NULL || params->jwt == NULL || params->verification_key == NULL || (params->out_claims != NULL && params->out_claims_length == NULL))
+    {
+        return L8W8JWT_NULL_ARG;
+    }
+
+    if (params->jwt_length == 0 || params->verification_key_length == 0 || params->verification_key_length > L8W8JWT_MAX_KEY_SIZE)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
+    return L8W8JWT_SUCCESS;
+}
+
 int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out)
 {
     // TODO: write decode function!
