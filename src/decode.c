@@ -52,7 +52,44 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
 
 int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out)
 {
-    // TODO: write decode function!
+    enum l8w8jwt_validation_result validation_res = L8W8JWT_VALID;
+
+    int r = l8w8jwt_validate_decoding_params(params);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        return r;
+    }
+
+    if (out == NULL)
+    {
+        return L8W8JWT_NULL_ARG;
+    }
+
+    char* header = NULL;
+    size_t header_length = 0;
+
+    char* payload = NULL;
+    size_t payload_length = 0;
+
+    char* signature = NULL;
+    size_t signature_length = 0;
+
+    header = params->jwt;
+
+    payload = strchr(header, '.');
+    if (payload == NULL)
+    {
+        return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+    }
+
+    header_length = payload - header;
+
+    signature = strchr(++payload, '.');
+    if (signature != NULL)
+    {
+        payload_length = signature - payload;
+    }
+
     return 0;
 }
 

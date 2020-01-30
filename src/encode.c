@@ -571,10 +571,13 @@ int l8w8jwt_encode(struct l8w8jwt_encoding_params* params)
         goto exit;
     }
 
-    r = write_signature(&stringbuilder, params);
-    if (r != L8W8JWT_SUCCESS)
+    if (params->alg != -1)
     {
-        goto exit;
+        r = write_signature(&stringbuilder, params);
+        if (r != L8W8JWT_SUCCESS)
+        {
+            goto exit;
+        }
     }
 
     r = write_token(&stringbuilder, params);

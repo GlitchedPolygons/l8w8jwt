@@ -22,9 +22,6 @@ ColumnLimit: 500
 # Translation comments are also excluded.
 CommentPragmas: "^!|^:"
 
-# http://www.stroustrup.com/bs_faq2.html#whitespace
-PointerBindsToType: true
-
 # We use template< without space.
 SpaceAfterTemplateKeyword: false
 
@@ -61,7 +58,7 @@ NamespaceIndentation: None
 # The coding style does not specify the following, but this is what gives
 # results closest to the existing code.
 AlignAfterOpenBracket: DontAlign
-AlwaysBreakTemplateDeclarations: true
+AlwaysBreakTemplateDeclarations: Yes
 
 # Ideally we should also allow less short function in a single line, but
 # clang-format does not handle that.
@@ -80,3 +77,7 @@ ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCH
 BreakConstructorInitializers: BeforeColon
 
 IndentCaseLabels: true
+
+# http://www.stroustrup.com/bs_faq2.html#whitespace
+PointerAlignment: Left
+PointerBindsToType: true
