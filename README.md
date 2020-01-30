@@ -3,5 +3,7 @@
 [![License Shield](https://img.shields.io/badge/license-Apache--2.0-orange)](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/LICENSE)
 [![API](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/l8w8jwt)
 
+[![Icon](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/icon.png?raw=true)](https://jwt.io/)
+
 ### `l8w8jwt` (say "lightweight jawt") is a minimal, OpenSSL-less and super lightweight JWT library written in C. 
 Its only significant dependency is [ARM's open-source MbedTLS library](https://github.com/ARMmbed/mbedtls).
