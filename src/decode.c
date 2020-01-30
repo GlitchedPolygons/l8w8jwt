@@ -33,6 +33,12 @@ extern "C" {
 #include <mbedtls/pk_internal.h>
 #include <mbedtls/asn1write.h>
 
+int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out)
+{
+    // TODO: write decode function!
+    return 0;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

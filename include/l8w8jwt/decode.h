@@ -35,10 +35,71 @@ extern "C" {
 #include "l8w8jwt/retcodes.h"
 
 /**
+ * Enum containing the validation result flags.
+ */
+enum l8w8jwt_validation_result
+{
+    /**
+     * The JWT is valid (according to the passed validation parameters).
+     */
+    L8W8JWT_VALID = 0,
+
+    /**
+     * The issuer claim is invalid.
+     */
+    L8W8JWT_ISS_FAILURE = 1 << 0,
+
+    /**
+     * The subject claim is invalid.
+     */
+    L8W8JWT_SUB_FAILURE = 1 << 1,
+
+    /**
+     * The audience claim is invalid.
+     */
+    L8W8JWT_AUD_FAILURE = 1 << 2,
+
+    /**
+     * The JWT ID claim is invalid.
+     */
+    L8W8JWT_JTI_FAILURE = 1 << 3,
+
+    /**
+     * The token is expired.
+     */
+    L8W8JWT_EXP_FAILURE = 1 << 4,
+
+    /**
+     * The token is not yet valid.
+     */
+    L8W8JWT_NBF_FAILURE = 1 << 5,
+
+    /**
+     * The token was not issued yet, are you from the future?
+     */
+    L8W8JWT_IAT_FAILURE = 1 << 6,
+
+    /**
+     * The token was potentially tampered with: its signature couldn't be verified.
+     */
+    L8w8JWT_SIGNATURE_FAILURE = 1 << 7
+};
+
+/**
  * Struct containing the parameters to use for decoding and validating a JWT.
  */
 struct l8w8jwt_decoding_params
 {
+    /**
+     * The token to decode and validate.
+     */
+    char* jwt;
+
+    /**
+     * The jwt string length.
+     */
+    size_t jwt_length;
+
     /**
      * The signature algorithm ID. <p>
      * [0;2] = HS256/384/512 | [3;5] = RS256/384/512 | [6;8] = PS256/384/512 | [9;11] = ES256/384/512 <p>
@@ -147,18 +208,30 @@ struct l8w8jwt_decoding_params
     size_t verification_key_length;
 
     /**
-     * Where the decoded claims should be written into (will be dereferenced + allocated, so make sure to pass a fresh pointer!).
+     * [OPTIONAL] Where the decoded claims (header + payload claims together) should be written into. <p>
+     * This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer! <p>
+     * If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...). <p>
+     * @note If you decide to keep the claims in this out parameter, REMEMBER to call {@link #l8w8jwt_free_claims()} on it once you're done using them!
      */
-    struct l8w8jwt_claim** out;
+    struct l8w8jwt_claim** out_claims;
 
     /**
-     * Where to write the decoded claims count into. This will have the value of how many claims the decoded token contains.
+     * Where to write the decoded claims count into. <p>
+     * This will receive the value of how many claims were written into "out_claims" (0 if you decided to set "out_claims" to <code>NULL</code>).
      */
-    size_t* out_length;
+    size_t* out_claims_length;
 };
 
-// TODO: write the decode function!
-int l8w8jwt_decode(struct l8w8jwt_decoding_params* params);
+/**
+ * Decode (and validate) a JWT using specific parameters. <p>
+ * The resulting l8w8jwt_validation_result written into the passed "out" pointer
+ * contains validation failure flags (see the {@link #l8w8jwt_validation_result} enum docs for more details). <p>
+ * If validation succeeds, the l8w8jwt_validation_result receives the value 0 (enum value <code>L8W8JWT_VALID</code>).
+ * @param params The parameters to use for decoding and validating the token.
+ * @param out Where to write the validation result flags into (0 means success).
+ * @return Return code as defined in retcodes.h
+ */
+int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out);
 
 #ifdef __cplusplus
 } // extern "C"
