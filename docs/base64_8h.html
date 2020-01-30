@@ -76,14 +76,16 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for base64.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="base64_8h__incl.png" border="0" usemap="#include_2l8w8jwt_2base64_8h" alt=""/></div>
 <map name="include_2l8w8jwt_2base64_8h" id="include_2l8w8jwt_2base64_8h">
-<area shape="rect" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="5,5,172,32"/>
-<area shape="rect" title=" " alt="" coords="12,80,77,107"/>
-<area shape="rect" title=" " alt="" coords="101,80,167,107"/>
+<area shape="rect" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="44,5,211,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,71,107"/>
+<area shape="rect" title=" " alt="" coords="95,80,160,107"/>
+<area shape="rect" title=" " alt="" coords="185,80,259,107"/>
 </map>
 </div>
 </div>
@@ -91,25 +93,32 @@ Include dependency graph for base64.h:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9f434e6f3de7fe53015d21aefb96da04"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="base64_8h.html#a9f434e6f3de7fe53015d21aefb96da04">l8w8jwt_base64_encode</a> (const uint8_t *data, size_t data_length, size_t *out_length)</td></tr>
-<tr class="separator:a9f434e6f3de7fe53015d21aefb96da04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e39934301f9f0592d3750908cfdea58"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="base64_8h.html#a2e39934301f9f0592d3750908cfdea58">l8w8jwt_base64_decode</a> (const char *data, size_t data_length, size_t *out_length)</td></tr>
-<tr class="separator:a2e39934301f9f0592d3750908cfdea58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad50ceff28343c84f5d198fad80f5265a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="base64_8h.html#ad50ceff28343c84f5d198fad80f5265a">l8w8jwt_base64_encode</a> (bool url, const uint8_t *data, size_t data_length, char **out, size_t *out_length)</td></tr>
+<tr class="separator:ad50ceff28343c84f5d198fad80f5265a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34d3dabbcd8d901a0da1405029728c39"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="base64_8h.html#a34d3dabbcd8d901a0da1405029728c39">l8w8jwt_base64_decode</a> (bool url, const char *data, size_t data_length, uint8_t **out, size_t *out_length)</td></tr>
+<tr class="separator:a34d3dabbcd8d901a0da1405029728c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base-64 encode and decode strings/bytes. </p>
 <dl class="section author"><dt>Author</dt><dd>Raphael Beck </dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>The caller is responsible for freeing the returned buffers! </dd></dl>
+<p>Pass <code>true</code> as first parameter if you want to use base64url encoding instead of base64. </p><dl class="section see"><dt>See also</dt><dd><a href="https://en.wikipedia.org/wiki/Base64#URL_applications">https://en.wikipedia.org/wiki/Base64#URL_applications</a> </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a2e39934301f9f0592d3750908cfdea58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e39934301f9f0592d3750908cfdea58">&#9670;&nbsp;</a></span>l8w8jwt_base64_decode()</h2>
+<a id="a34d3dabbcd8d901a0da1405029728c39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34d3dabbcd8d901a0da1405029728c39">&#9670;&nbsp;</a></span>l8w8jwt_base64_decode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t* l8w8jwt_base64_decode </td>
+          <td class="memname">int l8w8jwt_base64_decode </td>
           <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>url</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
@@ -118,6 +127,12 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>data_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t **&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -133,32 +148,40 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Decodes a base-64 encoded string to an array of bytes. </p>
-<dl class="section note"><dt>Note</dt><dd>The returned bytes buffer is nul terminated to allow usage as a C string. </dd>
+<dl class="section note"><dt>Note</dt><dd>The returned bytes buffer is NUL-terminated to allow usage as a C string. </dd>
 <dd>
-The nul terminator is NOT included in the <code>out_length</code>. </dd>
+The NUL terminator is NOT included in the <code>out_length</code>. </dd>
 <dd>
-DO NOT forget to call <code>free()</code> on the returned buffer once you're done using it!</dd></dl>
+DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>The base-64 encoded string to decode (obtained via <a class="el" href="base64_8h.html#a9f434e6f3de7fe53015d21aefb96da04">l8w8jwt_base64_encode</a>). </td></tr>
+    <tr><td class="paramname">url</td><td>Decode using base64url instead of base64? </td></tr>
+    <tr><td class="paramname">data</td><td>The base-64 encoded string to decode (obtained via <a class="el" href="base64_8h.html#ad50ceff28343c84f5d198fad80f5265a">l8w8jwt_base64_encode</a>). </td></tr>
     <tr><td class="paramname">data_length</td><td>The length of the string to decode. </td></tr>
+    <tr><td class="paramname">out</td><td>Output where the decoded bytes should be written into (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!). </td></tr>
     <tr><td class="paramname">out_length</td><td>Pointer to a <code>size_t</code> variable into which to write the output buffer's length.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The decoded bytes; <code>NULL</code> in case of a failure (errors are <code>printf</code>'ed). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return code as defined in <a class="el" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions.">retcodes.h</a> </dd></dl>
 
 </div>
 </div>
-<a id="a9f434e6f3de7fe53015d21aefb96da04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f434e6f3de7fe53015d21aefb96da04">&#9670;&nbsp;</a></span>l8w8jwt_base64_encode()</h2>
+<a id="ad50ceff28343c84f5d198fad80f5265a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad50ceff28343c84f5d198fad80f5265a">&#9670;&nbsp;</a></span>l8w8jwt_base64_encode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* l8w8jwt_base64_encode </td>
+          <td class="memname">int l8w8jwt_base64_encode </td>
           <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>url</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const uint8_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
@@ -167,6 +190,12 @@ DO NOT forget to call <code>free()</code> on the returned buffer once you're don
           <td></td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>data_length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -182,21 +211,23 @@ DO NOT forget to call <code>free()</code> on the returned buffer once you're don
       </table>
 </div><div class="memdoc">
 <p>Encodes a byte array to a base-64 string. </p>
-<p>If you're encoding a string, don't include the nul terminator (pass <code>strlen(data)</code> instead of the array's size to the <code>data_length</code> parameter). </p>
-<dl class="section note"><dt>Note</dt><dd>The returned buffer is nul terminated to make it easier to use as a C string. </dd>
+<p>If you're encoding a string, don't include the NUL terminator (pass <code>strlen(data)</code> instead of the array's size to the <code>data_length</code> parameter). </p>
+<dl class="section note"><dt>Note</dt><dd>The output buffer is NUL-terminated to make it easier to use as a C string. </dd>
 <dd>
-The nul terminator is NOT included in the <code>out_length</code>. </dd>
+The NUL terminator is NOT included in the <code>out_length</code>. </dd>
 <dd>
-DO NOT forget to call <code>free()</code> on the returned buffer once you're done using it!</dd></dl>
+DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">url</td><td>base64url encode instead of base64? </td></tr>
     <tr><td class="paramname">data</td><td>The data (array of bytes) to base-64 encode. </td></tr>
-    <tr><td class="paramname">data_length</td><td>The length of the input data array (in case of a C string: array size - 1 in order to omit the nul terminator). </td></tr>
-    <tr><td class="paramname">out_length</td><td>Pointer to a <code>size_t</code> variable containing the length of the output buffer minus the nul terminator.</td></tr>
+    <tr><td class="paramname">data_length</td><td>The length of the input data array (in case of a C string: array size - 1 in order to omit the NUL terminator). </td></tr>
+    <tr><td class="paramname">out</td><td>Output where the base-64 encoded string should be written into (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!). </td></tr>
+    <tr><td class="paramname">out_length</td><td>Pointer to a <code>size_t</code> variable containing the length of the output buffer minus the NUL terminator.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Base-64 encoded string, or <code>NULL</code> in case of a failure (errors are <code>printf</code>'ed). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return code as defined in <a class="el" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions.">retcodes.h</a> </dd></dl>
 
 </div>
 </div>
