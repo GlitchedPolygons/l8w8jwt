@@ -17,7 +17,7 @@
 /**
  *  @file decode.h
  *  @author Raphael Beck
- *  @brief Core decode function for l8w8jwt. Use this to decode and verify a JWT's signature!
+ *  @brief Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!
  */
 
 #ifndef L8W8JWT_DECODE_H
