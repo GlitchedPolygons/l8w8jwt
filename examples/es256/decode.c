@@ -40,12 +40,13 @@ int main(void)
 {
     struct l8w8jwt_decoding_params params = {
 
+        .alg = -1,
+
         .jwt = (char*)JWT,
         .jwt_length = strlen(JWT),
 
         .verification_key = (unsigned char*)ECDSA_PUBLIC_KEY,
         .verification_key_length = strlen(ECDSA_PUBLIC_KEY),
-
     };
 
     enum l8w8jwt_validation_result validation_result;

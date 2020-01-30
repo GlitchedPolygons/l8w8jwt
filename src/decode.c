@@ -52,6 +52,7 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
 
 int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out)
 {
+    int alg = params->alg;
     enum l8w8jwt_validation_result validation_res = L8W8JWT_VALID;
 
     int r = l8w8jwt_validate_decoding_params(params);
@@ -71,26 +72,68 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     char* payload = NULL;
     size_t payload_length = 0;
 
-    char* signature = NULL;
+    uint8_t* signature = NULL;
     size_t signature_length = 0;
 
-    header = params->jwt;
+    char* current = params->jwt;
+    char* next = strchr(params->jwt, '.');
 
-    payload = strchr(header, '.');
-    if (payload == NULL)
+    if (next == NULL) /* No payload. */
     {
         return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
     }
 
-    header_length = payload - header;
+    size_t current_length = next - current;
 
-    signature = strchr(++payload, '.');
-    if (signature != NULL)
+    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)(&header), &header_length);
+    if (r != L8W8JWT_SUCCESS)
     {
-        payload_length = signature - payload;
+        r = L8W8JWT_BASE64_FAILURE;
+        goto exit;
     }
 
-    return 0;
+    current = next + 1;
+    next = strchr(current, '.');
+
+    if (next == NULL) /* No signature. */
+    {
+        if (alg != -1)
+        {
+            r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+            goto exit;
+        }
+    }
+
+    current_length = (next != NULL ? next : (params->jwt + params->jwt_length)) - current;
+
+    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)(&payload), &payload_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_BASE64_FAILURE;
+        goto exit;
+    }
+
+    if (next != NULL)
+    {
+        current = next + 1;
+        current_length = (params->jwt + params->jwt_length) - current;
+
+        r = l8w8jwt_base64_decode(true, current, current_length, &signature, &signature_length);
+        if (r != L8W8JWT_SUCCESS)
+        {
+            r = L8W8JWT_BASE64_FAILURE;
+            goto exit;
+        }
+    }
+
+    current = next = NULL;
+
+    *out = validation_res;
+exit:
+    free(header);
+    free(payload);
+    free(signature);
+    return r;
 }
 
 #ifdef __cplusplus
