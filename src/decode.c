@@ -238,7 +238,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                     goto exit;
                 }
 
-                r = mbedtls_pk_verify(&pk, md_type, hash, md_length, signature, signature_length);
+                r = mbedtls_pk_verify(&pk, md_type, hash, md_length, (const unsigned char*)signature, signature_length);
                 if (r != 0)
                 {
                     validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
@@ -278,27 +278,40 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 r = mbedtls_pk_parse_public_key(&pk, key, key_length);
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
+                    r = L8W8JWT_KEY_PARSE_FAILURE;
+                    goto exit;
                 }
+
+                const size_t half_signature_length = signature_length / 2;
 
                 mbedtls_ecdsa_context ecdsa;
                 mbedtls_ecdsa_init(&ecdsa);
+
+                mbedtls_mpi sig_r, sig_s;
+                mbedtls_mpi_init(&sig_r);
+                mbedtls_mpi_init(&sig_s);
 
                 r = mbedtls_ecdsa_from_keypair(&ecdsa, mbedtls_pk_ec(pk));
                 if (r != 0)
                 {
                     r = L8W8JWT_KEY_PARSE_FAILURE;
                     mbedtls_ecdsa_free(&ecdsa);
+                    mbedtls_mpi_free(&sig_r);
+                    mbedtls_mpi_free(&sig_s);
                     goto exit;
                 }
 
-                r = mbedtls_ecdsa_read_signature(&ecdsa, hash, md_length, signature, signature_length);
+                mbedtls_mpi_read_binary(&sig_r, signature, half_signature_length);
+                mbedtls_mpi_read_binary(&sig_s, signature + half_signature_length, half_signature_length);
+
+                r = mbedtls_ecdsa_verify(&ecdsa.grp, hash, md_length, &ecdsa.Q, &sig_r, &sig_s);
                 if (r != 0)
                 {
                     validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
                 }
 
+                mbedtls_mpi_free(&sig_r);
+                mbedtls_mpi_free(&sig_s);
                 mbedtls_ecdsa_free(&ecdsa);
                 break;
 
