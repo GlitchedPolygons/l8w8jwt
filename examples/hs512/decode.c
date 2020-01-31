@@ -26,7 +26,7 @@ int main(void)
 {
     struct l8w8jwt_decoding_params params = {
 
-            .alg = -1,
+            .alg = L8W8JWT_ALG_HS512,
 
             .jwt = (char*)JWT,
             .jwt_length = strlen(JWT),
@@ -38,7 +38,7 @@ int main(void)
     enum l8w8jwt_validation_result validation_result;
     int r = l8w8jwt_decode(&params, &validation_result);
 
-    printf("\nl8w8jwt_decode_es256 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
+    printf("\nl8w8jwt_decode_hs512 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
 
     return 0;
 }

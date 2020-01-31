@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "l8w8jwt/encode.h"
+#include "l8w8jwt/decode.h"
 
 static const char RSA_PRIVATE_KEY[] = "-----BEGIN RSA PRIVATE KEY-----\n"
                                       "MIIJJwIBAAKCAgEAoWFe7BbX1nWo5oaSv/JvIUCWsk/Vi2q8P0cGkefgN5J7MN7K\n"
@@ -85,7 +85,25 @@ static const char RSA_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
                                      "B9ymLxQBRp8osHjuZpKXr3cCAwEAAQ==\n"
                                      "-----END PUBLIC KEY-----";
 
+static const char JWT[] = "eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE1ODAzNDAwMzcsImV4cCI6MTU4MDM0MDYzNywic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.X4o81UkLLt1mBdoQozWPAtVIRvkX7249fs25FGqrlGzci2exAVQh6g8OzqZlhPO8_VSVGt1bTlurWPhrPwZoeViy1g86MRBLNoiuWEkPg0FFB2jhBPGF2u-cJ2YKd9VSLSjs1fcxSyfG5dKczDo_w3FUL_syNpOpWaWtvByxDn0Cez4SHfTIcaGPKsyYBKhy1t3RgFzm9mCMugRd40omPO4WFKQ1f-boO0ydfvcybEmxMBpT3DsqbKAD9oM0kFWsLMIzOXIp4Uo1J-k3utjieDwaiBu7x2g-bU_0XygnXWIfrSXtUOmntVVFe9am13fIeH-I_3SJlzhLI4QapJ-_s5xeyZ3Y8tHLs-Sqt85Bs_rnewnJpHESXn-G5eK7YTHEvC3luELNrGQlTzQIpTZLYwARikQlhBme-lqvH6hTdGwQy-jhlr41GF5hBKHArFTN0RJBRDKyGgJffDlDDsk3g9NpaZqvOqMvLBHk78TbrQnTKMKY6L7dnAoPcTcl8IgIr9lN37TKFuvAm6nDjcWQUViOO9YtDng3e8cjWaJiizGpTOct-IKn7ZXMzGRrFSmXSOWgeukP5jcwH5dU_0ICDbt2oaid7Bpm1z8EviBGNh0OmjqJ8FmsGst8zaAufpSBwCbV9OCUo84RminY6pW6Lm3BWwIbki-yUOExAWJPjN0";
+
 int main(void)
 {
+    struct l8w8jwt_decoding_params params = {
+
+            .alg = L8W8JWT_ALG_PS256,
+
+            .jwt = (char*)JWT,
+            .jwt_length = strlen(JWT),
+
+            .verification_key = (unsigned char*)RSA_PUBLIC_KEY,
+            .verification_key_length = strlen(RSA_PUBLIC_KEY),
+    };
+
+    enum l8w8jwt_validation_result validation_result;
+    int r = l8w8jwt_decode(&params, &validation_result);
+
+    printf("\nl8w8jwt_decode_ps256 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
+
     return 0;
 }

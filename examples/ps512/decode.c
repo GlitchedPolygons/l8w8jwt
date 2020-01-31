@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "l8w8jwt/encode.h"
+#include "l8w8jwt/decode.h"
 
 static const char RSA_PRIVATE_KEY[] = "-----BEGIN RSA PRIVATE KEY-----\n"
                                       "MIIJJwIBAAKCAgEAoWFe7BbX1nWo5oaSv/JvIUCWsk/Vi2q8P0cGkefgN5J7MN7K\n"
@@ -85,7 +85,33 @@ static const char RSA_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
                                      "B9ymLxQBRp8osHjuZpKXr3cCAwEAAQ==\n"
                                      "-----END PUBLIC KEY-----";
 
+static const char JWT[] = "eyJhbGciOiJQUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE1ODA0NzgwNzUsImV4cCI6MTU4MDQ3"
+                          "ODY3NSwic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25z"
+                          "ZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.XtxqEVj8EhRceAWD-d45qntb0Jy_0ahAJiPqr26"
+                          "oqM1x3kGqeWh-rt588uf2jKJvNBrW7IcdqpS94Sot77s0qsK1JSzlV2awb68-QPgSyWycq_-P8cwYP6JNtZ_h3AB2_ZwyV0-YZkdUltAcuaiJ8hhwig6gfRE"
+                          "SqQq4N7lqXMAnxurPJskGSWQ6JWsXObs6s8G6apur0dni-Ro-w8RKw1-lXvI7d5Q2xi_k0pT5BUJlB8mXwgkpXIi9Cftnbqvy5oD-JA6atq3xZG6JmA01Hnu"
+                          "lyq13760XEvdinqomOdxGF91yYPtbQKUpwzYkI3EEDCS8atPJ6rEUQ-HDDQ1X9Nl6-MsrGa59OksefQTrZS3uatoZp2gmteLkPMKP1dMZ7F0JLU-xDLrOFpp"
+                          "VxweKhrhxa0FX3ClbISoZlqNhgrVsFpNF_HJiRF6KVVHO4e0v2Xkobc-bnYJhjP7U8qVWOxsiELZW3jzeyfnf4Po7LdELyczEyoFTbS55ELbbTC5F4KLZS9D"
+                          "2iSKFaRnG8dmgjz86YV8fptU3pFWWEDgb3-4DAMwyixF-8raYJz2AuzPL6NeIMUEH7oc6SVdwodc-2iItxLvXbmDYDk-gS7O3wgDiXwAKtWGujzIaOs2j0d7"
+                          "Kg2qLDQIIN4cYLvWLw1eoGa_a1MEiT0ALAJ-2xRjZH1U";
+
 int main(void)
 {
+    struct l8w8jwt_decoding_params params = {
+
+        .alg = L8W8JWT_ALG_PS512,
+
+        .jwt = (char*)JWT,
+        .jwt_length = strlen(JWT),
+
+        .verification_key = (unsigned char*)RSA_PUBLIC_KEY,
+        .verification_key_length = strlen(RSA_PUBLIC_KEY),
+    };
+
+    enum l8w8jwt_validation_result validation_result;
+    int r = l8w8jwt_decode(&params, &validation_result);
+
+    printf("\nl8w8jwt_decode_ps512 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
+
     return 0;
 }

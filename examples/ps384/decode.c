@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "l8w8jwt/encode.h"
+#include "l8w8jwt/decode.h"
 
 static const char RSA_PRIVATE_KEY[] = "-----BEGIN RSA PRIVATE KEY-----\n"
                                       "MIIJJwIBAAKCAgEAoWFe7BbX1nWo5oaSv/JvIUCWsk/Vi2q8P0cGkefgN5J7MN7K\n"
@@ -85,7 +85,25 @@ static const char RSA_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
                                      "B9ymLxQBRp8osHjuZpKXr3cCAwEAAQ==\n"
                                      "-----END PUBLIC KEY-----";
 
+static const char JWT[] = "eyJhbGciOiJQUzM4NCIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE1ODAzNDAwMzcsImV4cCI6MTU4MDM0MDYzNywic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.HvYA8YB0nTHl2J57WTVisf3zJ8mMElvIxooW95iNtHzZDNuPWluQG9UL-mU01p4mGMZtcfMmg0hN_PMeshuNPei9AlzZXtBvixQO-NOcNFo94qRC9wTL2DOJsHGJwMflXBESpOQlgzsSoAuVboFZZ5BRGyIxQWvl3CgGy3CaUsmLfwHzfr_OER5HQLEM3onJfM2F9uzT0VqI9-pj3JMB8gXiNDzi_krcOlwe_F5xQzr7nwqYBaBr7kHlJJEouBjEcesCWv8hD0a9xtWiWx3aIBI3ynMxXbbXbR6N4dyZgy9CzAmgvZXx1SVWOLCXb2WY5jiAF_O2OnEGKT_HlnQYI102N6xaQekXozMrzs7e-nboWvo5QRvpsjslgvL8E1j8sFv5AFlhOrUi3CJQDZK0MaCyljaGDuLJUYsnag8w8f6jDT1DtZgsPzZE6FOLbwxPkuGy106_4pBdPzMfQv-OAC0Kf6t3wJsDdP4oY6d3VsNlKvL6g0sGfIPMykP32o3cVXdOHeOqFkoPGL9LcpKZIMxjAcKA7MNE7TLRZBLLVeED2hSocfBxiYE4pOicg2sZMc2iscr3ksYEqfmBJ4ZOmC_FGRRg0GpGukvkz-AKzwnoezKAU6evWTMPwdphw2ZA0sUdgJZT7jbpDMdnk1vf96DO-SV21RvNFdah5eem1bA";
+
 int main(void)
 {
+    struct l8w8jwt_decoding_params params = {
+
+        .alg = L8W8JWT_ALG_PS384,
+
+        .jwt = (char*)JWT,
+        .jwt_length = strlen(JWT),
+
+        .verification_key = (unsigned char*)RSA_PUBLIC_KEY,
+        .verification_key_length = strlen(RSA_PUBLIC_KEY),
+    };
+
+    enum l8w8jwt_validation_result validation_result;
+    int r = l8w8jwt_decode(&params, &validation_result);
+
+    printf("\nl8w8jwt_decode_ps384 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
+
     return 0;
 }

@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-#include <mbedtls/md_internal.h>
+//#include <mbedtls/md_internal.h>
 
 /**
  * HMAC-SHA256 signing algorithm.
@@ -88,6 +88,7 @@ extern "C" {
  * ECDSA + P-521 + SHA512 signing algorithm.
  */
 #define L8W8JWT_ALG_ES512 11
+
 
 #ifdef __cplusplus
 } // extern "C"

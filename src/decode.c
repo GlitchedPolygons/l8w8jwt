@@ -193,16 +193,21 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         unsigned char hash[64];
         memset(hash, '\0', sizeof(hash));
 
-        size_t signature_cmp_length = 0;
-
-        unsigned char signature_cmp[4096];
-        memset(signature_cmp, '\0', sizeof(signature_cmp));
+        r = mbedtls_md(md_info, (const unsigned char*)params->jwt, (current - 1) - params->jwt, hash);
+        if (r != L8W8JWT_SUCCESS)
+        {
+            r = L8W8JWT_SHA2_FAILURE;
+            goto exit;
+        }
 
         switch (alg)
         {
             case L8W8JWT_ALG_HS256:
             case L8W8JWT_ALG_HS384:
-            case L8W8JWT_ALG_HS512:
+            case L8W8JWT_ALG_HS512: {
+
+                unsigned char signature_cmp[64];
+                memset(signature_cmp, '\0', sizeof(signature_cmp));
 
                 r = mbedtls_md_hmac(md_info, key, key_length - 1, (const unsigned char*)params->jwt, (current - 1) - params->jwt, signature_cmp);
                 if (r != 0)
@@ -219,26 +224,77 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 }
 
                 break;
+            }
 
             case L8W8JWT_ALG_RS256:
             case L8W8JWT_ALG_RS384:
             case L8W8JWT_ALG_RS512:
 
-                // TODO: rsa verification
+                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                if (r != 0)
+                {
+                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    break;
+                }
+
+                r = mbedtls_pk_verify(&pk, md_type, hash, md_length, signature, signature_length);
+                if (r != 0)
+                {
+                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    break;
+                }
+
                 break;
 
             case L8W8JWT_ALG_PS256:
             case L8W8JWT_ALG_PS384:
             case L8W8JWT_ALG_PS512:
 
-                // TODO: rsassa pss verification
+                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                if (r != 0)
+                {
+                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    break;
+                }
+
+                mbedtls_rsa_context* rsa = mbedtls_pk_rsa(pk);
+                rsa->hash_id = md_type;
+                rsa->padding = MBEDTLS_RSA_PKCS_V21;
+
+                r = mbedtls_rsa_rsassa_pss_verify(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PUBLIC, md_type, md_length, hash, signature);
+                if (r != 0)
+                {
+                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    break;
+                }
+
                 break;
 
             case L8W8JWT_ALG_ES256:
             case L8W8JWT_ALG_ES384:
             case L8W8JWT_ALG_ES512:
 
-                // TODO: ecdsa verification
+                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                if (r != 0)
+                {
+                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    break;
+                }
+
+                mbedtls_ecdsa_context ecdsa;
+                mbedtls_ecdsa_init(&ecdsa);
+
+                r = mbedtls_ecdsa_from_keypair(&ecdsa, mbedtls_pk_ec(pk));
+                if (r != 0)
+                {
+                    r = L8W8JWT_KEY_PARSE_FAILURE;
+                    mbedtls_ecdsa_free(&ecdsa);
+                    goto exit;
+                }
+
+                // TODO: verify sig here
+
+                mbedtls_ecdsa_free(&ecdsa);
                 break;
 
             default:
@@ -256,9 +312,10 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     r = L8W8JWT_SUCCESS;
     *out = validation_res;
 exit:
-    free(header);
-    free(payload);
-    free(signature);
+    // TODO: find out why the fuck this segfaults. Freeing NULL should be ok (?)
+    // free(header);
+    // free(payload);
+    // free(signature);
     return r;
 }
 
