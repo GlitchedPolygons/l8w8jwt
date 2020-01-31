@@ -273,7 +273,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             r = mbedtls_md_hmac(md_info, key, key_length - 1, (const unsigned char*)stringbuilder->array, stringbuilder->length, signature_bytes);
             if (r != 0)
             {
-                r = L8W8JWT_SIGNATURE_FAILURE;
+                r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
                 goto exit;
             }
 
@@ -319,7 +319,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             r = mbedtls_pk_sign(&pk, md_type, hash, md_length, signature_bytes, &signature_bytes_length, mbedtls_ctr_drbg_random, &ctr_drbg);
             if (r != L8W8JWT_SUCCESS)
             {
-                r = L8W8JWT_SIGNATURE_FAILURE;
+                r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
                 goto exit;
             }
 
@@ -363,7 +363,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             r = mbedtls_rsa_rsassa_pss_sign(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PRIVATE, md_type, md_length, hash, signature_bytes);
             if (r != 0)
             {
-                r = L8W8JWT_SIGNATURE_FAILURE;
+                r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
                 goto exit;
             }
 
@@ -441,7 +441,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             r = mbedtls_ecdsa_sign_det(&ecdsa.grp, &sig_r, &sig_s, &ecdsa.d, hash, md_length, md_type);
             if (r != 0)
             {
-                r = L8W8JWT_SIGNATURE_FAILURE;
+                r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
                 goto ecdsa_exit;
             }
 
@@ -450,14 +450,14 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             r = mbedtls_mpi_write_binary(&sig_r, signature_bytes, half_signature_bytes_length);
             if (r != 0)
             {
-                r = L8W8JWT_SIGNATURE_FAILURE;
+                r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
                 goto ecdsa_exit;
             }
 
             r = mbedtls_mpi_write_binary(&sig_s, signature_bytes + half_signature_bytes_length, half_signature_bytes_length);
             if (r != 0)
             {
-                r = L8W8JWT_SIGNATURE_FAILURE;
+                r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
                 goto ecdsa_exit;
             }
 
@@ -481,7 +481,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
 
     if (signature_bytes_length == 0)
     {
-        r = L8W8JWT_SIGNATURE_FAILURE;
+        r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
         goto exit;
     }
 

@@ -82,7 +82,7 @@ enum l8w8jwt_validation_result
     /**
      * The token was potentially tampered with: its signature couldn't be verified.
      */
-    L8w8JWT_SIGNATURE_FAILURE = 1 << 7
+    L8W8JWT_SIGNATURE_VERIFICATION_FAILURE = 1 << 7
 };
 
 /**
@@ -233,6 +233,7 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
  * Decode (and validate) a JWT using specific parameters. <p>
  * The resulting l8w8jwt_validation_result written into the passed "out" pointer
  * contains validation failure flags (see the {@link #l8w8jwt_validation_result} enum docs for more details). <p>
+ * This only happens if decoding also succeeded: if the token is malformed, nothing will be written into "out". <p>
  * If validation succeeds, the l8w8jwt_validation_result receives the value 0 (enum value <code>L8W8JWT_VALID</code>).
  * @param params The parameters to use for decoding and validating the token.
  * @param out Where to write the validation result flags into (0 means success).

@@ -55,7 +55,7 @@ extern "C" {
 /**
  * Returned if signing a JWT failed.
  */
-#define L8W8JWT_SIGNATURE_FAILURE 400
+#define L8W8JWT_SIGNATURE_CREATION_FAILURE 400
 
 /**
  * If one of the SHA-2 functions fails (e.g. SHA-256).
@@ -85,14 +85,9 @@ extern "C" {
 #define L8W8JWT_MBEDTLS_CTR_DRBG_SEED_FAILURE 500
 
 /**
- * This value is returned when the JWT's signature couldn't be verified using the provided key.
- */
-#define L8W8JWT_SIGNATURE_VERIFICATION_FAILURE 600
-
-/**
  * Returned if the token is invalid (format-wise).
  */
-#define L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT 700
+#define L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT 600
 
 #ifdef __cplusplus
 } // extern "C"
