@@ -162,6 +162,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         }
     }
 
+    /* Signature verification. */
     if (signature != NULL && signature_length > 0 && alg != -1)
     {
         mbedtls_pk_context pk;
@@ -305,13 +306,13 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 break;
         }
 
-        // TODO: other claims verification
-
         memset(key, '\0', sizeof(key));
         mbedtls_ctr_drbg_free(&ctr_drbg);
         mbedtls_entropy_free(&entropy);
         mbedtls_pk_free(&pk);
     }
+
+    // TODO: other claims verification
 
     r = L8W8JWT_SUCCESS;
     *out = validation_res;
