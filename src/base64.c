@@ -236,8 +236,13 @@ int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, 
             count++;
     }
 
-    if (count == 0 || (!url && count % 4))
+    int r = (int)(count % 4);
+
+    if (count == 0 || r == 1 || (!url && r > 0)) // Invalid input string (format or padding).
         return L8W8JWT_INVALID_ARG;
+
+    if (r == 3)
+        r = 1;
 
     size_t olen = count / 4 * 3;
     uint8_t* pos = *out = malloc(olen + 1);
@@ -252,14 +257,16 @@ int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, 
     uint8_t tmp;
     uint8_t block[4];
 
-    for (i = 0; i < data_length; i++)
+    for (i = 0; i < data_length + r; i++)
     {
-        tmp = dtable[data[i]];
+        const int c = i < data_length ? data[i] : '=';
+
+        tmp = dtable[c];
 
         if (tmp == 0x80)
             continue;
 
-        if (data[i] == '=')
+        if (c == '=')
             pad++;
 
         block[count] = tmp;
