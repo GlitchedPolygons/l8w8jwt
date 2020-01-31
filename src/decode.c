@@ -233,8 +233,8 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 r = mbedtls_pk_parse_public_key(&pk, key, key_length);
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
+                    r = L8W8JWT_KEY_PARSE_FAILURE;
+                    goto exit;
                 }
 
                 r = mbedtls_pk_verify(&pk, md_type, hash, md_length, signature, signature_length);
@@ -253,8 +253,8 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 r = mbedtls_pk_parse_public_key(&pk, key, key_length);
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
+                    r = L8W8JWT_KEY_PARSE_FAILURE;
+                    goto exit;
                 }
 
                 mbedtls_rsa_context* rsa = mbedtls_pk_rsa(pk);
@@ -292,7 +292,11 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                     goto exit;
                 }
 
-                // TODO: verify sig here
+                r = mbedtls_ecdsa_read_signature(&ecdsa, hash, md_length, signature, signature_length);
+                if (r != 0)
+                {
+                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                }
 
                 mbedtls_ecdsa_free(&ecdsa);
                 break;

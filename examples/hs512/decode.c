@@ -18,7 +18,6 @@
 #include <string.h>
 #include "l8w8jwt/decode.h"
 
-
 static const char KEY[] = "test key";
 static const char JWT[] = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE1ODAzMzk1OTQsImV4cCI6MTU4MDM0MDE5NCwic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.1wUyFChHp7CwSVJ7ZHYv0mMphSwaCZQyn-LMDLRBskxikyhqvLNehQNz3T--FJ3OJ3LxL6FrI6KFuTVGqcIV4g";
 
@@ -26,13 +25,13 @@ int main(void)
 {
     struct l8w8jwt_decoding_params params = {
 
-            .alg = L8W8JWT_ALG_HS512,
+        .alg = L8W8JWT_ALG_HS512,
 
-            .jwt = (char*)JWT,
-            .jwt_length = strlen(JWT),
+        .jwt = (char*)JWT,
+        .jwt_length = strlen(JWT),
 
-            .verification_key = (unsigned char*)KEY,
-            .verification_key_length = strlen(KEY),
+        .verification_key = (unsigned char*)KEY,
+        .verification_key_length = strlen(KEY),
     };
 
     enum l8w8jwt_validation_result validation_result;
