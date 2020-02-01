@@ -31,7 +31,6 @@ extern "C" {
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/pk_internal.h>
-#include <mbedtls/asn1write.h>
 
 #define L8W8JWT_MAX_KEY_SIZE 8192
 
@@ -121,7 +120,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
 
     size_t current_length = next - current;
 
-    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)(&header), &header_length);
+    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)&header, &header_length);
     if (r != L8W8JWT_SUCCESS)
     {
         if (r != L8W8JWT_OUT_OF_MEM)
@@ -134,13 +133,13 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
 
     if (next == NULL && alg != -1) /* No signature. */
     {
-        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        r = L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE;
         goto exit;
     }
 
     current_length = (next != NULL ? next : params->jwt + params->jwt_length) - current;
 
-    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)(&payload), &payload_length);
+    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)&payload, &payload_length);
     if (r != L8W8JWT_SUCCESS)
     {
         if (r != L8W8JWT_OUT_OF_MEM)
@@ -325,15 +324,16 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         mbedtls_pk_free(&pk);
     }
 
+
     // TODO: other claims verification
 
     r = L8W8JWT_SUCCESS;
     *out = validation_res;
+
 exit:
-    // TODO: find out why the fuck this segfaults. Freeing NULL should be ok (?)
-    // free(header);
-    // free(payload);
-    // free(signature);
+    free(header);
+    free(payload);
+    free(signature);
     return r;
 }
 

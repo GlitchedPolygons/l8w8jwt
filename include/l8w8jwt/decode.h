@@ -237,7 +237,7 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
  * If validation succeeds, the l8w8jwt_validation_result receives the value 0 (enum value <code>L8W8JWT_VALID</code>).
  * @param params The parameters to use for decoding and validating the token.
  * @param out Where to write the validation result flags into (0 means success).
- * @return Return code as defined in retcodes.h
+ * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the out argument; the returned int describes whether the actual parsing/decoding part failed).
  */
 int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out);
 

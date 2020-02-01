@@ -89,6 +89,11 @@ extern "C" {
  */
 #define L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT 600
 
+/**
+ * Returned if the token is invalid because it's missing the signature (despite having specified an alg that isn't "none").
+ */
+#define L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE 700
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
