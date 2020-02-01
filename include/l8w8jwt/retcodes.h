@@ -68,6 +68,11 @@ extern "C" {
 #define L8W8JWT_KEY_PARSE_FAILURE 420
 
 /**
+ * JSON parse failure.
+ */
+#define L8W8JWT_CLAIM_PARSE_FAILURE 430
+
+/**
  * Returned if you passed the wrong private or public key type (e.g. trying to use an RSA key for ECDSA tokens, etc...). <p>
  * Especially for the ECDSA algorithms like ES256, ES384 and ES512 double-check that you passed keys of the correct curve! <p>
  * Only use the P-256 curve for ES256, P-384 (a.k.a. secp384r1) for ES384 and P-521 (a.k.a. secp521r1) for ES512.

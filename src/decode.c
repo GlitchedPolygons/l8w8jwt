@@ -70,14 +70,22 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
-static int l8w8jwt_parse_claims(chillbuff* buffer, const char* json, const size_t json_length)
+static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json_length)
 {
-    for (size_t i = 0; i < json_length; i++)
+    for (char* c = json; c < json + json_length; c++)
     {
-        const char c = json[i];
-        if (c == '\"')
+        if (!c || *c != '\"')
         {
-            char* end = strchr(json + i, '\"'); // TODO: find an elegant way to parse these...
+            continue;
+        }
+        char* end = strchr(++c, '\"');
+        if (end == NULL)
+        {
+            return L8W8JWT_CLAIM_PARSE_FAILURE;
+        }
+        if (*(end - 1) != '\\')
+        {
+            //
         }
     }
 }
@@ -229,14 +237,14 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 r = mbedtls_md_hmac(md_info, key, key_length - 1, (const unsigned char*)params->jwt, (current - 1) - params->jwt, signature_cmp);
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
                     break;
                 }
 
                 r = memcmp(signature, signature_cmp, 32 + (16 * alg));
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
                     break;
                 }
 
@@ -257,7 +265,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 r = mbedtls_pk_verify(&pk, md_type, hash, md_length, (const unsigned char*)signature, signature_length);
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
                     break;
                 }
 
@@ -281,7 +289,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 r = mbedtls_rsa_rsassa_pss_verify(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PUBLIC, md_type, md_length, hash, signature);
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
                     break;
                 }
 
@@ -323,7 +331,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 r = mbedtls_ecdsa_verify(&ecdsa.grp, hash, md_length, &ecdsa.Q, &sig_r, &sig_s);
                 if (r != 0)
                 {
-                    validation_res |= L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
                 }
 
                 mbedtls_mpi_free(&sig_r);
@@ -362,7 +370,6 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
         goto exit;
     }
-
 
     // TODO:  claims verification
 
