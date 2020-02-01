@@ -70,6 +70,18 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
+static int l8w8jwt_parse_claims(chillbuff* buffer, const char* json, const size_t json_length)
+{
+    for (size_t i = 0; i < json_length; i++)
+    {
+        const char c = json[i];
+        if (c == '\"')
+        {
+            char* end = strchr(json + i, '\"'); // TODO: find an elegant way to parse these...
+        }
+    }
+}
+
 int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
 {
     if (params == NULL || params->jwt == NULL || params->verification_key == NULL)
@@ -337,7 +349,22 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         goto exit;
     }
 
-    // TODO: other claims verification
+    r = l8w8jwt_parse_claims(&claims, header, header_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        goto exit;
+    }
+
+    r = l8w8jwt_parse_claims(&claims, payload, payload_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        goto exit;
+    }
+
+
+    // TODO:  claims verification
 
     r = L8W8JWT_SUCCESS;
 
