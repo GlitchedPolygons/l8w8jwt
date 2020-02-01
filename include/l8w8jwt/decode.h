@@ -206,20 +206,6 @@ struct l8w8jwt_decoding_params
      * Length of the {@link #verification_key}
      */
     size_t verification_key_length;
-
-    /**
-     * [OPTIONAL] Where the decoded claims (header + payload claims together) should be written into. <p>
-     * This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer! <p>
-     * If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...). <p>
-     * @note If you decide to keep the claims in this out parameter, REMEMBER to call {@link #l8w8jwt_free_claims()} on it once you're done using them!
-     */
-    struct l8w8jwt_claim** out_claims;
-
-    /**
-     * Where to write the decoded claims count into. <p>
-     * This will receive the value of how many claims were written into "out_claims" (0 if you decided to set "out_claims" to <code>NULL</code>).
-     */
-    size_t* out_claims_length;
 };
 
 /**
@@ -231,15 +217,28 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
 
 /**
  * Decode (and validate) a JWT using specific parameters. <p>
- * The resulting l8w8jwt_validation_result written into the passed "out" pointer
+ * The resulting {@link #l8w8jwt_validation_result} written into the passed "out_validation_result" pointer
  * contains validation failure flags (see the {@link #l8w8jwt_validation_result} enum docs for more details). <p>
- * This only happens if decoding also succeeded: if the token is malformed, nothing will be written into "out". <p>
- * If validation succeeds, the l8w8jwt_validation_result receives the value 0 (enum value <code>L8W8JWT_VALID</code>).
+ * This only happens if decoding also succeeded: if the token is malformed, nothing will be written into "out_validation_result". <p>
+ * If validation succeeds, the {@link #l8w8jwt_validation_result} receives the value 0 (enum value <code>L8W8JWT_VALID</code>). <p>
+ * The same applies to the "out_claims" argument: it is only allocated and written to if it (obviously) isn't <code>NULL</code> and if the decoding was also successful!
+ *
  * @param params The parameters to use for decoding and validating the token.
- * @param out Where to write the validation result flags into (0 means success).
- * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the out argument; the returned int describes whether the actual parsing/decoding part failed).
+ *
+ * @param out_validation_result Where to write the validation result flags into (0 means success). Will only be written into if the parsing and decoding succeeds! In case of a failure this REMAINS UNTOUCHED!
+ *
+ * @param out_claims
+ * [OPTIONAL] Where the decoded claims (header + payload claims together) should be written into.
+ * This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer!
+ * If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...).
+ *
+ * @param out_claims_length Where to write the decoded claims count into. This will receive the value of how many claims were written into "out_claims" (0 if you decided to set "out_claims" to <code>NULL</code>).
+ *
+ * @note If you decide to keep the claims stored in the <code>out_claims</code> parameter, REMEMBER to call {@link #l8w8jwt_free_claims()} on it once you're done using them!
+ *
+ * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the out_validation_result argument; the returned int describes whether the actual parsing/decoding part failed).
  */
-int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out);
+int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length);
 
 #ifdef __cplusplus
 } // extern "C"

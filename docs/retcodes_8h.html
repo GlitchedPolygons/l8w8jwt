@@ -99,8 +99,8 @@ Macros</h2></td></tr>
 <tr class="separator:acdac86a7c21b7e45279c5d4059ff1ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a861ddf14da3ae24f8c15f83f80d6adac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#a861ddf14da3ae24f8c15f83f80d6adac">L8W8JWT_OVERFLOW</a>&#160;&#160;&#160;310</td></tr>
 <tr class="separator:a861ddf14da3ae24f8c15f83f80d6adac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dd114aef8cfa55f44eef8ba3d240f84"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#a9dd114aef8cfa55f44eef8ba3d240f84">L8W8JWT_SIGNATURE_CREATION_FAILURE</a>&#160;&#160;&#160;400</td></tr>
-<tr class="separator:a9dd114aef8cfa55f44eef8ba3d240f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5bd30e0ae7e91c7adaf11c041aa4c01"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#aa5bd30e0ae7e91c7adaf11c041aa4c01">L8W8JWT_SIGNATURE_CREATION_FAILURE</a>&#160;&#160;&#160;400</td></tr>
+<tr class="separator:aa5bd30e0ae7e91c7adaf11c041aa4c01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae713fbf017e08bb3d599cd6f20d41803"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#ae713fbf017e08bb3d599cd6f20d41803">L8W8JWT_SHA2_FAILURE</a>&#160;&#160;&#160;410</td></tr>
 <tr class="separator:ae713fbf017e08bb3d599cd6f20d41803"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4385c6c96feba1e480025150e1b8930"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#ae4385c6c96feba1e480025150e1b8930">L8W8JWT_KEY_PARSE_FAILURE</a>&#160;&#160;&#160;420</td></tr>
@@ -111,10 +111,10 @@ Macros</h2></td></tr>
 <tr class="separator:a514dd74c2bc135065b45a8f154f04435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd4421c1e00e6c7b2abaf2a856a85fb4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#acd4421c1e00e6c7b2abaf2a856a85fb4">L8W8JWT_MBEDTLS_CTR_DRBG_SEED_FAILURE</a>&#160;&#160;&#160;500</td></tr>
 <tr class="separator:acd4421c1e00e6c7b2abaf2a856a85fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa66249d23a9a8cc706f9e5429342afda"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#aa66249d23a9a8cc706f9e5429342afda">L8W8JWT_SIGNATURE_VERIFICATION_FAILURE</a>&#160;&#160;&#160;600</td></tr>
-<tr class="separator:aa66249d23a9a8cc706f9e5429342afda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab26241148ccad4d16f08c2ab409a8eeb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#ab26241148ccad4d16f08c2ab409a8eeb">L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT</a>&#160;&#160;&#160;700</td></tr>
+<tr class="memitem:ab26241148ccad4d16f08c2ab409a8eeb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#ab26241148ccad4d16f08c2ab409a8eeb">L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT</a>&#160;&#160;&#160;600</td></tr>
 <tr class="separator:ab26241148ccad4d16f08c2ab409a8eeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8af1ed938d5e7144a14986480da24a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#ad8af1ed938d5e7144a14986480da24a7">L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE</a>&#160;&#160;&#160;700</td></tr>
+<tr class="separator:ad8af1ed938d5e7144a14986480da24a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Macros for possible integer codes returned by the various l8w8jwt functions. </p>
@@ -142,11 +142,26 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT&#160;&#160;&#160;700</td>
+          <td class="memname">#define L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT&#160;&#160;&#160;600</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Returned if the token is invalid (format-wise). </p>
+
+</div>
+</div>
+<a id="ad8af1ed938d5e7144a14986480da24a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8af1ed938d5e7144a14986480da24a7">&#9670;&nbsp;</a></span>L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE&#160;&#160;&#160;700</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returned if the token is invalid because it's missing the signature (despite having specified an alg that isn't "none"). </p>
 
 </div>
 </div>
@@ -255,8 +270,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="a9dd114aef8cfa55f44eef8ba3d240f84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dd114aef8cfa55f44eef8ba3d240f84">&#9670;&nbsp;</a></span>L8W8JWT_SIGNATURE_CREATION_FAILURE</h2>
+<a id="aa5bd30e0ae7e91c7adaf11c041aa4c01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5bd30e0ae7e91c7adaf11c041aa4c01">&#9670;&nbsp;</a></span>L8W8JWT_SIGNATURE_CREATION_FAILURE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -267,21 +282,6 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Returned if signing a JWT failed. </p>
-
-</div>
-</div>
-<a id="aa66249d23a9a8cc706f9e5429342afda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa66249d23a9a8cc706f9e5429342afda">&#9670;&nbsp;</a></span>L8W8JWT_SIGNATURE_VERIFICATION_FAILURE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define L8W8JWT_SIGNATURE_VERIFICATION_FAILURE&#160;&#160;&#160;600</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>This value is returned when the JWT's signature couldn't be verified using the provided key. </p>
 
 </div>
 </div>

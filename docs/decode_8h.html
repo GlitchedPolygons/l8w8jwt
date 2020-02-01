@@ -119,7 +119,7 @@ Enumerations</h2></td></tr>
 <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402a151575c92c0cdd677a80b4dac5861a74">L8W8JWT_NBF_FAILURE</a> = 1 &lt;&lt; 5, 
 <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402ad39b0f239ba5a695ec1aa4f2f86d8e6e">L8W8JWT_IAT_FAILURE</a> = 1 &lt;&lt; 6, 
 <br />
-&#160;&#160;<a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402a781169e13fb261b1a0456340b1e7ab22">L8w8JWT_SIGNATURE_FAILURE</a> = 1 &lt;&lt; 7
+&#160;&#160;<a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402a49b0489ff91d73c51a5cb0f5da3e84b6">L8W8JWT_SIGNATURE_VERIFICATION_FAILURE</a> = 1 &lt;&lt; 7
 <br />
  }</td></tr>
 <tr class="separator:ab290426e6c23685fd1065e19c368c402"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,8 +128,8 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ac83dd7a29368eafc23dd8ae39ad78e61"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#ac83dd7a29368eafc23dd8ae39ad78e61">l8w8jwt_validate_decoding_params</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params)</td></tr>
 <tr class="separator:ac83dd7a29368eafc23dd8ae39ad78e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a194c901d7b7623324269bbc87fcee7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#a2a194c901d7b7623324269bbc87fcee7">l8w8jwt_decode</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params, enum <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> *out)</td></tr>
-<tr class="separator:a2a194c901d7b7623324269bbc87fcee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a603ee77b0a2f8baf35aa4c492799934b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#a603ee77b0a2f8baf35aa4c492799934b">l8w8jwt_decode</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params, enum <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> *out_validation_result, struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> **out_claims, size_t *out_claims_length)</td></tr>
+<tr class="separator:a603ee77b0a2f8baf35aa4c492799934b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core DECODE function for l8w8jwt. Use this to decode and validate a JWT! </p>
@@ -164,15 +164,15 @@ Functions</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ab290426e6c23685fd1065e19c368c402ad39b0f239ba5a695ec1aa4f2f86d8e6e"></a>L8W8JWT_IAT_FAILURE&#160;</td><td class="fielddoc"><p>The token was not issued yet, are you from the future? </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ab290426e6c23685fd1065e19c368c402a781169e13fb261b1a0456340b1e7ab22"></a>L8w8JWT_SIGNATURE_FAILURE&#160;</td><td class="fielddoc"><p>The token was potentially tampered with: its signature couldn't be verified. </p>
+<tr><td class="fieldname"><a id="ab290426e6c23685fd1065e19c368c402a49b0489ff91d73c51a5cb0f5da3e84b6"></a>L8W8JWT_SIGNATURE_VERIFICATION_FAILURE&#160;</td><td class="fielddoc"><p>The token was potentially tampered with: its signature couldn't be verified. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a2a194c901d7b7623324269bbc87fcee7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a194c901d7b7623324269bbc87fcee7">&#9670;&nbsp;</a></span>l8w8jwt_decode()</h2>
+<a id="a603ee77b0a2f8baf35aa4c492799934b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a603ee77b0a2f8baf35aa4c492799934b">&#9670;&nbsp;</a></span>l8w8jwt_decode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,7 +187,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">enum <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> *&#160;</td>
-          <td class="paramname"><em>out</em>&#160;</td>
+          <td class="paramname"><em>out_validation_result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> **&#160;</td>
+          <td class="paramname"><em>out_claims</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>out_claims_length</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -197,15 +209,21 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Decode (and validate) a JWT using specific parameters. </p>
-<p>The resulting l8w8jwt_validation_result written into the passed "out" pointer contains validation failure flags (see the <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> enum docs for more details). </p>
-<p>If validation succeeds, the l8w8jwt_validation_result receives the value 0 (enum value <code>L8W8JWT_VALID</code>). </p><dl class="params"><dt>Parameters</dt><dd>
+<p>The resulting <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> written into the passed "out_validation_result" pointer contains validation failure flags (see the <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> enum docs for more details). </p>
+<p>This only happens if decoding also succeeded: if the token is malformed, nothing will be written into "out_validation_result". </p>
+<p>If validation succeeds, the <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> receives the value 0 (enum value <code>L8W8JWT_VALID</code>). </p>
+<p>The same applies to the "out_claims" argument: it is only allocated and written to if it (obviously) isn't <code>NULL</code> and if the decoding was also successful!</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">params</td><td>The parameters to use for decoding and validating the token. </td></tr>
-    <tr><td class="paramname">out</td><td>Where to write the validation result flags into (0 means success). </td></tr>
+    <tr><td class="paramname">params</td><td>The parameters to use for decoding and validating the token.</td></tr>
+    <tr><td class="paramname">out_validation_result</td><td>Where to write the validation result flags into (0 means success). Will only be written into if the parsing and decoding succeeds! In case of a failure this REMAINS UNTOUCHED!</td></tr>
+    <tr><td class="paramname">out_claims</td><td>[OPTIONAL] Where the decoded claims (header + payload claims together) should be written into. This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer! If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...).</td></tr>
+    <tr><td class="paramname">out_claims_length</td><td>Where to write the decoded claims count into. This will receive the value of how many claims were written into "out_claims" (0 if you decided to set "out_claims" to <code>NULL</code>).</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Return code as defined in <a class="el" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions.">retcodes.h</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If you decide to keep the claims stored in the <code>out_claims</code> parameter, REMEMBER to call <a class="el" href="claim_8h.html#a0de61424e50fa9e9eff05d53f3257291">l8w8jwt_free_claims()</a> on it once you're done using them!</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Return code as defined in <a class="el" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions.">retcodes.h</a> (this is NOT the validation result that's written into the out_validation_result argument; the returned int describes whether the actual parsing/decoding part failed). </dd></dl>
 
 </div>
 </div>

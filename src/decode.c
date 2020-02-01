@@ -72,7 +72,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
 
 int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
 {
-    if (params == NULL || params->jwt == NULL || params->verification_key == NULL || (params->out_claims != NULL && params->out_claims_length == NULL))
+    if (params == NULL || params->jwt == NULL || params->verification_key == NULL)
     {
         return L8W8JWT_NULL_ARG;
     }
@@ -85,9 +85,14 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
     return L8W8JWT_SUCCESS;
 }
 
-int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out)
+int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length)
 {
-    int alg = params->alg;
+    if (out_claims != NULL && out_claims_length == NULL)
+    {
+        return L8W8JWT_NULL_ARG;
+    }
+
+    const int alg = params->alg;
     enum l8w8jwt_validation_result validation_res = L8W8JWT_VALID;
 
     int r = l8w8jwt_validate_decoding_params(params);
@@ -96,7 +101,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         return r;
     }
 
-    if (out == NULL)
+    if (out_validation_result == NULL)
     {
         return L8W8JWT_NULL_ARG;
     }
@@ -324,16 +329,36 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         mbedtls_pk_free(&pk);
     }
 
+    chillbuff claims;
+    r = chillbuff_init(&claims, 16, sizeof(struct l8w8jwt_claim), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
+    }
 
     // TODO: other claims verification
 
     r = L8W8JWT_SUCCESS;
-    *out = validation_res;
+
+    if (out_claims != NULL && out_claims_length != NULL)
+    {
+        *out_claims_length = claims.length;
+        *out_claims = (struct l8w8jwt_claim*)claims.array;
+    }
+
+    *out_validation_result = validation_res;
 
 exit:
     free(header);
     free(payload);
     free(signature);
+
+    if (out_claims == NULL || r != L8W8JWT_SUCCESS)
+    {
+        l8w8jwt_free_claims((struct l8w8jwt_claim*)claims.array, claims.length);
+    }
+
     return r;
 }
 

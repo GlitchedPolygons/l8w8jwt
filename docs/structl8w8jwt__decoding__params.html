@@ -70,15 +70,6 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="decode_8h_source.html">decode.h</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for l8w8jwt_decoding_params:</div>
-<div class="dyncontent">
-<div class="center"><img src="structl8w8jwt__decoding__params__coll__graph.png" border="0" usemap="#l8w8jwt__decoding__params_coll__map" alt="Collaboration graph"/></div>
-<map name="l8w8jwt__decoding__params_coll__map" id="l8w8jwt__decoding__params_coll__map">
-<area shape="rect" title=" " alt="" coords="5,95,179,121"/>
-<area shape="rect" href="structl8w8jwt__claim.html" title=" " alt="" coords="41,5,143,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -120,10 +111,6 @@ Public Attributes</h2></td></tr>
 <tr class="separator:af3a727dbda6d1a1b06934249a86b05c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeafb73bb540cf91f61dbda889a470d96"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#aeafb73bb540cf91f61dbda889a470d96">verification_key_length</a></td></tr>
 <tr class="separator:aeafb73bb540cf91f61dbda889a470d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cf9f73a988aa47c78d930e146702965"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#a6cf9f73a988aa47c78d930e146702965">out_claims</a></td></tr>
-<tr class="separator:a6cf9f73a988aa47c78d930e146702965"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeeb0d6b0ddeb19084ca0b32867eaefb8"><td class="memItemLeft" align="right" valign="top">size_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#aeeb0d6b0ddeb19084ca0b32867eaefb8">out_claims_length</a></td></tr>
-<tr class="separator:aeeb0d6b0ddeb19084ca0b32867eaefb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct containing the parameters to use for decoding and validating a JWT. </p>
@@ -218,40 +205,6 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>The amount of seconds to subtract from the current time when comparing the "not before" claim, to allow for a small tolerance time frame. Only taken into consideration if <a class="el" href="structl8w8jwt__decoding__params.html#aeb79a31a8ccfef34cd2e75265d11fb08">validate_nbf</a> is set to <code>true</code>. </p>
-
-</div>
-</div>
-<a id="a6cf9f73a988aa47c78d930e146702965"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6cf9f73a988aa47c78d930e146702965">&#9670;&nbsp;</a></span>out_claims</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a>** l8w8jwt_decoding_params::out_claims</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>[OPTIONAL] Where the decoded claims (header + payload claims together) should be written into. </p>
-<p>This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer! </p>
-<p>If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...). </p>
-<dl class="section note"><dt>Note</dt><dd>If you decide to keep the claims in this out parameter, REMEMBER to call <a class="el" href="claim_8h.html#a0de61424e50fa9e9eff05d53f3257291">l8w8jwt_free_claims()</a> on it once you're done using them! </dd></dl>
-
-</div>
-</div>
-<a id="aeeb0d6b0ddeb19084ca0b32867eaefb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeeb0d6b0ddeb19084ca0b32867eaefb8">&#9670;&nbsp;</a></span>out_claims_length</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t* l8w8jwt_decoding_params::out_claims_length</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Where to write the decoded claims count into. </p>
-<p>This will receive the value of how many claims were written into "out_claims" (0 if you decided to set "out_claims" to <code>NULL</code>). </p>
 
 </div>
 </div>

@@ -109,7 +109,7 @@ int main(void)
     };
 
     enum l8w8jwt_validation_result validation_result;
-    int r = l8w8jwt_decode(&params, &validation_result);
+    int r = l8w8jwt_decode(&params, &validation_result, NULL, NULL);
 
     printf("\nl8w8jwt_decode_ps512 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
 
