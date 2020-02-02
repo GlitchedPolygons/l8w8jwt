@@ -81,21 +81,15 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
 
         char* end = strchr(++c, '\"');
 
+        while (end != NULL && *(end - 1) == '\\')
+        {
+            end = strchr(end + 1, '\"');
+        }
+
         if (end == NULL || end - json >= json_length)
         {
             return L8W8JWT_CLAIM_PARSE_FAILURE;
         }
-
-        while (*(end - 1) == '\\')
-        {
-            end = strchr(end + 1, '\"');
-            if (end == NULL || end - json >= json_length)
-            {
-                return L8W8JWT_CLAIM_PARSE_FAILURE;
-            }
-        }
-
-        
     }
 }
 
