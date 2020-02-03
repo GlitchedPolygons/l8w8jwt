@@ -169,6 +169,16 @@ exit:
     return r;
 }
 
+void l8w8jwt_decoding_params_init(struct l8w8jwt_decoding_params* params)
+{
+    if (params == NULL)
+    {
+        return;
+    }
+    memset(params, 0x00, sizeof(struct l8w8jwt_decoding_params));
+    params->alg = -2;
+}
+
 int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
 {
     if (params == NULL || params->jwt == NULL || params->verification_key == NULL)

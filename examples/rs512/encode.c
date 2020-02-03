@@ -103,11 +103,41 @@ int main(void)
 
     struct l8w8jwt_claim payload_claims[] =
     {
-        { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING },
-        { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER },
-        { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
-        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN },
-        { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL }
+        {
+            .key = "ctx",
+            .key_length = 3,
+            .value = "Unforseen Consequences",
+            .value_length = strlen("Unforseen Consequences"),
+            .type = L8W8JWT_CLAIM_TYPE_STRING
+        },
+        {
+            .key = "age",
+            .key_length = 3,
+            .value = "27",
+            .value_length = strlen("27"),
+            .type = L8W8JWT_CLAIM_TYPE_INTEGER
+        },
+        {
+            .key = "size",
+            .key_length = strlen("size"),
+            .value = "1.85",
+            .value_length = strlen("1.85"),
+            .type = L8W8JWT_CLAIM_TYPE_NUMBER
+        },
+        {
+            .key = "alive",
+            .key_length = strlen("alive"),
+            .value = "true",
+            .value_length = strlen("true"),
+            .type = L8W8JWT_CLAIM_TYPE_BOOLEAN
+        },
+        {
+            .key = "nulltest",
+            .key_length = strlen("nulltest"),
+            .value = "null",
+            .value_length = strlen("null"),
+            .type = L8W8JWT_CLAIM_TYPE_NULL
+        }
     };
 
     struct l8w8jwt_encoding_params params =
@@ -124,7 +154,7 @@ int main(void)
         .aud_length = strlen("Administrator"),
 
         .iat = time(NULL),
-        .exp = time(NULL) + 600,
+        .exp = time(NULL) + 600, // Set to expire after 10 minutes (600 seconds).
 
         .additional_header_claims = header_claims,
         .additional_header_claims_count = sizeof(header_claims) / sizeof(struct l8w8jwt_claim),

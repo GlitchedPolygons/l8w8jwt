@@ -87,7 +87,7 @@ int main(void)
         .aud_length = strlen("Administrator"),
 
         .iat = time(NULL),
-        .exp = time(NULL) + 600,
+        .exp = time(NULL) + 600, // Set to expire after 10 minutes (600 seconds).
 
         .additional_header_claims = header_claims,
         .additional_header_claims_count = sizeof(header_claims) / sizeof(struct l8w8jwt_claim),

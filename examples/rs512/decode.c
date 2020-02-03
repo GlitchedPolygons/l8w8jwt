@@ -89,34 +89,31 @@ static const char JWT[] = "eyJhbGciOiJQUzM4NCIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta
 
 int main(void)
 {
-    struct l8w8jwt_decoding_params params = {
+    struct l8w8jwt_decoding_params params;
+    l8w8jwt_decoding_params_init(&params);
 
-        .alg = L8W8JWT_ALG_RS512,
+    params.alg = L8W8JWT_ALG_RS512;
 
-        .jwt = (char*)JWT,
-        .jwt_length = strlen(JWT),
+    params.jwt = (char*)JWT;
+    params.jwt_length = strlen(JWT);
 
-        .verification_key = (unsigned char*)RSA_PUBLIC_KEY,
-        .verification_key_length = strlen(RSA_PUBLIC_KEY),
+    params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    params.verification_key_length = strlen(RSA_PUBLIC_KEY);
 
-        .validate_iss = "Black Mesa",
-        .validate_iss_length = 10,
+    params.validate_iss = "Black Mesa";
+    params.validate_iss_length = strlen(params.validate_iss);
 
-        .validate_sub = "Gordon Freeman",
-        .validate_sub_length = 14,
+    params.validate_sub = "Gordon Freeman";
+    params.validate_sub_length = strlen(params.validate_sub);
 
-        .validate_aud = NULL,
-        .validate_aud_length = 0,
+    params.validate_exp = true;
+    params.exp_tolerance_seconds = 60;
 
-        .validate_exp = true,
-        .exp_tolerance_seconds = 60,
+    params.validate_nbf = true;
+    params.nbf_tolerance_seconds = 0;
 
-        .validate_nbf = true,
-        .nbf_tolerance_seconds = 0,
-
-        .validate_iat = true,
-        .iat_tolerance_seconds = 60
-    };
+    params.validate_iat = true;
+    params.iat_tolerance_seconds = 60;
 
     enum l8w8jwt_validation_result validation_result;
     int r = l8w8jwt_decode(&params, &validation_result, NULL, NULL);

@@ -42,16 +42,28 @@ static const char JWT[] = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta
 
 int main(void)
 {
-    struct l8w8jwt_decoding_params params = {
+    struct l8w8jwt_decoding_params params;
+    l8w8jwt_decoding_params_init(&params);
 
-        .alg = L8W8JWT_ALG_ES512,
+    params.alg = L8W8JWT_ALG_ES512;
 
-        .jwt = (char*)JWT,
-        .jwt_length = strlen(JWT),
+    params.jwt = (char*)JWT;
+    params.jwt_length = strlen(JWT);
 
-        .verification_key = (unsigned char*)ECDSA_PUBLIC_KEY,
-        .verification_key_length = strlen(ECDSA_PUBLIC_KEY),
-    };
+    params.verification_key = (unsigned char*)ECDSA_PUBLIC_KEY;
+    params.verification_key_length = strlen(ECDSA_PUBLIC_KEY);
+
+    params.validate_iss = "Black Mesa";
+    params.validate_iss_length = strlen(params.validate_iss);
+
+    params.validate_sub = "Gordon Freeman";
+    params.validate_sub_length = strlen(params.validate_sub);
+
+    params.validate_exp = true;
+    params.exp_tolerance_seconds = 60;
+
+    params.validate_iat = true;
+    params.iat_tolerance_seconds = 60;
 
     enum l8w8jwt_validation_result validation_result;
     int r = l8w8jwt_decode(&params, &validation_result, NULL, NULL);

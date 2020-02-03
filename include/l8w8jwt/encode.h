@@ -174,6 +174,12 @@ struct l8w8jwt_encoding_params
 };
 
 /**
+ * Initializes a {@link #l8w8jwt_encoding_params) instance by setting its fields to default values.
+ * @param params The l8w8jwt_encoding_params to initialize (set to default values).
+ */
+void l8w8jwt_encoding_params_init(struct l8w8jwt_encoding_params* params);
+
+/**
  * Validates a set of l8w8jwt_encoding_params.
  * @param params The l8w8jwt_encoding_params to validate.
  * @return Return code as defined in retcodes.h
