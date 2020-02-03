@@ -140,37 +140,34 @@ int main(void)
         }
     };
 
-    struct l8w8jwt_encoding_params params =
-    {
-        .alg = L8W8JWT_ALG_RS256,
+    struct l8w8jwt_encoding_params params;
+    l8w8jwt_encoding_params_init(&params);
 
-        .sub = "Gordon Freeman",
-        .sub_length = strlen("Gordon Freeman"),
+    params.alg = L8W8JWT_ALG_RS256;
 
-        .iss = "Black Mesa",
-        .iss_length = strlen("Black Mesa"),
+    params.sub = "Gordon Freeman";
+    params.sub_length = strlen("Gordon Freeman");
 
-        .aud = "Administrator",
-        .aud_length = strlen("Administrator"),
+    params.iss = "Black Mesa";
+    params.iss_length = strlen("Black Mesa");
 
-        .iat = time(NULL),
-        .exp = time(NULL) + 600,
+    params.aud = "Administrator";
+    params.aud_length = strlen("Administrator");
 
-        .additional_header_claims = header_claims,
-        .additional_header_claims_count = sizeof(header_claims) / sizeof(struct l8w8jwt_claim),
+    params.iat = time(NULL);
+    params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
-        .additional_payload_claims = payload_claims,
-        .additional_payload_claims_count = sizeof(payload_claims) / sizeof(struct l8w8jwt_claim),
+    params.additional_header_claims = header_claims;
+    params.additional_header_claims_count = sizeof(header_claims) / sizeof(struct l8w8jwt_claim);
 
-        .secret_key = (unsigned char*)RSA_PRIVATE_KEY,
-        .secret_key_length = strlen(RSA_PRIVATE_KEY),
+    params.additional_payload_claims = payload_claims;
+    params.additional_payload_claims_count = sizeof(payload_claims) / sizeof(struct l8w8jwt_claim);
 
-        .secret_key_pw = NULL,
-        .secret_key_pw_length = 0,
+    params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    params.secret_key_length = strlen(RSA_PRIVATE_KEY);
 
-        .out = &jwt,
-        .out_length = &jwt_length
-    };
+    params.out = &jwt;
+    params.out_length = &jwt_length;
 
     int r = l8w8jwt_encode(&params);
     printf("\nl8w8jwt_encode_rs256 function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
