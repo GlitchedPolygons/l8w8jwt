@@ -131,6 +131,8 @@ Functions</h2></td></tr>
 <tr class="separator:a0de61424e50fa9e9eff05d53f3257291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accd0d74e3743501951f058bb19a2c68f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="claim_8h.html#accd0d74e3743501951f058bb19a2c68f">l8w8jwt_write_claims</a> (chillbuff *stringbuilder, struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> *claims, size_t claims_count)</td></tr>
 <tr class="separator:accd0d74e3743501951f058bb19a2c68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d55b6f43b7f13eaea7a13a1e086ec2f"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="claim_8h.html#a3d55b6f43b7f13eaea7a13a1e086ec2f">l8w8jwt_get_claim</a> (struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> *claims, size_t claims_count, const char *key, size_t key_length)</td></tr>
+<tr class="separator:a3d55b6f43b7f13eaea7a13a1e086ec2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>JWT claims as described in <a href="https://auth0.com/docs/tokens/concepts/jwt-claims">https://auth0.com/docs/tokens/concepts/jwt-claims</a>. </p>
@@ -289,6 +291,56 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a3d55b6f43b7f13eaea7a13a1e086ec2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d55b6f43b7f13eaea7a13a1e086ec2f">&#9670;&nbsp;</a></span>l8w8jwt_get_claim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a>* l8w8jwt_get_claim </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> *&#160;</td>
+          <td class="paramname"><em>claims</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>claims_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>key_length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets a claim by key from a <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> array. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">claims</td><td>The array to look in. </td></tr>
+    <tr><td class="paramname">claims_count</td><td>The claims array size. </td></tr>
+    <tr><td class="paramname">key</td><td>The claim key (e.g. "sub") to look for. </td></tr>
+    <tr><td class="paramname">key_length</td><td>The claim key's string length. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The found claim; <code>NULL</code> if no such claim was found in the array. </dd></dl>
 
 </div>
 </div>

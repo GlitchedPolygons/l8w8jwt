@@ -174,7 +174,7 @@ struct l8w8jwt_encoding_params
 };
 
 /**
- * Initializes a {@link #l8w8jwt_encoding_params) instance by setting its fields to default values.
+ * Initializes a {@link #l8w8jwt_encoding_params} instance by setting its fields to default values.
  * @param params The l8w8jwt_encoding_params to initialize (set to default values).
  */
 void l8w8jwt_encoding_params_init(struct l8w8jwt_encoding_params* params);
