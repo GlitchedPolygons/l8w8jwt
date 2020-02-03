@@ -47,42 +47,42 @@ enum l8w8jwt_validation_result
     /**
      * The issuer claim is invalid.
      */
-    L8W8JWT_ISS_FAILURE = 1 << 0,
+    L8W8JWT_ISS_FAILURE = (unsigned)1 << (unsigned)0,
 
     /**
      * The subject claim is invalid.
      */
-    L8W8JWT_SUB_FAILURE = 1 << 1,
+    L8W8JWT_SUB_FAILURE = (unsigned)1 << (unsigned)1,
 
     /**
      * The audience claim is invalid.
      */
-    L8W8JWT_AUD_FAILURE = 1 << 2,
+    L8W8JWT_AUD_FAILURE = (unsigned)1 << (unsigned)2,
 
     /**
      * The JWT ID claim is invalid.
      */
-    L8W8JWT_JTI_FAILURE = 1 << 3,
+    L8W8JWT_JTI_FAILURE = (unsigned)1 << (unsigned)3,
 
     /**
      * The token is expired.
      */
-    L8W8JWT_EXP_FAILURE = 1 << 4,
+    L8W8JWT_EXP_FAILURE = (unsigned)1 << (unsigned)4,
 
     /**
      * The token is not yet valid.
      */
-    L8W8JWT_NBF_FAILURE = 1 << 5,
+    L8W8JWT_NBF_FAILURE = (unsigned)1 << (unsigned)5,
 
     /**
      * The token was not issued yet, are you from the future?
      */
-    L8W8JWT_IAT_FAILURE = 1 << 6,
+    L8W8JWT_IAT_FAILURE = (unsigned)1 << (unsigned)6,
 
     /**
      * The token was potentially tampered with: its signature couldn't be verified.
      */
-    L8W8JWT_SIGNATURE_VERIFICATION_FAILURE = 1 << 7
+    L8W8JWT_SIGNATURE_VERIFICATION_FAILURE = (unsigned)1 << (unsigned)7
 };
 
 /**

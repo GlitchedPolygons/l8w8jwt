@@ -17,7 +17,7 @@
 /**
  *  @file base64.h
  *  @author Raphael Beck
- *  @brief Base-64 l8w8jwt_encode and decode strings/bytes. <p>
+ *  @brief Base-64 encode and decode strings/bytes. <p>
  *  @warning The caller is responsible for freeing the returned buffers! <p>
  *  Pass <code>true</code> as first parameter if you want to use base64url encoding instead of base64.
  *  @see https://en.wikipedia.org/wiki/Base64#URL_applications

@@ -17,7 +17,7 @@
 /**
  *  @file encode.h
  *  @author Raphael Beck
- *  @brief Core ENCODE function for l8w8jwt. Use this to l8w8jwt_encode a JWT header + payload WITHOUT signing.
+ *  @brief Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing.
  */
 
 #ifndef L8W8JWT_ENCODE_H

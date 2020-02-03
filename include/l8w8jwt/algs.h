@@ -27,8 +27,6 @@
 extern "C" {
 #endif
 
-//#include <mbedtls/md_internal.h>
-
 /**
  * HMAC-SHA256 signing algorithm.
  */

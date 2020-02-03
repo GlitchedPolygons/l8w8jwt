@@ -109,7 +109,7 @@ struct l8w8jwt_claim
 };
 
 /**
- * Frees a heap-allocated array of <code>l8w8jwt_claim</code>s.
+ * Frees a heap-allocated <code>l8w8jwt_claim</code> array.
  * @param claims The claims to free.
  * @param claims_count The size of the passed claims array.
  */
