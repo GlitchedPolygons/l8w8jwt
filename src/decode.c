@@ -463,7 +463,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_sub != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "sub", 3);
-        if (c == NULL || strncmp(c->value, params->validate_sub, params->validate_sub_length) != 0)
+        if (c == NULL || strncmp(c->value, params->validate_sub, params->validate_sub_length ? params->validate_sub_length : strlen(params->validate_sub)) != 0)
         {
             validation_res |= (unsigned)L8W8JWT_SUB_FAILURE;
         }
@@ -472,7 +472,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_aud != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "aud", 3);
-        if (c == NULL || strncmp(c->value, params->validate_aud, params->validate_aud_length) != 0)
+        if (c == NULL || strncmp(c->value, params->validate_aud, params->validate_aud_length ? params->validate_aud_length : strlen(params->validate_aud)) != 0)
         {
             validation_res |= (unsigned)L8W8JWT_AUD_FAILURE;
         }
@@ -481,7 +481,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_iss != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "iss", 3);
-        if (c == NULL || strncmp(c->value, params->validate_iss, params->validate_iss_length) != 0)
+        if (c == NULL || strncmp(c->value, params->validate_iss, params->validate_iss_length ? params->validate_iss_length : strlen(params->validate_iss)) != 0)
         {
             validation_res |= (unsigned)L8W8JWT_ISS_FAILURE;
         }
@@ -490,7 +490,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_jti != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "jti", 3);
-        if (c == NULL || strncmp(c->value, params->validate_jti, params->validate_jti_length) != 0)
+        if (c == NULL || strncmp(c->value, params->validate_jti, params->validate_jti_length ? params->validate_jti_length : strlen(params->validate_jti)) != 0)
         {
             validation_res |= (unsigned)L8W8JWT_JTI_FAILURE;
         }
