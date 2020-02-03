@@ -20,6 +20,7 @@ set(CMAKE_C_STANDARD 11)
 add_subdirectory(lib/mbedtls)
 
 set(l8w8jwt_headers
+        lib/jsmn/jsmn.h
         lib/chillbuff/include/chillbuff.h
         include/l8w8jwt/retcodes.h
         include/l8w8jwt/algs.h
@@ -40,6 +41,7 @@ add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})
 
 target_include_directories(l8w8jwt PUBLIC lib/chillbuff/include)
 target_include_directories(l8w8jwt PRIVATE lib/mbedtls/include)
+target_include_directories(l8w8jwt PRIVATE lib/jsmn)
 target_include_directories(l8w8jwt PUBLIC include)
 
 if (UNIX AND NOT APPLE)

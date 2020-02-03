@@ -18,10 +18,14 @@
 extern "C" {
 #endif
 
+#define JSMN_STATIC
+
 #include "l8w8jwt/decode.h"
 #include "l8w8jwt/base64.h"
 #include "l8w8jwt/retcodes.h"
 
+#include <jsmn.h>
+#include <string.h>
 #include <stdbool.h>
 #include <inttypes.h>
 #include <mbedtls/pk.h>
@@ -72,25 +76,97 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
 
 static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json_length)
 {
-    for (char* c = json; c < json + json_length; c++)
+    jsmn_parser parser;
+    jsmn_init(&parser);
+
+    int r = jsmn_parse(&parser, json, json_length, NULL, 0);
+
+    if (r == 0)
     {
-        if (!c || *c != '\"')
-        {
-            continue;
-        }
-
-        char* end = strchr(++c, '\"');
-
-        while (end != NULL && *(end - 1) == '\\')
-        {
-            end = strchr(end + 1, '\"');
-        }
-
-        if (end == NULL || end - json >= json_length)
-        {
-            return L8W8JWT_CLAIM_PARSE_FAILURE;
-        }
+        return L8W8JWT_SUCCESS;
     }
+    else if (r < 0)
+    {
+        return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+    }
+
+    jsmntok_t _tokens[64];
+    jsmntok_t* tokens = r <= sizeof(_tokens) ? _tokens : malloc(r * sizeof(jsmntok_t));
+
+    if (tokens == NULL)
+    {
+        return L8W8JWT_OUT_OF_MEM;
+    }
+
+    jsmn_init(&parser);
+    r = jsmn_parse(&parser, json, json_length, tokens, r);
+
+    if (r < 0)
+    {
+        return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+    }
+
+    if (tokens->type != JSMN_OBJECT)
+    {
+        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        goto exit;
+    }
+
+    for (size_t i = 1; i < r; i++)
+    {
+        struct l8w8jwt_claim claim;
+
+        const jsmntok_t key = tokens[i];
+        const jsmntok_t value = tokens[++i];
+
+        if (i >= r)
+        {
+            r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+            goto exit;
+        }
+
+        switch (key.type)
+        {
+            case JSMN_UNDEFINED:
+                claim.type = L8W8JWT_CLAIM_TYPE_OTHER;
+                break;
+            case JSMN_OBJECT:
+                claim.type = L8W8JWT_CLAIM_TYPE_OBJECT;
+                break;
+            case JSMN_ARRAY:
+                claim.type = L8W8JWT_CLAIM_TYPE_ARRAY;
+                break;
+            case JSMN_STRING:
+                claim.type = L8W8JWT_CLAIM_TYPE_STRING;
+                break;
+            case JSMN_PRIMITIVE:
+                // TODO: parse and filter type (e.g. number vs boolean etc...)
+                break;
+            default:
+                r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+                goto exit;
+        }
+
+        claim.key_length = key.end - key.start;
+        claim.key = malloc(sizeof(char) * claim.key_length + 1);
+        claim.key[claim.key_length] = '\0';
+        memcpy(claim.key, json + key.start, claim.key_length);
+
+        claim.value_length = value.end - value.start;
+        claim.value = malloc(sizeof(char) * claim.value_length + 1);
+        claim.value[claim.value_length] = '\0';
+        memcpy(claim.value, json + value.start, claim.value_length);
+
+        chillbuff_push_back(buffer, &claim, 1);
+    }
+
+    r = L8W8JWT_SUCCESS;
+exit:
+    if (tokens != _tokens)
+    {
+        free(tokens);
+    }
+    return r;
 }
 
 int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
@@ -374,17 +450,79 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         goto exit;
     }
 
-    // TODO:  claims verification
+    if (params->validate_sub != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "sub", 3);
+        if (c == NULL || strncmp(c->value, params->validate_sub, params->validate_sub_length) != 0)
+        {
+            validation_res |= (unsigned)L8W8JWT_SUB_FAILURE;
+        }
+    }
+
+    if (params->validate_aud != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "aud", 3);
+        if (c == NULL || strncmp(c->value, params->validate_aud, params->validate_aud_length) != 0)
+        {
+            validation_res |= (unsigned)L8W8JWT_AUD_FAILURE;
+        }
+    }
+
+    if (params->validate_iss != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "iss", 3);
+        if (c == NULL || strncmp(c->value, params->validate_iss, params->validate_iss_length) != 0)
+        {
+            validation_res |= (unsigned)L8W8JWT_ISS_FAILURE;
+        }
+    }
+
+    if (params->validate_jti != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "jti", 3);
+        if (c == NULL || strncmp(c->value, params->validate_jti, params->validate_jti_length) != 0)
+        {
+            validation_res |= (unsigned)L8W8JWT_JTI_FAILURE;
+        }
+    }
+
+    const time_t ct = time(NULL);
+
+    if (params->validate_exp)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "exp", 3);
+        if (c == NULL || ct + params->exp_tolerance_seconds > atoll(c->value))
+        {
+            validation_res |= (unsigned)L8W8JWT_EXP_FAILURE;
+        }
+    }
+
+    if (params->validate_nbf)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "nbf", 3);
+        if (c == NULL || ct + params->nbf_tolerance_seconds < atoll(c->value))
+        {
+            validation_res |= (unsigned)L8W8JWT_NBF_FAILURE;
+        }
+    }
+
+    if (params->validate_iat)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "iat", 3);
+        if (c == NULL || ct + params->iat_tolerance_seconds < atoll(c->value))
+        {
+            validation_res |= (unsigned)L8W8JWT_IAT_FAILURE;
+        }
+    }
 
     r = L8W8JWT_SUCCESS;
+    *out_validation_result = validation_res;
 
     if (out_claims != NULL && out_claims_length != NULL)
     {
         *out_claims_length = claims.length;
         *out_claims = (struct l8w8jwt_claim*)claims.array;
     }
-
-    *out_validation_result = validation_res;
 
 exit:
     free(header);
@@ -398,6 +536,8 @@ exit:
 
     return r;
 }
+
+#undef JSMN_STATIC
 
 #ifdef __cplusplus
 } // extern "C"

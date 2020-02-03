@@ -83,6 +83,20 @@ int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims,
     return L8W8JWT_SUCCESS;
 }
 
+struct l8w8jwt_claim* l8w8jwt_get_claim(struct l8w8jwt_claim* claims, size_t claims_count, const char* key, size_t key_length)
+{
+    if (claims == NULL || key == NULL || claims_count == 0 || key_length == 0)
+        return NULL;
+
+    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; claim++)
+    {
+        if (strncmp(claim->key, key, key_length) == 0)
+            return claim;
+    }
+
+    return NULL;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

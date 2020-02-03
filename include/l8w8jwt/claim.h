@@ -125,6 +125,16 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, size_t claims_count);
  */
 int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims, size_t claims_count);
 
+/**
+ * Gets a claim by key from a l8w8jwt_claim array.
+ * @param claims The array to look in.
+ * @param claims_count The claims array size.
+ * @param key The claim key (e.g. "sub") to look for.
+ * @param key_length The claim key's string length.
+ * @return The found claim; <code>NULL</code> if no such claim was found in the array.
+ */
+struct l8w8jwt_claim* l8w8jwt_get_claim(struct l8w8jwt_claim* claims, size_t claims_count, const char* key, size_t key_length);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

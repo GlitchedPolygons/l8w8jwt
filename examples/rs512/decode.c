@@ -85,7 +85,7 @@ static const char RSA_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
                                      "B9ymLxQBRp8osHjuZpKXr3cCAwEAAQ==\n"
                                      "-----END PUBLIC KEY-----";
 
-static const char JWT[] = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE1ODAzNDAwMzcsImV4cCI6MTU4MDM0MDYzNywic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.Rc693uEBu00aSaZ_2n14hakj6GRQutC4nA9NNopeHOUnV940_6vLsHXeiPGLb4YBiyzBMdIZ17kNYS9wavTEaliZ5O6c4IAXQTBOD1uxCJQHlAfPPLtHBHgory_LaHUYMkqc6bv_cx4afPlTTCIpw-R6fwv158_soxQsDkT2iIAIn6RdzPaMBmG2URCSHZMpt8-RIqKePI2hLUDVyvTYWAKJc3TxlJHUQH-ZxHyzgAtOroX8UZwSO-2XMfZxPksNBjvHbQ3vEYXtWVSDcj24JLKJvXqyXNbM481BABTmYU7stfP8kG71dBOLSDxFBypIiskurP6lUS6sipGOzJ5GpPiLWUUMaFUCOu8IUNZT6OPzen2YF4axXpltajurDUWaFLSj9EbDLEDEttL4ozK4zUdcQl7z-MVrwLnb2R0-1c0s1zhpbpKOpRo97T5kf6V8WPkNkXUcghRQg8AXB2L6Py6CZucdMLPYFlEX8KF8h25SL1O4nz7Al0IHrcSj_eHHKZFxHH1OsuM7iekuSkkszBWxnp-nX3eLK7rLLooo1Kvcnc2j8C9ubZOizPZUZarm_IoNI18SoOgeJmW7kpO3H8SCRqGfKCzVlyEPLfmo5o2KJgJ30ykR6CRX-3MVGIIJQIPH3newkdMmhscYi70hbpXzvFI6t_9KuqFMP2jQNmo";
+static const char JWT[] = "eyJhbGciOiJQUzM4NCIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE1ODAzNDAwMzcsImV4cCI6MTU4MDM0MDYzNywic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJuYmYiOiIxNTgwMzQwNjM3Iiwic2l6ZSI6MS44NSwiYWxpdmUiOnRydWUsIm51bGx0ZXN0IjpudWxsfQ.S6m2xbt9gqDnrhwepSwCIn3iZQJyPGeWY5YfEvuxcSxNu9wXVJQDpseLxPYbbW45B30S0SYtHXUnpWbd73NmOv5r54T0pcG5T1dOaCjQx-Lbuhhh_J_ad5FDEHuoZETEWNXrvsb84XSHpIjjpa_q6LY-wOMukrPplKzSlNnHMhxIeT7jRuofMdVHII5IcQuz8CrA-CX1-5iEGV1EfLBy1KoBjVi6qcgfeDRUj5gD58tpWHa0uYxovG3_O3YOkecznQn3msOt8NGgeE261Q7Y6MWJiMuScLQrUdV9-W_Kj3nAFL2LX215y3SmtuhETnaWLxJv3FJugZmdgzt1M2B5hNYy_2x8RlJpw7dtnOZbneAbQbKP5QVYR_iczQ7q5vfX5SHRC4ZMntlnfjGbCwkOuRL7-NUqSwXlna7a99jtIsUqmZNDB4DAzVi65oknAqfDAtryLdRMX5MEUwYg7gpHyn7dRQdhVwX4CtWVutka04LcNjPgYxXQ9XsCC0Df3CVAK9a0Ml63kEUQYiiF5wvSPAkn8gHM03W17aqDZaLZnARZE36Rpbcw0Hq1-dP7t3-eIaVIU-LNojUNoFmjahgi5IVZaDUJUHkH_yhdtXH4WA4TXc9yevuYOud1AUUH-pivDgChocq_NNs7Qf8QfmOMXXHsFyK9DEyBA0EairtI5vY";
 
 int main(void)
 {
@@ -98,6 +98,21 @@ int main(void)
 
         .verification_key = (unsigned char*)RSA_PUBLIC_KEY,
         .verification_key_length = strlen(RSA_PUBLIC_KEY),
+
+        .validate_iss = "Black Mesa",
+        .validate_iss_length = 10,
+
+        .validate_sub = "Gordon Freeman",
+        .validate_sub_length = 14,
+
+        .validate_exp = true,
+        .exp_tolerance_seconds = 60,
+
+        .validate_nbf = true,
+        .nbf_tolerance_seconds = 0,
+
+        .validate_iat = true,
+        .iat_tolerance_seconds = 60
     };
 
     enum l8w8jwt_validation_result validation_result;
