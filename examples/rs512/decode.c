@@ -105,6 +105,9 @@ int main(void)
         .validate_sub = "Gordon Freeman",
         .validate_sub_length = 14,
 
+        .validate_aud = NULL,
+        .validate_aud_length = 0,
+
         .validate_exp = true,
         .exp_tolerance_seconds = 60,
 
