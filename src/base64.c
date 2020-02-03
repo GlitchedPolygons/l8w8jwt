@@ -246,18 +246,18 @@ int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, 
     if (r == 3)
         r = 1;
 
-    size_t olen = count / 4 * 3;
-    uint8_t* pos = *out = malloc(olen + 1);
-
+    *out = calloc(count / 4 * 3 + 16, sizeof(uint8_t));
     if (*out == NULL)
     {
         return L8W8JWT_OUT_OF_MEM;
     }
 
+
     count = 0;
     int pad = 0;
     uint8_t tmp;
     uint8_t block[4];
+    uint8_t* pos = *out;
 
     for (i = 0; i < data_length + r; i++)
     {
@@ -302,7 +302,6 @@ int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, 
     }
 
     *out_length = pos - *out;
-    *pos = '\0';
 
     return L8W8JWT_SUCCESS;
 }
