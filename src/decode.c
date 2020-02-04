@@ -74,6 +74,82 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
+static inline int checknum(char* string, const size_t string_length)
+{
+    if (string == NULL || string_length == 0)
+        return 0;
+
+    char* c = string;
+    while (*c == ' ' && c < string + string_length)
+        c++;
+
+    switch (*c)
+    {
+        case '+':
+        case '-':
+            if (++c >= string + string_length)
+                return 0;
+        default:
+            break;
+    }
+
+    unsigned int type = 0;
+    for (; c < string + string_length; c++)
+    {
+        switch (*c)
+        {
+            case '0':
+                if (!(type & 1 << 0) && *(c + 1) != '.')
+                    return c == string + string_length - 1;
+                type |= 1 << 0;
+                continue;
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                type |= 1 << 0;
+                continue;
+            case '-':
+                if (type & 1 << 1 || (*(c - 1) != 'E' && *(c - 1) != 'e'))
+                    return 0;
+                type |= 1 << 1;
+                continue;
+            case '.':
+                if (type & 1 << 2 || type & 1 << 3)
+                    return 0;
+                type |= 1 << 2;
+                continue;
+            case 'E':
+            case 'e':
+                if (!(type & 1 << 0) || type & 1 << 3)
+                    return 0;
+                type |= 1 << 3;
+                continue;
+            case '+':
+                if (type & 1 << 4 || (*(c - 1) != 'E' && *(c - 1) != 'e'))
+                    return 0;
+                type |= 1 << 4;
+                continue;
+            default:
+                return 0;
+        }
+    }
+    switch (type)
+    {
+        case 0:
+            return 0;
+        case 1 << 0:
+            return 1;
+        default:
+            return type & 1 << 0 ? 2 : 0;
+    }
+}
+
 static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json_length)
 {
     jsmn_parser parser;
@@ -119,13 +195,13 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
         const jsmntok_t key = tokens[i];
         const jsmntok_t value = tokens[++i];
 
-        if (i >= r)
+        if (i >= r || key.type != JSMN_STRING)
         {
             r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
             goto exit;
         }
 
-        switch (key.type)
+        switch (value.type)
         {
             case JSMN_UNDEFINED:
                 claim.type = L8W8JWT_CLAIM_TYPE_OTHER;
@@ -139,9 +215,36 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
             case JSMN_STRING:
                 claim.type = L8W8JWT_CLAIM_TYPE_STRING;
                 break;
-            case JSMN_PRIMITIVE:
-                // TODO: parse and filter type (e.g. number vs boolean etc...)
+            case JSMN_PRIMITIVE: {
+                const int value_length = value.end - value.start;
+
+                if (value_length <= 5 && (strncmp(json + value.start, "true", 4) == 0 || strncmp(json + value.start, "false", 5) == 0))
+                {
+                    claim.type = L8W8JWT_CLAIM_TYPE_BOOLEAN;
+                    break;
+                }
+
+                if (value_length == 4 && strncmp(json + value.start, "null", 4) == 0)
+                {
+                    claim.type = L8W8JWT_CLAIM_TYPE_NULL;
+                    break;
+                }
+
+                switch (checknum(json + value.start, value.end - value.start))
+                {
+                    case 1:
+                        claim.type = L8W8JWT_CLAIM_TYPE_INTEGER;
+                        break;
+                    case 2:
+                        claim.type = L8W8JWT_CLAIM_TYPE_NUMBER;
+                        break;
+                    default:
+                        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+                        goto exit;
+                }
+
                 break;
+            }
             default:
                 r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
                 goto exit;
