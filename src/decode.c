@@ -74,20 +74,21 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
-static inline int checknum(char* string, const int string_length)
+static inline int checknum(char* string, size_t string_length)
 {
-    if (string == NULL || string_length == 0 || string_length >= 512))
+    if (string == NULL)
         return 0;
 
-    char tmp[512];
-    memset(tmp, '\0', sizeof(tmp));
-    memcpy(tmp, string, string_length);
-
-// TODO: replace below code with sscanf variant (?)
+    if (string_length == 0)
+        string_length = strlen(string);
 
     char* c = string;
+
     while (*c == ' ' && c < string + string_length)
         c++;
+
+    while (*(string + string_length - 1) == ' ' && c < string + string_length)
+        string_length--;
 
     switch (*c)
     {
@@ -100,15 +101,19 @@ static inline int checknum(char* string, const int string_length)
     }
 
     unsigned int type = 0;
+
+    if (*c == '0')
+    {
+        type |= 1 << 0;
+        if (*++c != '.' && c < string + string_length)
+            return 0;
+    }
+
     for (; c < string + string_length; c++)
     {
         switch (*c)
         {
             case '0':
-                if (!(type & 1 << 0) && *(c + 1) != '.')
-                    return c == string + string_length - 1;
-                type |= 1 << 0;
-                continue;
             case '1':
             case '2':
             case '3':
@@ -132,7 +137,7 @@ static inline int checknum(char* string, const int string_length)
                 continue;
             case 'E':
             case 'e':
-                if (!(type & 1 << 0) || type & 1 << 3)
+                if (!(type & 1 << 0) || type & 1 << 3 || c + 1 >= string + string_length)
                     return 0;
                 type |= 1 << 3;
                 continue;
@@ -145,6 +150,7 @@ static inline int checknum(char* string, const int string_length)
                 return 0;
         }
     }
+
     switch (type)
     {
         case 0:
@@ -158,6 +164,36 @@ static inline int checknum(char* string, const int string_length)
 
 static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json_length)
 {
+    int i1 = checknum("  0.0000", 0);
+    int i111 = checknum("0", 0);
+    int i121 = checknum("00", 0);
+    int i122 = checknum("0 ", 0);
+    int i551 = checknum("0123", 0);
+    int i2 = checknum("1.0030  ", 0);
+    int i20 = checknum("4256337 ", 0);
+    int i207 = checknum("-256337 ", 0);
+    int i297 = checknum("--56337 ", 0);
+    int i247 = checknum(" +56337 ", 0);
+    int i647 = checknum("++56337 ", 0);
+    int i27 = checknum("- 256337", 0);
+    int i3 = checknum("fdfdx5865jnw", 0);
+    int i4 = checknum(".2579000   ", 0);
+    int i5 = checknum("  0.04e-9000", 0);
+    int i99 = checknum(" 42.01E+92  ", 0);
+    int i6 = checknum("  514793 ", 0);
+    int i7 = checknum("  51 4793 ", 0);
+    int i8 = checknum("  0 ", 0);
+    int i9 = checknum("  .0 ", 0);
+    int i10 = checknum(" .2E-3   ", 0);
+    int i102 = checknum(" .2E-3", 0);
+    int i12 = checknum(".7E", 0);
+    int i100 = checknum(" .       ", 0);
+    int i133 = checknum("0.       ", 0);
+    int i109 = checknum("+.       ", 0);
+    int i108 = checknum("-.       ", 0);
+
+    // TODO: delete above tests soon
+
     jsmn_parser parser;
     jsmn_init(&parser);
 
