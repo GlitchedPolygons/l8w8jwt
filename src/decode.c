@@ -74,10 +74,16 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
-static inline int checknum(char* string, const size_t string_length)
+static inline int checknum(char* string, const int string_length)
 {
-    if (string == NULL || string_length == 0)
+    if (string == NULL || string_length == 0 || string_length >= 512))
         return 0;
+
+    char tmp[512];
+    memset(tmp, '\0', sizeof(tmp));
+    memcpy(tmp, string, string_length);
+
+// TODO: replace below code with sscanf variant (?)
 
     char* c = string;
     while (*c == ' ' && c < string + string_length)
@@ -230,7 +236,7 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
                     break;
                 }
 
-                switch (checknum(json + value.start, value.end - value.start))
+                switch (checknum(json + value.start, value_length))
                 {
                     case 1:
                         claim.type = L8W8JWT_CLAIM_TYPE_INTEGER;
