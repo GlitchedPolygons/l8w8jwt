@@ -34,6 +34,10 @@ extern "C" {
 #include "l8w8jwt/claim.h"
 #include "l8w8jwt/retcodes.h"
 
+#ifndef L8W8JWT_MAX_KEY_SIZE
+#define L8W8JWT_MAX_KEY_SIZE 8192
+#endif 
+
 /**
  * Struct containing the parameters to use for creating a JWT with l8w8jwt.
  */

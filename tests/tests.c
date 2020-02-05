@@ -18,11 +18,29 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
+#include "l8w8jwt/encode.h"
+#include "l8w8jwt/decode.h"
 
 /* A test case that does nothing and succeeds. */
 static void null_test_success(void** state)
 {
     (void)state;
+}
+
+static void test_default_l8w8jwt_validate_encoding_params(void** state)
+{
+    struct l8w8jwt_encoding_params params;
+    l8w8jwt_encoding_params_init(&params);
+    const int r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+}
+
+static void test_default_l8w8jwt_validate_decoding_params(void** state)
+{
+    struct l8w8jwt_decoding_params params;
+    l8w8jwt_decoding_params_init(&params);
+    const int r = l8w8jwt_validate_decoding_params(&params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
 }
 
 // --------------------------------------------------------------------------------------------------------------
@@ -32,6 +50,8 @@ int main(void)
     const struct CMUnitTest tests[] = 
     {
         cmocka_unit_test(null_test_success),
+        cmocka_unit_test(test_default_l8w8jwt_validate_encoding_params),
+        cmocka_unit_test(test_default_l8w8jwt_validate_decoding_params),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

@@ -36,8 +36,6 @@ extern "C" {
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/pk_internal.h>
 
-#define L8W8JWT_MAX_KEY_SIZE 8192
-
 static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, mbedtls_md_type_t* md_type, size_t* md_length)
 {
     switch (alg)
