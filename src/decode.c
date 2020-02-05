@@ -166,36 +166,6 @@ static inline int checknum(char* string, size_t string_length)
 
 static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json_length)
 {
-    int i1 = checknum("  0.0000", 0);
-    int i111 = checknum("0", 0);
-    int i121 = checknum("00", 0);
-    int i122 = checknum("0 ", 0);
-    int i551 = checknum("0123", 0);
-    int i2 = checknum("1.0030  ", 0);
-    int i20 = checknum("4256337 ", 0);
-    int i207 = checknum("-256337 ", 0);
-    int i297 = checknum("--56337 ", 0);
-    int i247 = checknum(" +56337 ", 0);
-    int i647 = checknum("++56337 ", 0);
-    int i27 = checknum("- 256337", 0);
-    int i3 = checknum("fdfdx5865jnw", 0);
-    int i4 = checknum(".2579000   ", 0);
-    int i5 = checknum("  0.04e-9000", 0);
-    int i99 = checknum(" 42.01E+92  ", 0);
-    int i6 = checknum("  514793 ", 0);
-    int i7 = checknum("  51 4793 ", 0);
-    int i8 = checknum("  0 ", 0);
-    int i9 = checknum("  .0 ", 0);
-    int i10 = checknum(" .2E-3   ", 0);
-    int i102 = checknum(" .2E-3", 0);
-    int i12 = checknum(".7E", 0);
-    int i100 = checknum(" .       ", 0);
-    int i133 = checknum("0.       ", 0);
-    int i109 = checknum("+.       ", 0);
-    int i108 = checknum("-.       ", 0);
-
-    // TODO: delete above tests soon
-
     jsmn_parser parser;
     jsmn_init(&parser);
 
