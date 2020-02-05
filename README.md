@@ -21,7 +21,9 @@ The others are extremely lightweight header-only libraries for JSON handling and
 
 ### How to use
 
-Just add l8w8jwt as a git submodule to your project (e.g. into some `lib/` or `deps/` folder inside your project's repo; `{repo_root}/lib/` is used here in the following example). If you don't want to use git submodules, you can also start vendoring a specific version of l8w8jwt by copying its full repo content into the folder where you keep your project's external libraries/dependencies.
+Just add l8w8jwt as a git submodule to your project (e.g. into some `lib/` or `deps/` folder inside your project's repo; `{repo_root}/lib/` is used here in the following example). 
+
+If you don't want to use git submodules, you can also start vendoring a specific version of l8w8jwt by copying its full repo content into the folder where you keep your project's external libraries/dependencies.
 
 ```bash
 git submodule add https://github.com/GlitchedPolygons/l8w8jwt.git lib/
