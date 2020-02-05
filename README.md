@@ -133,3 +133,5 @@ int main(void)
     return 0;
 }
 ```
+
+**More examples can be found inside this repo's [`examples/`](https://github.com/GlitchedPolygons/l8w8jwt/tree/master/examples) folder - check them out now and find out how to encode/decode custom claims and sign using the various asymmetric algos!**
