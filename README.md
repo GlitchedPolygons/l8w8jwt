@@ -1,7 +1,9 @@
 # l8w8jwt
 
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/0h3gkursbe2lpnqu?svg=true)](https://ci.appveyor.com/project/GlitchedPolygons/l8w8jwt)
+[![CircleCI](https://circleci.com/gh/GlitchedPolygons/l8w8jwt/tree/master.svg?style=shield)](https://app.circleci.com/github/GlitchedPolygons/l8w8jwt/pipelines?branch=master)
 [![License Shield](https://img.shields.io/badge/license-Apache--2.0-orange)](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/LICENSE)
-[![API](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/l8w8jwt)
+[![API Docs](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/l8w8jwt/files.html)
 
 [![Icon](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/icon.png?raw=true)](https://jwt.io/)
 
