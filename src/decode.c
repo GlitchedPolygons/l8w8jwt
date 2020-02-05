@@ -74,6 +74,8 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
+/* https://github.com/GlitchedPolygons/checknum */
+
 static inline int checknum(char* string, size_t string_length)
 {
     if (string == NULL)
