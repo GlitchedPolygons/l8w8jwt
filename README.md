@@ -113,6 +113,12 @@ int main(void)
     {
         printf("\n Example HS512 token validation failed! \n");
     }
+    
+    /*
+     * decode_results describes whether decoding/parsing the token succeeded or failed;
+     * the output l8w8jwt_validation_result variable contains actual information about
+     * JWT signature verification status and claims validation (e.g. expiration check).
+     */
 
     return 0;
 }
