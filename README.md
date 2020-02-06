@@ -135,3 +135,35 @@ int main(void)
 ```
 
 **More examples can be found inside this repo's [`examples/`](https://github.com/GlitchedPolygons/l8w8jwt/tree/master/examples) folder - check them out now and find out how to encode/decode custom claims and sign using the various asymmetric algos!**
+
+### Mandatory parameters
+
+Some encoding/decoding parameters can be omitted, while others can't. 
+
+Here is the overview of minimal **required** parameters that can't be omitted for encoding and decoding JWTs:
+
+<details>
+<summary>
+<strong>Encode</strong>
+</summary>
+<ul>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__encoding__params.html#a5bf39d6b8874a581a6787b9784403c44">l8w8jwt_encoding_params.alg</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__encoding__params.html#a34152cd49b4ea1bd906672b8167556d8">l8w8jwt_encoding_params.secret_key</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__encoding__params.html#a76e20b9285d52accb63ac5fc1dc924f7">l8w8jwt_encoding_params.secret_key_length</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__encoding__params.html#aff53956be385bd146899b80c44ae9484">l8w8jwt_encoding_params.out</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__encoding__params.html#a06c545ea2dd26dbcd3a8a7182c85b745">l8w8jwt_encoding_params.out_length</a></li>
+</ul>
+</details>
+
+<details>
+<summary>
+<strong>Decode</strong>
+</summary>
+<ul>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#a8cbaab2006eac325b92c1874020bcb1a">l8w8jwt_decoding_params.alg</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#a5fdb41e8f132385efd054f82c5e8b3d9">l8w8jwt_encoding_params.jwt</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#a75ba9b9c4dc7bd55b8e058f45fe8b66f">l8w8jwt_encoding_params.jwt_length</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#af3a727dbda6d1a1b06934249a86b05c5">l8w8jwt_encoding_params.verification_key</a></li>
+    <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#aeafb73bb540cf91f61dbda889a470d96">l8w8jwt_encoding_params.verification_key_length</a></li>
+</ul>
+</details>
