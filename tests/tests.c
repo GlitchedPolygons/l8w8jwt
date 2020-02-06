@@ -29,18 +29,142 @@ static void null_test_success(void** state)
 
 static void test_default_l8w8jwt_validate_encoding_params(void** state)
 {
+    int r;
+    char* out;
+    size_t out_length;
     struct l8w8jwt_encoding_params params;
+
+    struct l8w8jwt_claim header_claims[] =
+    {
+        {
+            .key = "kid",
+            .key_length = 3,
+            .value = "some-key-id-here-012345",
+            .value_length = 0, /* Setting this to 0 makes it use strlen(), which in this case is fine. */
+            .type = L8W8JWT_CLAIM_TYPE_STRING
+        }
+    };
+    
+    struct l8w8jwt_claim payload_claims[] =
+    {
+        {
+            .key = "tst",
+            .key_length = 3,
+            .value = "some-test-claim-here-012345",
+            .value_length = 0,
+            .type = L8W8JWT_CLAIM_TYPE_STRING
+        }
+    };
+
+    r = l8w8jwt_validate_encoding_params(NULL);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
     l8w8jwt_encoding_params_init(&params);
-    const int r = l8w8jwt_validate_encoding_params(&params);
-    //assert_int_equal(r, L8W8JWT_SUCCESS);
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.secret_key = NULL;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.out = NULL;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.out_length = NULL;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.secret_key = "test key";
+    params.secret_key_length = 0;
+    params.out = &out;
+    params.out_length = &out_length;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_INVALID_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.secret_key = "test key";
+    params.secret_key_length = L8W8JWT_MAX_KEY_SIZE + 1;
+    params.out = &out;
+    params.out_length = &out_length;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_INVALID_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.secret_key = "test key";
+    params.secret_key_length = 0;
+    params.out = &out;
+    params.out_length = &out_length;
+    params.additional_header_claims = header_claims;
+    params.additional_header_claims_count = 0;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_INVALID_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.secret_key = "test key";
+    params.secret_key_length = 0;
+    params.out = &out;
+    params.out_length = &out_length;
+    params.additional_payload_claims = payload_claims;
+    params.additional_payload_claims_count = 0;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_INVALID_ARG);
+
+    l8w8jwt_encoding_params_init(&params);
+    params.secret_key = "test key";
+    params.secret_key_length = strlen(params.secret_key);
+    params.out = &out;
+    params.out_length = &out_length;
+    r = l8w8jwt_validate_encoding_params(&params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
 }
 
 static void test_default_l8w8jwt_validate_decoding_params(void** state)
 {
+    int r;
     struct l8w8jwt_decoding_params params;
+
+    r = l8w8jwt_validate_decoding_params(NULL);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+    
     l8w8jwt_decoding_params_init(&params);
-    const int r = l8w8jwt_validate_decoding_params(&params);
-    //assert_int_equal(r, L8W8JWT_SUCCESS);
+    params.jwt = NULL;
+    r = l8w8jwt_validate_decoding_params(&params);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
+    l8w8jwt_decoding_params_init(&params);
+    params.jwt = "test jwt";
+    params.verification_key = NULL;
+    r = l8w8jwt_validate_decoding_params(&params);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
+    l8w8jwt_decoding_params_init(&params);
+    params.jwt = "test jwt";
+    params.jwt_length = 0;
+    params.verification_key = "test key";
+    params.verification_key_length = strlen(params.verification_key);
+    r = l8w8jwt_validate_decoding_params(&params);
+    assert_int_equal(r, L8W8JWT_INVALID_ARG);
+
+    l8w8jwt_decoding_params_init(&params);
+    params.jwt = "test jwt";
+    params.jwt_length = strlen(params.jwt);
+    params.verification_key = "test key";
+    params.verification_key_length = 0;
+    r = l8w8jwt_validate_decoding_params(&params);
+    assert_int_equal(r, L8W8JWT_INVALID_ARG);
+
+    l8w8jwt_decoding_params_init(&params);
+    params.jwt = "test jwt";
+    params.jwt_length = strlen(params.jwt);
+    params.verification_key = "test key";
+    params.verification_key_length = strlen(params.verification_key);
+    r = l8w8jwt_validate_decoding_params(&params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
 }
 
 // --------------------------------------------------------------------------------------------------------------
