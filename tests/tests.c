@@ -171,7 +171,7 @@ static void test_l8w8jwt_encode_invalid_alg_arg_err(void** state)
 {
     int r;
     char* out = NULL;
-    size_t out_length;
+    size_t out_length = 0;
     struct l8w8jwt_encoding_params params;
     l8w8jwt_encoding_params_init(&params);
 
@@ -218,12 +218,12 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state
     assert_true(*(out + out_length) == '\0');
     assert_true(*(out + out_length - 1) != '\0');
 
-    int p = 0;
+    int dots = 0;
     for(char* c = out; c < out + out_length; c++)
       if(*c == '.')
-        p++;
+        dots++;
 
-    assert_int_equal(p, 2);
+    assert_int_equal(dots, 2);
     free(out);
 }
 
