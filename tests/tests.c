@@ -170,7 +170,7 @@ static void test_l8w8jwt_validate_decoding_params(void** state)
 static void test_l8w8jwt_encode_invalid_alg_arg_err(void** state)
 {
     int r;
-    char* out;
+    char* out = NULL;
     size_t out_length;
     struct l8w8jwt_encoding_params params;
     l8w8jwt_encoding_params_init(&params);
@@ -179,11 +179,15 @@ static void test_l8w8jwt_encode_invalid_alg_arg_err(void** state)
     params.secret_key_length = strlen(params.secret_key);
     params.out = &out;
     params.out_length = &out_length;
+    params.iat = time(NULL);
+    params.exp = time(NULL) + 600;
     params.iss = "test iss";
     params.aud = "test sub";
     params.alg = -3;
     
     r = l8w8jwt_encode(&params);
+    assert_null(out);
+    assert_int_equal(out_length, 0);
     assert_int_not_equal(r, L8W8JWT_SUCCESS);
     assert_int_equal(r, L8W8JWT_INVALID_ARG);
 }
@@ -200,9 +204,27 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state
     params.secret_key_length = strlen(params.secret_key);
     params.out = &out;
     params.out_length = &out_length;
+    params.iat = time(NULL);
+    params.exp = time(NULL) + 600;
     params.iss = "test iss";
     params.aud = "test sub";
     params.alg = L8W8JWT_ALG_HS256;
+
+    r = l8w8jwt_encode(&params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    assert_true(out_length > 0);
+    assert_int_equal(*out, 'e');
+    assert_true(*(out + out_length) == '\0');
+    assert_true(*(out + out_length - 1) != '\0');
+
+    int p = 0;
+    for(char* c = out; c < out + out_length; c++)
+      if(*c == '.')
+        p++;
+
+    assert_int_equal(p, 2);
+    free(out);
 }
 
 // --------------------------------------------------------------------------------------------------------------
@@ -215,6 +237,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_validate_encoding_params),
         cmocka_unit_test(test_l8w8jwt_validate_decoding_params),
         cmocka_unit_test(test_l8w8jwt_encode_invalid_alg_arg_err),
+        cmocka_unit_test(test_l8w8jwt_encode_creates_nul_terminated_valid_string),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
