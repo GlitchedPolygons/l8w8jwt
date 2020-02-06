@@ -27,7 +27,7 @@ static void null_test_success(void** state)
     (void)state;
 }
 
-static void test_default_l8w8jwt_validate_encoding_params(void** state)
+static void test_l8w8jwt_validate_encoding_params(void** state)
 {
     int r;
     char* out;
@@ -44,7 +44,7 @@ static void test_default_l8w8jwt_validate_encoding_params(void** state)
             .type = L8W8JWT_CLAIM_TYPE_STRING
         }
     };
-    
+
     struct l8w8jwt_claim payload_claims[] =
     {
         {
@@ -123,7 +123,7 @@ static void test_default_l8w8jwt_validate_encoding_params(void** state)
     assert_int_equal(r, L8W8JWT_SUCCESS);
 }
 
-static void test_default_l8w8jwt_validate_decoding_params(void** state)
+static void test_l8w8jwt_validate_decoding_params(void** state)
 {
     int r;
     struct l8w8jwt_decoding_params params;
@@ -167,6 +167,44 @@ static void test_default_l8w8jwt_validate_decoding_params(void** state)
     assert_int_equal(r, L8W8JWT_SUCCESS);
 }
 
+static void test_l8w8jwt_encode_invalid_alg_arg_err(void** state)
+{
+    int r;
+    char* out;
+    size_t out_length;
+    struct l8w8jwt_encoding_params params;
+    l8w8jwt_encoding_params_init(&params);
+
+    params.secret_key = "test key";
+    params.secret_key_length = strlen(params.secret_key);
+    params.out = &out;
+    params.out_length = &out_length;
+    params.iss = "test iss";
+    params.aud = "test sub";
+    params.alg = -3;
+    
+    r = l8w8jwt_encode(&params);
+    assert_int_not_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(r, L8W8JWT_INVALID_ARG);
+}
+
+static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state)
+{
+    int r;
+    char* out;
+    size_t out_length;
+    struct l8w8jwt_encoding_params params;
+    l8w8jwt_encoding_params_init(&params);
+    
+    params.secret_key = "test key";
+    params.secret_key_length = strlen(params.secret_key);
+    params.out = &out;
+    params.out_length = &out_length;
+    params.iss = "test iss";
+    params.aud = "test sub";
+    params.alg = L8W8JWT_ALG_HS256;
+}
+
 // --------------------------------------------------------------------------------------------------------------
 
 int main(void)
@@ -174,8 +212,9 @@ int main(void)
     const struct CMUnitTest tests[] = 
     {
         cmocka_unit_test(null_test_success),
-        cmocka_unit_test(test_default_l8w8jwt_validate_encoding_params),
-        cmocka_unit_test(test_default_l8w8jwt_validate_decoding_params),
+        cmocka_unit_test(test_l8w8jwt_validate_encoding_params),
+        cmocka_unit_test(test_l8w8jwt_validate_decoding_params),
+        cmocka_unit_test(test_l8w8jwt_encode_invalid_alg_arg_err),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
