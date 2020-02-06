@@ -9,7 +9,7 @@
 
 ### `l8w8jwt` (say "lightweight jawt") is a minimal, OpenSSL-less and super lightweight JWT library written in C. 
 
-Its only significant (in terms of heaviness) dependency is [ARM's open-source MbedTLS library](https://github.com/ARMmbed/mbedtls). 
+Its only significant dependency (in terms of heaviness) is [ARM's open-source MbedTLS library](https://github.com/ARMmbed/mbedtls). 
 
 The others are extremely lightweight header-only libraries for JSON handling and building strings.
 
