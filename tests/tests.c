@@ -278,8 +278,8 @@ static void test_l8w8jwt_decode_invalid_token_base64_err(void** state)
 
     l8w8jwt_decoding_params_init(&params);
     params.alg = L8W8JWT_ALG_HS256;
-    params.verification_key = "test key";
-    params.verification_key_length = strlen(params.verification_key);
+    params.verification_key = (unsigned char*)"test key";
+    params.verification_key_length = strlen((const char*)params.verification_key);
     params.jwt = "enotavalidjwt!^?.payloadisalsowrong.omfg1337shitm8";
     params.jwt_length = strlen(params.jwt);
 
