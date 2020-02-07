@@ -227,6 +227,23 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state
     free(out);
 }
 
+static void test_l8w8jwt_decode_out_claims_length_null_arg_err(void** state)
+{
+    int r;
+    size_t claims_length;
+    struct l8w8jwt_claim* claims;
+    struct l8w8jwt_decoding_params params;
+    enum l8w8jwt_validation_result validation_result;
+
+    l8w8jwt_decoding_params_init(&params);
+    r = l8w8jwt_decode(&params,NULL,&claims,&claims_length);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+
+    l8w8jwt_decoding_params_init(&params);
+    r = l8w8jwt_decode(&params,&validation_result,&claims,NULL);
+    assert_int_equal(r, L8W8JWT_NULL_ARG);
+}
+
 // --------------------------------------------------------------------------------------------------------------
 
 int main(void)
@@ -238,6 +255,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_validate_decoding_params),
         cmocka_unit_test(test_l8w8jwt_encode_invalid_alg_arg_err),
         cmocka_unit_test(test_l8w8jwt_encode_creates_nul_terminated_valid_string),
+        cmocka_unit_test(test_l8w8jwt_decode_out_claims_length_null_arg_err),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

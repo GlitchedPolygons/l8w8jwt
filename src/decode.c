@@ -311,7 +311,7 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
 
 int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length)
 {
-    if (out_claims != NULL && out_claims_length == NULL)
+    if (params == NULL || (out_claims != NULL && out_claims_length == NULL))
     {
         return L8W8JWT_NULL_ARG;
     }
