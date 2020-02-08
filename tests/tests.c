@@ -854,62 +854,458 @@ static void test_l8w8jwt_decode_invalid_signature_es512(void** state)
 
 static void test_l8w8jwt_decode_valid_signature_hs256(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_HS256;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)"the cake is a lie";
+    encoding_params.secret_key_length = strlen(encoding_params.secret_key);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_HS256;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)"the cake is a lie";
+    decoding_params.verification_key_length = strlen(decoding_params.verification_key);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_hs384(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_HS384;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)"the cake is a lie";
+    encoding_params.secret_key_length = strlen(encoding_params.secret_key);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_HS384;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)"the cake is a lie";
+    decoding_params.verification_key_length = strlen(decoding_params.verification_key);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_hs512(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_HS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)"the cake is a lie";
+    encoding_params.secret_key_length = strlen(encoding_params.secret_key);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_HS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)"the cake is a lie";
+    decoding_params.verification_key_length = strlen(decoding_params.verification_key);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_rs256(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_RS256;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_RS256;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_rs384(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_RS384;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_RS384;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_rs512(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_RS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_RS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_ps256(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS256;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS256;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_ps384(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS384;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS384;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_ps512(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_es256(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_ES256;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES256_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES256_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_ES256;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)ES256_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(ES256_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_es384(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_ES384;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES384_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES384_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_ES384;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)ES384_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(ES384_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_signature_es512(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_ES512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES512_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES512_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_ES512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)ES512_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(ES512_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 // Test claims invalidity (decode needs to succeed; validation needs to fail).
