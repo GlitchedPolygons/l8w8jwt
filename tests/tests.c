@@ -850,6 +850,79 @@ static void test_l8w8jwt_decode_invalid_signature_es512(void** state)
     free(jwt);
 }
 
+static void test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type(void** state)
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    int encoding_alg = L8W8JWT_ALG_HS256;
+    int decoding_alg = L8W8JWT_ALG_HS384;
+
+    for(; decoding_alg < L8W8JWT_ALG_ES512; encoding_alg = ++decoding_alg + 1)
+    {
+        unsigned char* key;
+
+        switch (encoding_alg)
+        {
+            case L8W8JWT_ALG_ES256:
+                key = (unsigned char*)ES256_PRIVATE_KEY;
+                break;
+            case L8W8JWT_ALG_ES384:
+                key = (unsigned char*)ES384_PRIVATE_KEY;
+                break;
+            case L8W8JWT_ALG_ES512:
+                key = (unsigned char*)ES512_PRIVATE_KEY;
+                break;
+            case L8W8JWT_ALG_HS256:
+            case L8W8JWT_ALG_HS384:
+            case L8W8JWT_ALG_HS512:
+                key = (unsigned char*)"HMAC secret key 42";
+                break;
+            case L8W8JWT_ALG_RS256:
+            case L8W8JWT_ALG_RS384:
+            case L8W8JWT_ALG_RS512:
+            case L8W8JWT_ALG_PS256:
+            case L8W8JWT_ALG_PS384:
+            case L8W8JWT_ALG_PS512:
+                key = (unsigned char*)RSA_PRIVATE_KEY;
+                break;
+        }
+
+        encoding_params.alg = encoding_alg;
+        encoding_params.iat = time(NULL);
+        encoding_params.exp = time(NULL) + 600;
+    
+        encoding_params.secret_key = key;
+        encoding_params.secret_key_length = strlen(key);
+    
+        encoding_params.out = &jwt;
+        encoding_params.out_length = &jwt_length;
+    
+        r = l8w8jwt_encode(&encoding_params);
+        assert_int_equal(r, L8W8JWT_SUCCESS);
+    
+        struct l8w8jwt_decoding_params decoding_params;
+        l8w8jwt_decoding_params_init(&decoding_params);
+    
+        decoding_params.alg = decoding_alg;
+        decoding_params.jwt = jwt;
+        decoding_params.jwt_length = jwt_length;
+        decoding_params.verification_key = encoding_params.secret_key;
+        decoding_params.verification_key_length = encoding_params.secret_key_length;
+    
+        enum l8w8jwt_validation_result validation_result;
+        r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+    
+        assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
+        free(jwt);
+        jwt = NULL;
+    }
+    free(jwt);
+}
+
 // Test signature validity (decode + validation both need to succeed).
 
 static void test_l8w8jwt_decode_valid_signature_hs256(void** state)
@@ -1411,6 +1484,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_es256),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_es384),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_es512),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_exp),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_nbf),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_iat),
