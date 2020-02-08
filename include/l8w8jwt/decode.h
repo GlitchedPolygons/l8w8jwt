@@ -235,7 +235,7 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
  *
  * @param params The parameters to use for decoding and validating the token.
  *
- * @param out_validation_result Where to write the validation result flags into (0 means success). Will only be written into if the parsing and decoding succeeds! In case of a failure this REMAINS UNTOUCHED!
+ * @param out_validation_result Where to write the validation result flags into (0 means success). In case of a decoding failure this is set to -1 (or <code>~L8W8JWT_VALID</code>)!
  *
  * @param out_claims
  * [OPTIONAL] Where the decoded claims (header + payload claims together) should be written into.

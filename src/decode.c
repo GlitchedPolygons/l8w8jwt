@@ -262,12 +262,12 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
                 goto exit;
         }
 
-        claim.key_length = key.end - key.start;
+        claim.key_length = (size_t)key.end - key.start;
         claim.key = malloc(sizeof(char) * claim.key_length + 1);
         claim.key[claim.key_length] = '\0';
         memcpy(claim.key, json + key.start, claim.key_length);
 
-        claim.value_length = value.end - value.start;
+        claim.value_length = (size_t)value.end - value.start;
         claim.value = malloc(sizeof(char) * claim.value_length + 1);
         claim.value[claim.value_length] = '\0';
         memcpy(claim.value, json + value.start, claim.value_length);
@@ -330,6 +330,8 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         return L8W8JWT_NULL_ARG;
     }
 
+    *out_validation_result = ~L8W8JWT_VALID;
+
     char* header = NULL;
     size_t header_length = 0;
 
@@ -345,6 +347,14 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (next == NULL) /* No payload. */
     {
         return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+    }
+
+    chillbuff claims;
+    r = chillbuff_init(&claims, 16, sizeof(struct l8w8jwt_claim), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
     }
 
     size_t current_length = next - current;
@@ -551,14 +561,6 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         mbedtls_ctr_drbg_free(&ctr_drbg);
         mbedtls_entropy_free(&entropy);
         mbedtls_pk_free(&pk);
-    }
-
-    chillbuff claims;
-    r = chillbuff_init(&claims, 16, sizeof(struct l8w8jwt_claim), CHILLBUFF_GROW_DUPLICATIVE);
-    if (r != CHILLBUFF_SUCCESS)
-    {
-        r = L8W8JWT_OUT_OF_MEM;
-        goto exit;
     }
 
     r = l8w8jwt_parse_claims(&claims, header, header_length);
