@@ -24,7 +24,7 @@ endif()
 
 add_subdirectory(../ lib)
 
-set(TESTS tests.c)
+set(TESTS testkeys.h tests.c)
 
 add_executable(run_tests ${TESTS})
 
