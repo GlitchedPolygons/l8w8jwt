@@ -350,17 +350,62 @@ static void test_l8w8jwt_decode_invalid_signature_base64_err(void** state)
 
 static void test_l8w8jwt_decode_invalid_signature_hs256(void**state)
 {
+    int r;
+    size_t claims_length;
+    struct l8w8jwt_claim* claims;
+    struct l8w8jwt_decoding_params params;
+    enum l8w8jwt_validation_result validation_result = -1;
 
+    l8w8jwt_decoding_params_init(&params);
+    params.alg = L8W8JWT_ALG_HS256;
+    params.verification_key = "test key";
+    params.verification_key_length = strlen(params.verification_key);
+    params.jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.7eMe1dyoNm0xNvZnT5asc7wo3uj412WPFukRKFfKjdk";
+    params.jwt_length = strlen(params.jwt);
+    
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
+    assert_int_equal(r, L8W8JWT_VALID);
+    assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 }
 
 static void test_l8w8jwt_decode_invalid_signature_hs384(void**state)
 {
+    int r;
+    size_t claims_length;
+    struct l8w8jwt_claim* claims;
+    struct l8w8jwt_decoding_params params;
+    enum l8w8jwt_validation_result validation_result = -1;
 
+    l8w8jwt_decoding_params_init(&params);
+    params.alg = L8W8JWT_ALG_HS384;
+    params.verification_key = "test key";
+    params.verification_key_length = strlen(params.verification_key);
+    params.jwt = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.NCrZ423t7J3jlUIS7vVLpYhMiM8hN-Maj2yuRKRiuBhoEtDWX25t-j5Yh-kkNhNZ";
+    params.jwt_length = strlen(params.jwt);
+    
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
+    assert_int_equal(r, L8W8JWT_VALID);
+    assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 }
 
 static void test_l8w8jwt_decode_invalid_signature_hs512(void**state)
 {
+    int r;
+    size_t claims_length;
+    struct l8w8jwt_claim* claims;
+    struct l8w8jwt_decoding_params params;
+    enum l8w8jwt_validation_result validation_result = -1;
 
+    l8w8jwt_decoding_params_init(&params);
+    params.alg = L8W8JWT_ALG_HS512;
+    params.verification_key = "test key";
+    params.verification_key_length = strlen(params.verification_key);
+    params.jwt = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.f7QsyR0cLva8oq6Wz_PEN9tI5KajMdahsYOTcdSM8ODJSkOcCg9az5lOLCwV-pGKD544c07u4V7uby-D9Bkwog";
+    params.jwt_length = strlen(params.jwt);
+    
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
+    assert_int_equal(r, L8W8JWT_VALID);
+    assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 }
 
 static void test_l8w8jwt_decode_invalid_signature_rs256(void**state)
