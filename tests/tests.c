@@ -235,15 +235,15 @@ static void test_l8w8jwt_decode_null_arg_err(void** state)
     struct l8w8jwt_decoding_params params;
     enum l8w8jwt_validation_result validation_result = -1;
 
-    r = l8w8jwt_decode(NULL, &validation_result,&claims,&claims_length);
+    r = l8w8jwt_decode(NULL, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_NULL_ARG);
 
     l8w8jwt_decoding_params_init(&params);
-    r = l8w8jwt_decode(&params,NULL,&claims,&claims_length);
+    r = l8w8jwt_decode(&params, NULL, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_NULL_ARG);
 
     l8w8jwt_decoding_params_init(&params);
-    r = l8w8jwt_decode(&params,&validation_result,&claims,NULL);
+    r = l8w8jwt_decode(&params, &validation_result, &claims, NULL);
     assert_int_equal(r, L8W8JWT_NULL_ARG);
 
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
@@ -263,7 +263,7 @@ static void test_l8w8jwt_decode_out_validation_result_null_arg_err(void** state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "not a valid jwt";
     params.jwt_length = strlen(params.jwt);
-    r = l8w8jwt_decode(&params,&validation_result,&claims,&claims_length);
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT);
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
 }
@@ -283,7 +283,7 @@ static void test_l8w8jwt_decode_invalid_token_base64_err(void** state)
     params.jwt = "enotavalidjwt!^?.payloadisalsowrong.omfg1337shitm8";
     params.jwt_length = strlen(params.jwt);
 
-    r = l8w8jwt_decode(&params,&validation_result,&claims,&claims_length);
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_BASE64_FAILURE);
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
 }
@@ -302,8 +302,8 @@ static void test_l8w8jwt_decode_missing_signature_err(void** state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ";
     params.jwt_length = strlen(params.jwt);
-    
-    r = l8w8jwt_decode(&params,&validation_result,&claims,&claims_length);
+
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE);
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
 }
@@ -322,8 +322,8 @@ static void test_l8w8jwt_decode_invalid_payload_base64_err(void** state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.invalidpayload.signature";
     params.jwt_length = strlen(params.jwt);
-    
-    r = l8w8jwt_decode(&params,&validation_result,&claims,&claims_length);
+
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_BASE64_FAILURE);
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
 }
@@ -342,13 +342,13 @@ static void test_l8w8jwt_decode_invalid_signature_base64_err(void** state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.";
     params.jwt_length = strlen(params.jwt);
-    
-    r = l8w8jwt_decode(&params,&validation_result,&claims,&claims_length);
+
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_BASE64_FAILURE);
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
 }
 
-static void test_l8w8jwt_decode_invalid_signature_hs256(void**state)
+static void test_l8w8jwt_decode_invalid_signature_hs256(void** state)
 {
     int r;
     size_t claims_length;
@@ -362,13 +362,13 @@ static void test_l8w8jwt_decode_invalid_signature_hs256(void**state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.7eMe1dyoNm0xNvZnT5asc7wo3uj412WPFukRKFfKjdk";
     params.jwt_length = strlen(params.jwt);
-    
+
     r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_VALID);
     assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 }
 
-static void test_l8w8jwt_decode_invalid_signature_hs384(void**state)
+static void test_l8w8jwt_decode_invalid_signature_hs384(void** state)
 {
     int r;
     size_t claims_length;
@@ -382,13 +382,13 @@ static void test_l8w8jwt_decode_invalid_signature_hs384(void**state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.NCrZ423t7J3jlUIS7vVLpYhMiM8hN-Maj2yuRKRiuBhoEtDWX25t-j5Yh-kkNhNZ";
     params.jwt_length = strlen(params.jwt);
-    
+
     r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_VALID);
     assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 }
 
-static void test_l8w8jwt_decode_invalid_signature_hs512(void**state)
+static void test_l8w8jwt_decode_invalid_signature_hs512(void** state)
 {
     int r;
     size_t claims_length;
@@ -402,189 +402,189 @@ static void test_l8w8jwt_decode_invalid_signature_hs512(void**state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.f7QsyR0cLva8oq6Wz_PEN9tI5KajMdahsYOTcdSM8ODJSkOcCg9az5lOLCwV-pGKD544c07u4V7uby-D9Bkwog";
     params.jwt_length = strlen(params.jwt);
-    
+
     r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_VALID);
     assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 }
 
-static void test_l8w8jwt_decode_invalid_signature_rs256(void**state)
+static void test_l8w8jwt_decode_invalid_signature_rs256(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_rs384(void**state)
+static void test_l8w8jwt_decode_invalid_signature_rs384(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_rs512(void**state)
+static void test_l8w8jwt_decode_invalid_signature_rs512(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_ps256(void**state)
+static void test_l8w8jwt_decode_invalid_signature_ps256(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_ps384(void**state)
+static void test_l8w8jwt_decode_invalid_signature_ps384(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_ps512(void**state)
+static void test_l8w8jwt_decode_invalid_signature_ps512(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_es256(void**state)
+static void test_l8w8jwt_decode_invalid_signature_es256(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_es384(void**state)
+static void test_l8w8jwt_decode_invalid_signature_es384(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_signature_es512(void**state)
+static void test_l8w8jwt_decode_invalid_signature_es512(void** state)
 {
 
 }
 
 // Test signature validity (decode + validation both need to succeed).
 
-static void test_l8w8jwt_decode_valid_signature_hs256(void**state)
+static void test_l8w8jwt_decode_valid_signature_hs256(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_hs384(void**state)
+static void test_l8w8jwt_decode_valid_signature_hs384(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_hs512(void**state)
+static void test_l8w8jwt_decode_valid_signature_hs512(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_rs256(void**state)
+static void test_l8w8jwt_decode_valid_signature_rs256(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_rs384(void**state)
+static void test_l8w8jwt_decode_valid_signature_rs384(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_rs512(void**state)
+static void test_l8w8jwt_decode_valid_signature_rs512(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_ps256(void**state)
+static void test_l8w8jwt_decode_valid_signature_ps256(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_ps384(void**state)
+static void test_l8w8jwt_decode_valid_signature_ps384(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_ps512(void**state)
+static void test_l8w8jwt_decode_valid_signature_ps512(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_es256(void**state)
+static void test_l8w8jwt_decode_valid_signature_es256(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_es384(void**state)
+static void test_l8w8jwt_decode_valid_signature_es384(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_signature_es512(void**state)
+static void test_l8w8jwt_decode_valid_signature_es512(void** state)
 {
 
 }
 
 // Test claims invalidity (decode needs to succeed; validation needs to fail).
 
-static void test_l8w8jwt_decode_invalid_exp(void**state)
+static void test_l8w8jwt_decode_invalid_exp(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_nbf(void**state)
+static void test_l8w8jwt_decode_invalid_nbf(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_iat(void**state)
+static void test_l8w8jwt_decode_invalid_iat(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_sub(void**state)
+static void test_l8w8jwt_decode_invalid_sub(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_iss(void**state)
+static void test_l8w8jwt_decode_invalid_iss(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_aud(void**state)
+static void test_l8w8jwt_decode_invalid_aud(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_invalid_jti(void**state)
+static void test_l8w8jwt_decode_invalid_jti(void** state)
 {
 
 }
 
 // Test claims validity (decode + validation successful).
 
-static void test_l8w8jwt_decode_valid_exp(void**state)
+static void test_l8w8jwt_decode_valid_exp(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_nbf(void**state)
+static void test_l8w8jwt_decode_valid_nbf(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_iat(void**state)
+static void test_l8w8jwt_decode_valid_iat(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_sub(void**state)
+static void test_l8w8jwt_decode_valid_sub(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_iss(void**state)
+static void test_l8w8jwt_decode_valid_iss(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_aud(void**state)
+static void test_l8w8jwt_decode_valid_aud(void** state)
 {
 
 }
 
-static void test_l8w8jwt_decode_valid_jti(void**state)
+static void test_l8w8jwt_decode_valid_jti(void** state)
 {
 
 }
