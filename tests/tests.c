@@ -348,6 +348,202 @@ static void test_l8w8jwt_decode_invalid_signature_base64_err(void** state)
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
 }
 
+static void test_l8w8jwt_decode_invalid_signature_hs256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_hs384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_hs512(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_rs256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_rs384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_rs512(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_ps256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_ps384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_ps512(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_es256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_es384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_signature_es512(void**state)
+{
+
+}
+
+// Test signature validity (decode + validation both need to succeed).
+
+static void test_l8w8jwt_decode_valid_signature_hs256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_hs384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_hs512(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_rs256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_rs384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_rs512(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_ps256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_ps384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_ps512(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_es256(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_es384(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_signature_es512(void**state)
+{
+
+}
+
+// Test claims invalidity (decode needs to succeed; validation needs to fail).
+
+static void test_l8w8jwt_decode_invalid_exp(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_nbf(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_iat(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_sub(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_iss(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_aud(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_invalid_jti(void**state)
+{
+
+}
+
+// Test claims validity (decode + validation successful).
+
+static void test_l8w8jwt_decode_valid_exp(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_nbf(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_iat(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_sub(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_iss(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_aud(void**state)
+{
+
+}
+
+static void test_l8w8jwt_decode_valid_jti(void**state)
+{
+
+}
+
 // --------------------------------------------------------------------------------------------------------------
 
 int main(void)
@@ -365,6 +561,51 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_decode_missing_signature_err),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_payload_base64_err),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_base64_err),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_hs256),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_hs384),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_hs512),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_rs256),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_rs384),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_rs512),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_ps256),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_ps384),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_ps512),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_es256),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_es384),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_signature_es512),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_exp),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_nbf),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_iat),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_sub),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_aud),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_iss),
+        cmocka_unit_test(test_l8w8jwt_decode_invalid_jti),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_hs256),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_hs384),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_hs512),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_rs256),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_rs384),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_rs512),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_ps256),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_ps384),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_ps512),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_es256),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_es384),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_signature_es512),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_exp),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_nbf),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_iat),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_sub),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_aud),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_iss),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_jti),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_exp),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_nbf),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_iat),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_sub),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_aud),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_iss),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_jti),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
