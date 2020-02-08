@@ -366,6 +366,39 @@ static void test_l8w8jwt_decode_invalid_signature_hs256(void** state)
     r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_VALID);
     assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
+
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_HS256;
+    encoding_params.sub = "Gordon Freeman";
+    encoding_params.iss = "Black Mesa";
+    encoding_params.aud = "Administrator";
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
+    encoding_params.secret_key = (unsigned char*)"YoUR sUpEr S3krEt 1337 HMAC kEy HeRE";
+    encoding_params.secret_key_length = strlen(encoding_params.secret_key);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    l8w8jwt_decoding_params_init(&params);
+    params.alg = L8W8JWT_ALG_HS256;
+    params.verification_key = "test key";
+    params.verification_key_length = strlen(params.verification_key);
+    params.jwt = jwt;
+    params.jwt_length = jwt_length;
+
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
+
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_invalid_signature_hs384(void** state)
@@ -386,6 +419,39 @@ static void test_l8w8jwt_decode_invalid_signature_hs384(void** state)
     r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
     assert_int_equal(r, L8W8JWT_VALID);
     assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
+
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_HS384;
+    encoding_params.sub = "Gordon Freeman";
+    encoding_params.iss = "Black Mesa";
+    encoding_params.aud = "Administrator";
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
+    encoding_params.secret_key = (unsigned char*)"YoUR sUpEr S3krEt 1337 HMAC kEy HeRE";
+    encoding_params.secret_key_length = strlen(encoding_params.secret_key);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    l8w8jwt_decoding_params_init(&params);
+    params.alg = L8W8JWT_ALG_HS384;
+    params.verification_key = "test key";
+    params.verification_key_length = strlen(params.verification_key);
+    params.jwt = jwt;
+    params.jwt_length = jwt_length;
+
+    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
+
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_invalid_signature_hs512(void** state)
