@@ -1712,9 +1712,7 @@ static void test_l8w8jwt_decode_valid_nbf(void** state)
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
-    encoding_params.nbf = time(NULL);
+    encoding_params.nbf = time(NULL) - 300;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -1734,7 +1732,6 @@ static void test_l8w8jwt_decode_valid_nbf(void** state)
     decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
     decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
     decoding_params.validate_nbf = true;
-    decoding_params.nbf_tolerance_seconds = 10;
 
     enum l8w8jwt_validation_result validation_result;
     r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
@@ -1747,27 +1744,380 @@ static void test_l8w8jwt_decode_valid_nbf(void** state)
 
 static void test_l8w8jwt_decode_valid_iat(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL) - 60;
+    encoding_params.exp = time(NULL) + 900;
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_iat = true;
+    decoding_params.iat_tolerance_seconds = 10;
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    assert_false(validation_result & L8W8JWT_IAT_FAILURE);
+
+    free(jwt);
+}
+
+static void test_l8w8jwt_decode_valid_exp_tolerance(void** state)
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL) - 60;
+    encoding_params.exp = time(NULL) - 30;
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_exp = true;
+    decoding_params.exp_tolerance_seconds = 60;
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    assert_false(validation_result & L8W8JWT_EXP_FAILURE);
+
+    // Test should fail if tolerance too low.
+
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_exp = true;
+    decoding_params.exp_tolerance_seconds = 20;
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_not_equal(validation_result, L8W8JWT_VALID);
+    assert_true(validation_result & L8W8JWT_EXP_FAILURE);
+
+    free(jwt);
+}
+
+static void test_l8w8jwt_decode_valid_nbf_tolerance(void** state)
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600;
+    encoding_params.nbf = time(NULL) + 60;
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_nbf = true;
+    decoding_params.nbf_tolerance_seconds = 120;
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    assert_false(validation_result & L8W8JWT_NBF_FAILURE);
+
+    // Test should fail if tolerance too low.
+
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_nbf = true;
+    decoding_params.nbf_tolerance_seconds = 30;
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_not_equal(validation_result, L8W8JWT_VALID);
+    assert_true(validation_result & L8W8JWT_NBF_FAILURE);
+
+    free(jwt);
+}
+
+static void test_l8w8jwt_decode_valid_iat_tolerance(void** state)
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL) + 60;
+    encoding_params.exp = time(NULL) + 900;
+
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_iat = true;
+    decoding_params.iat_tolerance_seconds = 100;
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+
+    // Test should fail if tolerance too low!
+
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_iat = true;
+    decoding_params.iat_tolerance_seconds = 30;
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_not_equal(validation_result, L8W8JWT_VALID);
+    assert_true(validation_result & L8W8JWT_IAT_FAILURE);
+
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_sub(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600;
+    encoding_params.sub = "test subject";
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_sub = "test subject";
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_iss(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iss = "test issuer";
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_iss = "test issuer";
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_aud(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600;
+    encoding_params.aud = "test audience";
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_aud = "test audience";
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 static void test_l8w8jwt_decode_valid_jti(void** state)
 {
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
 
+    encoding_params.alg = L8W8JWT_ALG_PS512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600;
+    encoding_params.jti = "test jti";
+    encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_PS512;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+    decoding_params.validate_jti = "test jti";
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    assert_int_equal(r, L8W8JWT_SUCCESS);
+    assert_int_equal(validation_result, L8W8JWT_VALID);
+    free(jwt);
 }
 
 // --------------------------------------------------------------------------------------------------------------
@@ -1822,6 +2172,9 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_decode_valid_exp),
         cmocka_unit_test(test_l8w8jwt_decode_valid_nbf),
         cmocka_unit_test(test_l8w8jwt_decode_valid_iat),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_exp_tolerance),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_nbf_tolerance),
+        cmocka_unit_test(test_l8w8jwt_decode_valid_iat_tolerance),
         cmocka_unit_test(test_l8w8jwt_decode_valid_sub),
         cmocka_unit_test(test_l8w8jwt_decode_valid_aud),
         cmocka_unit_test(test_l8w8jwt_decode_valid_iss),

@@ -618,7 +618,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_exp)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "exp", 3);
-        if (c == NULL || ct + params->exp_tolerance_seconds > atoll(c->value))
+        if (c == NULL || ct - params->exp_tolerance_seconds > atoll(c->value))
         {
             validation_res |= (unsigned)L8W8JWT_EXP_FAILURE;
         }
