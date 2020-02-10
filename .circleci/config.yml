@@ -8,7 +8,11 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake && rm -rf /var/lib/apt/lists/*'
+          command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake bash curl && rm -rf /var/lib/apt/lists/*'
       - run:
           name: Build and run tests
           command: 'bash run-tests.sh'
+      - run:
+          name: Upload coverage reports
+          when: on_success
+          command: cd build/CMakeFiles/l8w8jwt.dir/src && bash <(curl -s https://codecov.io/bash)

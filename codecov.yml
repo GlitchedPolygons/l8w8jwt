@@ -1,3 +1,2 @@
 ignore:
-  - "lib"  # ignore folders and all its contents
-  
+  - "lib"
