@@ -40,7 +40,7 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count
     }
 }
 
-int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims, size_t claims_count)
+int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims, const size_t claims_count)
 {
     if (stringbuilder == NULL || claims == NULL)
     {
@@ -83,7 +83,7 @@ int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims,
     return L8W8JWT_SUCCESS;
 }
 
-struct l8w8jwt_claim* l8w8jwt_get_claim(struct l8w8jwt_claim* claims, size_t claims_count, const char* key, size_t key_length)
+struct l8w8jwt_claim* l8w8jwt_get_claim(struct l8w8jwt_claim* claims, const size_t claims_count, const char* key, const size_t key_length)
 {
     if (claims == NULL || key == NULL || claims_count == 0 || key_length == 0)
         return NULL;
