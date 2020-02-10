@@ -16,18 +16,13 @@ cmake_minimum_required(VERSION 3.1)
 set(CMAKE_C_STANDARD 11)
 project(tests C)
 
-find_package(cmocka REQUIRED)
-
-if(NOT ${cmocka_FOUND})
-	message("Unit testing framework 'cmocka' not found: please follow installation instructions at https://gitlab.com/cmocka/cmocka/blob/master/INSTALL.md")
-endif()
-
-add_subdirectory(../ lib)
+add_subdirectory(cmocka cmocka)
+add_subdirectory(../ l8w8jwt)
 
 set(TESTS testkeys.h tests.c)
 
 add_executable(run_tests ${TESTS})
 
-target_include_directories(run_tests PRIVATE ${cmocka_INCLUDE_DIR})
+target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
 
-target_link_libraries(run_tests PRIVATE l8w8jwt cmocka)
+target_link_libraries(run_tests PUBLIC l8w8jwt cmocka)

@@ -358,7 +358,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             rsa->hash_id = md_type;
             rsa->padding = MBEDTLS_RSA_PKCS_V21;
 
-            r = mbedtls_rsa_rsassa_pss_sign(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PRIVATE, md_type, md_length, hash, signature_bytes);
+            r = mbedtls_rsa_rsassa_pss_sign(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PRIVATE, md_type, (unsigned int)md_length, hash, signature_bytes);
             if (r != 0)
             {
                 r = L8W8JWT_SIGNATURE_CREATION_FAILURE;

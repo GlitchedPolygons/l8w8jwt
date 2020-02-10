@@ -201,21 +201,23 @@ int l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data
     return L8W8JWT_SUCCESS;
 }
 
-int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, uint8_t** out, size_t* out_length)
+int l8w8jwt_base64_decode(const bool url, const char* data, const size_t data_length, uint8_t** out, size_t* out_length)
 {
     if (data == NULL || out_length == NULL)
     {
         return L8W8JWT_NULL_ARG;
     }
 
-    if (data_length == 0)
+    size_t in_length = data_length;
+
+    if (in_length == 0)
     {
         return L8W8JWT_INVALID_ARG;
     }
 
-    if (*(data + data_length - 1) == '\0')
+    if (*(data + in_length - 1) == '\0')
     {
-        data_length--;
+        in_length--;
     }
 
     size_t i;
@@ -232,7 +234,7 @@ int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, 
 
     dtable['='] = 0;
 
-    for (i = 0; i < data_length; i++)
+    for (i = 0; i < in_length; i++)
     {
         if (dtable[data[i]] != 0x80)
             count++;
@@ -259,9 +261,9 @@ int l8w8jwt_base64_decode(const bool url, const char* data, size_t data_length, 
     uint8_t block[4];
     uint8_t* pos = *out;
 
-    for (i = 0; i < data_length + r; i++)
+    for (i = 0; i < in_length + r; i++)
     {
-        const int c = i < data_length ? data[i] : '=';
+        const int c = i < in_length ? data[i] : '=';
 
         tmp = dtable[c];
 

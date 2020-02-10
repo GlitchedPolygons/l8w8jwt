@@ -500,7 +500,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 rsa->hash_id = md_type;
                 rsa->padding = MBEDTLS_RSA_PKCS_V21;
 
-                r = mbedtls_rsa_rsassa_pss_verify(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PUBLIC, md_type, md_length, hash, signature);
+                r = mbedtls_rsa_rsassa_pss_verify(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PUBLIC, md_type, (unsigned int)md_length, hash, signature);
                 if (r != 0)
                 {
                     validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;

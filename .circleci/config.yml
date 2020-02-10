@@ -13,5 +13,5 @@ jobs:
           name: Install cmocka
           command: 'cd tests/cmocka && mkdir build && cd build && cmake -DCMAKE_INSTALL_PREFIX=/usr .. && make && sudo make install && cd ../..'
       - run:
-          name: Run tests
+          name: Build and run tests
           command: 'bash run-tests.sh'
