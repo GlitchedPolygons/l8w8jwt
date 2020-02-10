@@ -113,7 +113,7 @@ struct l8w8jwt_claim
  * @param claims The claims to free.
  * @param claims_count The size of the passed claims array.
  */
-void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, size_t claims_count);
+void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count);
 
 /**
  * Writes a bunch of JWT claims into a chillbuff stringbuilder. <p>
