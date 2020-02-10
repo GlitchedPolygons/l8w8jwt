@@ -16,6 +16,10 @@ cmake_minimum_required(VERSION 3.1)
 set(CMAKE_C_STANDARD 11)
 project(tests C)
 
+if (WIN32 AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
+
 add_subdirectory(cmocka cmocka)
 add_subdirectory(../ l8w8jwt)
 

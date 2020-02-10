@@ -17,6 +17,10 @@ project(l8w8jwt C)
 
 set(CMAKE_C_STANDARD 11)
 
+if (WIN32 AND BUILD_SHARED_LIBS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif ()
+
 add_subdirectory(lib/mbedtls)
 
 set(l8w8jwt_headers
