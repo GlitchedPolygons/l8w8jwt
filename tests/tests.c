@@ -2195,6 +2195,54 @@ static void test_l8w8jwt_write_claims(void** state)
     chillbuff_free(&cb);
 }
 
+static void test_l8w8jwt_get_claim(void** state)
+{
+    const struct l8w8jwt_claim claims[] =
+    {
+            {
+                    .key = "ctx",
+                    .key_length = 3,
+                    .value = "Unforseen Consequences",
+                    .value_length = strlen("Unforseen Consequences"),
+                    .type = L8W8JWT_CLAIM_TYPE_STRING
+            },
+            {
+                    .key = "age",
+                    .key_length = 3,
+                    .value = "27",
+                    .value_length = strlen("27"),
+                    .type = L8W8JWT_CLAIM_TYPE_INTEGER
+            },
+            {
+                    .key = "size",
+                    .key_length = strlen("size"),
+                    .value = "1.85",
+                    .value_length = strlen("1.85"),
+                    .type = L8W8JWT_CLAIM_TYPE_NUMBER
+            },
+            {
+                    .key = "alive",
+                    .key_length = strlen("alive"),
+                    .value = "true",
+                    .value_length = strlen("true"),
+                    .type = L8W8JWT_CLAIM_TYPE_BOOLEAN
+            },
+            {
+                    .key = "nulltest",
+                    .key_length = strlen("nulltest"),
+                    .value = "null",
+                    .value_length = strlen("null"),
+                    .type = L8W8JWT_CLAIM_TYPE_NULL
+            }
+    };
+    assert_null(l8w8jwt_get_claim(NULL, 5, "alive", 5));
+    assert_null(l8w8jwt_get_claim(claims, 0, "alive", 5));
+    assert_null(l8w8jwt_get_claim(claims, 5, "test", 4));
+    struct l8w8jwt_claim* claim = l8w8jwt_get_claim(claims, sizeof(claims) / sizeof(struct l8w8jwt_claim), "alive", 5);
+    assert_string_equal(claim->key, "alive");
+    assert_string_equal(claim->value, "true");
+}
+
 // --------------------------------------------------------------------------------------------------------------
 
 int main(void)
@@ -2268,6 +2316,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_decode_valid_iss),
         cmocka_unit_test(test_l8w8jwt_decode_valid_jti),
         cmocka_unit_test(test_l8w8jwt_write_claims),
+        cmocka_unit_test(test_l8w8jwt_get_claim),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
