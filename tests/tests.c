@@ -19,6 +19,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include "testkeys.h"
+#include "l8w8jwt/base64.h"
 #include "l8w8jwt/encode.h"
 #include "l8w8jwt/decode.h"
 
@@ -166,6 +167,52 @@ static void test_l8w8jwt_validate_decoding_params(void** state)
     params.verification_key_length = strlen(params.verification_key);
     r = l8w8jwt_validate_decoding_params(&params);
     assert_int_equal(r, L8W8JWT_SUCCESS);
+}
+
+static void test_l8w8jwt_base64_encode_null_arg_err(void** state)
+{
+    char* out = NULL;
+    size_t out_length = 0;
+    unsigned char data[] = {1,2,3,4,5,6};
+    const size_t data_length = sizeof data;
+
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_encode(true, NULL, 16, &out, &out_length));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_encode(false, NULL, 16, &out, &out_length));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_encode(true, data, data_length, NULL, &out_length));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_encode(false, data, data_length, NULL, &out_length));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_encode(true, data, data_length, &out, NULL));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_encode(false, data, data_length, &out, NULL));
+}
+
+static void test_l8w8jwt_base64_encode_invalid_arg_err(void** state)
+{
+    char* out = NULL;
+    size_t out_length = 0;
+    unsigned char data[] = {1,2,3,4,5,6};
+
+    assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_base64_encode(true, data, 0, &out, &out_length));
+    assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_base64_encode(false, data, 0, &out, &out_length));
+}
+
+static void test_l8w8jwt_base64_encode_overflow_err(void** state)
+{
+    char* out = NULL;
+    size_t out_length = 0;
+    unsigned char data[] = {1,2,3,4,5,6};
+
+    assert_int_equal(L8W8JWT_OVERFLOW, l8w8jwt_base64_encode(true, data, SIZE_MAX - 64, &out, &out_length));
+    assert_int_equal(L8W8JWT_OVERFLOW, l8w8jwt_base64_encode(false, data, SIZE_MAX - 64, &out, &out_length));
+}
+
+static void test_l8w8jwt_base64_encode_success(void** state)
+{
+    char* out = NULL;
+    size_t out_length = 0;
+    unsigned char data[] = {1,2,3,4,5,6};
+    const size_t data_length = sizeof data;
+
+    assert_int_equal(L8W8JWT_SUCCESS, l8w8jwt_base64_encode(true, data, data_length, &out, &out_length));
+    assert_int_equal(L8W8JWT_SUCCESS, l8w8jwt_base64_encode(false, data, data_length, &out, &out_length));
 }
 
 static void test_l8w8jwt_encode_invalid_alg_arg_err(void** state)
@@ -2129,6 +2176,10 @@ int main(void)
         cmocka_unit_test(null_test_success),
         cmocka_unit_test(test_l8w8jwt_validate_encoding_params),
         cmocka_unit_test(test_l8w8jwt_validate_decoding_params),
+        cmocka_unit_test(test_l8w8jwt_base64_encode_null_arg_err),
+        cmocka_unit_test(test_l8w8jwt_base64_encode_invalid_arg_err),
+        cmocka_unit_test(test_l8w8jwt_base64_encode_overflow_err),
+        cmocka_unit_test(test_l8w8jwt_base64_encode_success),
         cmocka_unit_test(test_l8w8jwt_encode_invalid_alg_arg_err),
         cmocka_unit_test(test_l8w8jwt_encode_creates_nul_terminated_valid_string),
         cmocka_unit_test(test_l8w8jwt_decode_null_arg_err),
