@@ -2185,6 +2185,16 @@ static void test_l8w8jwt_decode_valid_jti(void** state)
     free(jwt);
 }
 
+static void test_l8w8jwt_write_claims(void** state)
+{
+    chillbuff cb;
+    chillbuff_init(&cb,16, sizeof(char),CHILLBUFF_GROW_DUPLICATIVE);
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_write_claims(NULL, 1, 1));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_write_claims(&cb, NULL, 1));
+    assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_write_claims(&cb, 1, 0));
+    chillbuff_free(&cb);
+}
+
 // --------------------------------------------------------------------------------------------------------------
 
 int main(void)
@@ -2257,6 +2267,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_decode_valid_aud),
         cmocka_unit_test(test_l8w8jwt_decode_valid_iss),
         cmocka_unit_test(test_l8w8jwt_decode_valid_jti),
+        cmocka_unit_test(test_l8w8jwt_write_claims),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
