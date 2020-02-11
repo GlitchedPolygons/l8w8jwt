@@ -203,7 +203,7 @@ int l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data
 
 int l8w8jwt_base64_decode(const bool url, const char* data, const size_t data_length, uint8_t** out, size_t* out_length)
 {
-    if (data == NULL || out_length == NULL)
+    if (data == NULL || out == NULL || out_length == NULL)
     {
         return L8W8JWT_NULL_ARG;
     }

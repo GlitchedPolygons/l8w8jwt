@@ -37,26 +37,21 @@ static void test_l8w8jwt_validate_encoding_params(void** state)
     struct l8w8jwt_encoding_params params;
 
     struct l8w8jwt_claim header_claims[] =
-    {
-        {
-            .key = "kid",
-            .key_length = 3,
-            .value = "some-key-id-here-012345",
-            .value_length = 0, /* Setting this to 0 makes it use strlen(), which in this case is fine. */
-            .type = L8W8JWT_CLAIM_TYPE_STRING
-        }
-    };
+    {{ .key = "kid",
+      .key_length = 3,
+      .value = "some-key-id-here-012345",
+      .value_length = 0, /* Setting this to 0 makes it use strlen(), which in this case is fine. */
+      .type = L8W8JWT_CLAIM_TYPE_STRING
+    }};
 
     struct l8w8jwt_claim payload_claims[] =
-    {
-        {
-            .key = "tst",
-            .key_length = 3,
-            .value = "some-test-claim-here-012345",
-            .value_length = 0,
-            .type = L8W8JWT_CLAIM_TYPE_STRING
-        }
-    };
+    {{
+        .key = "tst",
+        .key_length = 3,
+        .value = "some-test-claim-here-012345",
+        .value_length = 0,
+        .type = L8W8JWT_CLAIM_TYPE_STRING
+    }};
 
     r = l8w8jwt_validate_encoding_params(NULL);
     assert_int_equal(r, L8W8JWT_NULL_ARG);
@@ -132,7 +127,7 @@ static void test_l8w8jwt_validate_decoding_params(void** state)
 
     r = l8w8jwt_validate_decoding_params(NULL);
     assert_int_equal(r, L8W8JWT_NULL_ARG);
-    
+
     l8w8jwt_decoding_params_init(&params);
     params.jwt = NULL;
     r = l8w8jwt_validate_decoding_params(&params);
@@ -171,7 +166,7 @@ static void test_l8w8jwt_validate_decoding_params(void** state)
 
 static void test_l8w8jwt_decoding_params_init(void** state)
 {
-    struct l8w8jwt_decoding_params params = {.alg = 2};
+    struct l8w8jwt_decoding_params params = { .alg = 2 };
     l8w8jwt_decoding_params_init(NULL);
     assert_int_not_equal(params.alg, -2);
     l8w8jwt_decoding_params_init(&params);
@@ -180,7 +175,7 @@ static void test_l8w8jwt_decoding_params_init(void** state)
 
 static void test_l8w8jwt_encoding_params_init(void** state)
 {
-    struct l8w8jwt_encoding_params params = {.alg = 2};
+    struct l8w8jwt_encoding_params params = { .alg = 2 };
     l8w8jwt_encoding_params_init(NULL);
     assert_int_not_equal(params.alg, -2);
     l8w8jwt_encoding_params_init(&params);
@@ -191,7 +186,7 @@ static void test_l8w8jwt_base64_encode_null_arg_err(void** state)
 {
     char* out = NULL;
     size_t out_length = 0;
-    unsigned char data[] = {1,2,3,4,5,6};
+    unsigned char data[] = { 1, 2, 3, 4, 5, 6 };
     const size_t data_length = sizeof data;
 
     assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_encode(true, NULL, 16, &out, &out_length));
@@ -206,7 +201,7 @@ static void test_l8w8jwt_base64_encode_invalid_arg_err(void** state)
 {
     char* out = NULL;
     size_t out_length = 0;
-    unsigned char data[] = {1,2,3,4,5,6};
+    unsigned char data[] = { 1, 2, 3, 4, 5, 6 };
 
     assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_base64_encode(true, data, 0, &out, &out_length));
     assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_base64_encode(false, data, 0, &out, &out_length));
@@ -216,7 +211,7 @@ static void test_l8w8jwt_base64_encode_overflow_err(void** state)
 {
     char* out = NULL;
     size_t out_length = 0;
-    unsigned char data[] = {1,2,3,4,5,6};
+    unsigned char data[] = { 1, 2, 3, 4, 5, 6 };
 
     assert_int_equal(L8W8JWT_OVERFLOW, l8w8jwt_base64_encode(true, data, SIZE_MAX - 64, &out, &out_length));
     assert_int_equal(L8W8JWT_OVERFLOW, l8w8jwt_base64_encode(false, data, SIZE_MAX - 64, &out, &out_length));
@@ -226,11 +221,31 @@ static void test_l8w8jwt_base64_encode_success(void** state)
 {
     char* out = NULL;
     size_t out_length = 0;
-    unsigned char data[] = {1,2,3,4,5,6};
+    unsigned char data[] = { 1, 2, 3, 4, 5, 6 };
     const size_t data_length = sizeof data;
 
     assert_int_equal(L8W8JWT_SUCCESS, l8w8jwt_base64_encode(true, data, data_length, &out, &out_length));
     assert_int_equal(L8W8JWT_SUCCESS, l8w8jwt_base64_encode(false, data, data_length, &out, &out_length));
+}
+
+static void test_l8w8jwt_base64_decode_null_arg_err(void** state)
+{
+    uint8_t* out;
+    size_t out_length;
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_decode(true, NULL, 5, &out, &out_length));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_decode(true, "12345", 5, NULL, &out_length));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_decode(true, "12345", 5, &out, NULL));
+}
+
+static void test_l8w8jwt_base64_decode_success(void** state)
+{
+    uint8_t* out;
+    size_t out_length;
+    assert_int_equal(L8W8JWT_SUCCESS, l8w8jwt_base64_decode(0, "MTIz", strlen("MTIz"), &out, &out_length));
+    assert_int_equal(out_length, 3);
+    assert_int_equal(out[0], '1');
+    assert_int_equal(out[1], '2');
+    assert_int_equal(out[2], '3');
 }
 
 static void test_l8w8jwt_encode_invalid_alg_arg_err(void** state)
@@ -250,7 +265,7 @@ static void test_l8w8jwt_encode_invalid_alg_arg_err(void** state)
     params.iss = "test iss";
     params.aud = "test sub";
     params.alg = -3;
-    
+
     r = l8w8jwt_encode(&params);
     assert_null(out);
     assert_int_equal(out_length, 0);
@@ -265,7 +280,7 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state
     size_t out_length;
     struct l8w8jwt_encoding_params params;
     l8w8jwt_encoding_params_init(&params);
-    
+
     params.secret_key = "test key";
     params.secret_key_length = strlen(params.secret_key);
     params.out = &out;
@@ -285,9 +300,9 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state
     assert_true(*(out + out_length - 1) != '\0');
 
     int dots = 0;
-    for(char* c = out; c < out + out_length; c++)
-      if(*c == '.')
-        dots++;
+    for (char* c = out; c < out + out_length; c++)
+        if (*c == '.')
+            dots++;
 
     assert_int_equal(dots, 2);
     free(out);
@@ -926,7 +941,7 @@ static void test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type(void** 
     int encoding_alg = L8W8JWT_ALG_HS256;
     int decoding_alg = L8W8JWT_ALG_HS384;
 
-    for(; decoding_alg < L8W8JWT_ALG_ES512; encoding_alg = ++decoding_alg + 1)
+    for (; decoding_alg < L8W8JWT_ALG_ES512; encoding_alg = ++decoding_alg + 1)
     {
         unsigned char* key;
 
@@ -959,28 +974,28 @@ static void test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type(void** 
         encoding_params.alg = encoding_alg;
         encoding_params.iat = time(NULL);
         encoding_params.exp = time(NULL) + 600;
-    
+
         encoding_params.secret_key = key;
         encoding_params.secret_key_length = strlen(key);
-    
+
         encoding_params.out = &jwt;
         encoding_params.out_length = &jwt_length;
-    
+
         r = l8w8jwt_encode(&encoding_params);
         assert_int_equal(r, L8W8JWT_SUCCESS);
-    
+
         struct l8w8jwt_decoding_params decoding_params;
         l8w8jwt_decoding_params_init(&decoding_params);
-    
+
         decoding_params.alg = decoding_alg;
         decoding_params.jwt = jwt;
         decoding_params.jwt_length = jwt_length;
         decoding_params.verification_key = encoding_params.secret_key;
         decoding_params.verification_key_length = encoding_params.secret_key_length;
-    
+
         enum l8w8jwt_validation_result validation_result;
         r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
-    
+
         assert_true(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
         free(jwt);
         jwt = NULL;
@@ -2188,7 +2203,7 @@ static void test_l8w8jwt_decode_valid_jti(void** state)
 static void test_l8w8jwt_write_claims(void** state)
 {
     chillbuff cb;
-    chillbuff_init(&cb,16, sizeof(char),CHILLBUFF_GROW_DUPLICATIVE);
+    chillbuff_init(&cb, 16, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_write_claims(NULL, 1, 1));
     assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_write_claims(&cb, NULL, 1));
     assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_write_claims(&cb, 1, 0));
@@ -2197,44 +2212,8 @@ static void test_l8w8jwt_write_claims(void** state)
 
 static void test_l8w8jwt_get_claim(void** state)
 {
-    const struct l8w8jwt_claim claims[] =
-    {
-            {
-                    .key = "ctx",
-                    .key_length = 3,
-                    .value = "Unforseen Consequences",
-                    .value_length = strlen("Unforseen Consequences"),
-                    .type = L8W8JWT_CLAIM_TYPE_STRING
-            },
-            {
-                    .key = "age",
-                    .key_length = 3,
-                    .value = "27",
-                    .value_length = strlen("27"),
-                    .type = L8W8JWT_CLAIM_TYPE_INTEGER
-            },
-            {
-                    .key = "size",
-                    .key_length = strlen("size"),
-                    .value = "1.85",
-                    .value_length = strlen("1.85"),
-                    .type = L8W8JWT_CLAIM_TYPE_NUMBER
-            },
-            {
-                    .key = "alive",
-                    .key_length = strlen("alive"),
-                    .value = "true",
-                    .value_length = strlen("true"),
-                    .type = L8W8JWT_CLAIM_TYPE_BOOLEAN
-            },
-            {
-                    .key = "nulltest",
-                    .key_length = strlen("nulltest"),
-                    .value = "null",
-                    .value_length = strlen("null"),
-                    .type = L8W8JWT_CLAIM_TYPE_NULL
-            }
-    };
+    const struct l8w8jwt_claim claims[] = { { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING }, { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER }, { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
+        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN }, { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL } };
     assert_null(l8w8jwt_get_claim(NULL, 5, "alive", 5));
     assert_null(l8w8jwt_get_claim(claims, 0, "alive", 5));
     assert_null(l8w8jwt_get_claim(claims, 5, "test", 4));
@@ -2247,8 +2226,7 @@ static void test_l8w8jwt_get_claim(void** state)
 
 int main(void)
 {
-    const struct CMUnitTest tests[] = 
-    {
+    const struct CMUnitTest tests[] = {
         cmocka_unit_test(null_test_success),
         cmocka_unit_test(test_l8w8jwt_validate_encoding_params),
         cmocka_unit_test(test_l8w8jwt_validate_decoding_params),
@@ -2258,6 +2236,8 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_base64_encode_invalid_arg_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_overflow_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_success),
+        cmocka_unit_test(test_l8w8jwt_base64_decode_null_arg_err),
+        cmocka_unit_test(test_l8w8jwt_base64_decode_success),
         cmocka_unit_test(test_l8w8jwt_encode_invalid_alg_arg_err),
         cmocka_unit_test(test_l8w8jwt_encode_creates_nul_terminated_valid_string),
         cmocka_unit_test(test_l8w8jwt_decode_null_arg_err),
