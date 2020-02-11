@@ -28,6 +28,7 @@ extern "C" {
 #include <string.h>
 #include <stdbool.h>
 #include <inttypes.h>
+#include <checknum.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
@@ -69,96 +70,6 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
 
         default:
             break;
-    }
-}
-
-/* https://github.com/GlitchedPolygons/checknum */
-
-static inline int checknum(char* string, size_t string_length)
-{
-    if (string == NULL)
-        return 0;
-
-    if (string_length == 0)
-        string_length = strlen(string);
-
-    char* c = string;
-
-    while (*c == ' ' && c < string + string_length)
-        c++;
-
-    while (*(string + string_length - 1) == ' ' && c < string + string_length)
-        string_length--;
-
-    switch (*c)
-    {
-        case '+':
-        case '-':
-            if (++c >= string + string_length)
-                return 0;
-        default:
-            break;
-    }
-
-    unsigned int type = 0;
-
-    if (*c == '0')
-    {
-        type |= 1 << 0;
-        if (*++c != '.' && c < string + string_length)
-            return 0;
-    }
-
-    for (; c < string + string_length; c++)
-    {
-        switch (*c)
-        {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                type |= 1 << 0;
-                continue;
-            case '-':
-                if (type & 1 << 1 || (*(c - 1) != 'E' && *(c - 1) != 'e'))
-                    return 0;
-                type |= 1 << 1;
-                continue;
-            case '.':
-                if (type & 1 << 2 || type & 1 << 3)
-                    return 0;
-                type |= 1 << 2;
-                continue;
-            case 'E':
-            case 'e':
-                if (!(type & 1 << 0) || type & 1 << 3 || c + 1 >= string + string_length)
-                    return 0;
-                type |= 1 << 3;
-                continue;
-            case '+':
-                if (type & 1 << 4 || (*(c - 1) != 'E' && *(c - 1) != 'e'))
-                    return 0;
-                type |= 1 << 4;
-                continue;
-            default:
-                return 0;
-        }
-    }
-
-    switch (type)
-    {
-        case 0:
-            return 0;
-        case 1 << 0:
-            return 1;
-        default:
-            return type & 1 << 0 ? 2 : 0;
     }
 }
 

@@ -40,6 +40,24 @@ This library makes use of chillbuff; a generic, lightweight, header-only dynamic
 
 <details>
 <summary>
+<strong>Checknum</strong>
+</summary>
+<p>
+This library makes use of checknum; a single header containing a function for checking whether a given C-string contains an integer or a floating-point number. <a href="https://github.com/GlitchedPolygons/checknum/blob/master/LICENSE">Apache-2.0 licensed</a> at the time of writing (11. February 2020) and available on GitHub.
+</p>
+<p>
+
+---
+
+#### Chillbuff GitHub Repo: https://github.com/GlitchedPolygons/checknum
+#### Used commit: [`7d64f5b698a7ef852435bbd5befbbc30a96734df`](https://github.com/GlitchedPolygons/checknum/tree/7d64f5b698a7ef852435bbd5befbbc30a96734df)
+
+---
+</p>
+</details>
+
+<details>
+<summary>
 <strong>JSMN</strong>
 </summary>
 <p>
