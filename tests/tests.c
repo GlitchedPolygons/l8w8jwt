@@ -169,6 +169,24 @@ static void test_l8w8jwt_validate_decoding_params(void** state)
     assert_int_equal(r, L8W8JWT_SUCCESS);
 }
 
+static void test_l8w8jwt_decoding_params_init(void** state)
+{
+    struct l8w8jwt_decoding_params params = {.alg = 2};
+    l8w8jwt_decoding_params_init(NULL);
+    assert_int_not_equal(params.alg, -2);
+    l8w8jwt_decoding_params_init(&params);
+    assert_int_equal(params.alg, -2);
+}
+
+static void test_l8w8jwt_encoding_params_init(void** state)
+{
+    struct l8w8jwt_encoding_params params = {.alg = 2};
+    l8w8jwt_encoding_params_init(NULL);
+    assert_int_not_equal(params.alg, -2);
+    l8w8jwt_encoding_params_init(&params);
+    assert_int_equal(params.alg, -2);
+}
+
 static void test_l8w8jwt_base64_encode_null_arg_err(void** state)
 {
     char* out = NULL;
@@ -2176,6 +2194,8 @@ int main(void)
         cmocka_unit_test(null_test_success),
         cmocka_unit_test(test_l8w8jwt_validate_encoding_params),
         cmocka_unit_test(test_l8w8jwt_validate_decoding_params),
+        cmocka_unit_test(test_l8w8jwt_decoding_params_init),
+        cmocka_unit_test(test_l8w8jwt_encoding_params_init),
         cmocka_unit_test(test_l8w8jwt_base64_encode_null_arg_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_invalid_arg_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_overflow_err),
