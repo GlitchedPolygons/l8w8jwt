@@ -169,3 +169,5 @@ Here is the overview of minimal **required** parameters that can't be omitted fo
     <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#aeafb73bb540cf91f61dbda889a470d96">l8w8jwt_encoding_params.verification_key_length</a></li>
 </ul>
 </details>
+
+[![View on jwt.io](http://jwt.io/img/badge.svg)](https://jwt.io)
