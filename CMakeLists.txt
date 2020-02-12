@@ -65,6 +65,8 @@ endif ()
 
 if (L8W8JWT_ENABLE_TESTS)
 
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--wrap=malloc")
+
     if (WIN32 AND BUILD_SHARED_LIBS)
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     endif ()
@@ -75,7 +77,7 @@ if (L8W8JWT_ENABLE_TESTS)
             ${CMAKE_CURRENT_LIST_DIR}/tests/testkeys.h 
             ${CMAKE_CURRENT_LIST_DIR}/tests/tests.c
             )
-
+    
     add_executable(run_tests ${TESTS})
 
     target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
