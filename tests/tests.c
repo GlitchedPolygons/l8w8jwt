@@ -344,8 +344,8 @@ static void test_l8w8jwt_decode_out_validation_result_null_arg_err(void** state)
     params.verification_key_length = strlen(params.verification_key);
     params.jwt = "not a valid jwt";
     params.jwt_length = strlen(params.jwt);
-    r = l8w8jwt_decode(&params, &validation_result, &claims, &claims_length);
-    assert_int_equal(r, L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT);
+    r = l8w8jwt_decode(&params, NULL, &claims, &claims_length);
+    assert_int_equal(L8W8JWT_NULL_ARG, r);
     assert_int_not_equal(validation_result, L8W8JWT_VALID);
 }
 
