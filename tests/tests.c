@@ -2202,18 +2202,32 @@ static void test_l8w8jwt_decode_valid_jti(void** state)
 
 static void test_l8w8jwt_write_claims(void** state)
 {
+    struct l8w8jwt_claim claims[] = 
+    { 
+        { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING }, 
+        { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER }, 
+        { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
+        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN }, 
+        { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL } 
+    };
     chillbuff cb;
     chillbuff_init(&cb, 16, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
-    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_write_claims(NULL, 1, 1));
+    assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_write_claims(NULL, claims, 5));
     assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_write_claims(&cb, NULL, 1));
-    assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_write_claims(&cb, 1, 0));
+    assert_int_equal(L8W8JWT_INVALID_ARG, l8w8jwt_write_claims(&cb, claims, 0));
     chillbuff_free(&cb);
 }
 
 static void test_l8w8jwt_get_claim(void** state)
 {
-    const struct l8w8jwt_claim claims[] = { { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING }, { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER }, { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
-        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN }, { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL } };
+    struct l8w8jwt_claim claims[] = 
+    { 
+        { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING }, 
+        { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER }, 
+        { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
+        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN }, 
+        { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL } 
+    };
     assert_null(l8w8jwt_get_claim(NULL, 5, "alive", 5));
     assert_null(l8w8jwt_get_claim(claims, 0, "alive", 5));
     assert_null(l8w8jwt_get_claim(claims, 5, "test", 4));
