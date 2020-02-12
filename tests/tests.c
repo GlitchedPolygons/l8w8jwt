@@ -30,12 +30,19 @@ static void null_test_success(void** state)
 }
 
 bool fail_malloc = false;
+bool fail_calloc = false;
 
 void* __real_malloc(size_t size);
+void* __real_calloc(size_t size);
 
 void* __wrap_malloc(size_t size)
 {
     return fail_malloc ? NULL : __real_malloc(size);
+}
+
+void* __wrap_calloc(size_t size)
+{
+    return fail_calloc ? NULL : __real_calloc(size);
 }
 
 static void test_l8w8jwt_validate_encoding_params(void** state)
@@ -232,8 +239,8 @@ static void test_l8w8jwt_base64_encode_out_of_memory_err(void** state)
     size_t out_length = 0;
     fail_malloc = true;
     int r = l8w8jwt_base64_encode(false, "test", 4, &out, &out_length);
-    assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
     fail_malloc = false;
+    assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
 }
 
 static void test_l8w8jwt_base64_encode_success(void** state)
@@ -254,6 +261,16 @@ static void test_l8w8jwt_base64_decode_null_arg_err(void** state)
     assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_decode(true, NULL, 5, &out, &out_length));
     assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_decode(true, "12345", 5, NULL, &out_length));
     assert_int_equal(L8W8JWT_NULL_ARG, l8w8jwt_base64_decode(true, "12345", 5, &out, NULL));
+}
+
+static void test_l8w8jwt_base64_decode_out_of_memory_err(void** state)
+{
+    uint8_t* out;
+    size_t out_length;
+    fail_malloc = fail_calloc = true;
+    int r = l8w8jwt_base64_decode(0, "MTIz", strlen("MTIz"), &out, &out_length);
+    fail_malloc = fail_calloc = false;
+    assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
 }
 
 static void test_l8w8jwt_base64_decode_success(void** state)
@@ -2271,6 +2288,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_base64_encode_out_of_memory_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_success),
         cmocka_unit_test(test_l8w8jwt_base64_decode_null_arg_err),
+        cmocka_unit_test(test_l8w8jwt_base64_decode_out_of_memory_err),
         cmocka_unit_test(test_l8w8jwt_base64_decode_success),
         cmocka_unit_test(test_l8w8jwt_encode_invalid_alg_arg_err),
         cmocka_unit_test(test_l8w8jwt_encode_creates_nul_terminated_valid_string),
