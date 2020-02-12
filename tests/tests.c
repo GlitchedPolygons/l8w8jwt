@@ -344,6 +344,33 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state
     free(out);
 }
 
+static void test_l8w8jwt_encode_out_of_memory_err(void** state)
+{
+    fail_malloc = true;
+
+    int r;
+    char* out = NULL;
+    size_t out_length = 0;
+    struct l8w8jwt_encoding_params params;
+    l8w8jwt_encoding_params_init(&params);
+
+    params.secret_key = "test key";
+    params.secret_key_length = strlen(params.secret_key);
+    params.out = &out;
+    params.out_length = &out_length;
+    params.iat = time(NULL);
+    params.exp = time(NULL) + 600;
+    params.iss = "test iss";
+    params.aud = "test sub";
+    params.alg = L8W8JWT_ALG_HS256;
+
+    r = l8w8jwt_encode(&params);
+
+    fail_malloc = false;
+
+    assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
+}
+
 static void test_l8w8jwt_decode_null_arg_err(void** state)
 {
     int r;
@@ -2317,6 +2344,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_base64_decode_success),
         cmocka_unit_test(test_l8w8jwt_encode_invalid_alg_arg_err),
         cmocka_unit_test(test_l8w8jwt_encode_creates_nul_terminated_valid_string),
+        cmocka_unit_test(test_l8w8jwt_encode_out_of_memory_err),
         cmocka_unit_test(test_l8w8jwt_decode_null_arg_err),
         cmocka_unit_test(test_l8w8jwt_decode_out_validation_result_null_arg_err),
         cmocka_unit_test(test_l8w8jwt_decode_invalid_token_base64_err),
