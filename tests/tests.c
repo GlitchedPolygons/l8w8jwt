@@ -249,7 +249,7 @@ static void test_l8w8jwt_base64_encode_success(void** state)
     size_t out_length = 0;
     unsigned char data[] = { 1, 2, 3, 4, 5, 6 };
     const size_t data_length = sizeof data;
-
+    
     assert_int_equal(L8W8JWT_SUCCESS, l8w8jwt_base64_encode(true, data, data_length, &out, &out_length));
     assert_int_equal(L8W8JWT_SUCCESS, l8w8jwt_base64_encode(false, data, data_length, &out, &out_length));
 }
@@ -1049,6 +1049,25 @@ static void test_l8w8jwt_decode_valid_signature_hs256(void** state)
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
 
+    struct l8w8jwt_claim additional_header_claims[] = 
+    {
+        { .key = "test",
+          .key_length = 4,
+          .value = "value",
+          .value_length = 5,
+          .type = L8W8JWT_CLAIM_TYPE_STRING
+        }
+    };
+    struct l8w8jwt_claim additional_payload_claims[] = 
+    {
+        { .key = "test",
+          .key_length = 4,
+          .value = "value",
+          .value_length = 5,
+          .type = L8W8JWT_CLAIM_TYPE_STRING
+        }
+    };
+
     encoding_params.alg = L8W8JWT_ALG_HS256;
     encoding_params.iat = time(NULL);
     encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
@@ -1058,6 +1077,12 @@ static void test_l8w8jwt_decode_valid_signature_hs256(void** state)
 
     encoding_params.out = &jwt;
     encoding_params.out_length = &jwt_length;
+
+    encoding_params.additional_header_claims = additional_header_claims;
+    encoding_params.additional_header_claims_count = 1;
+
+    encoding_params.additional_payload_claims = additional_payload_claims;
+    encoding_params.additional_payload_claims_count = 1;
 
     r = l8w8jwt_encode(&encoding_params);
     assert_int_equal(r, L8W8JWT_SUCCESS);
