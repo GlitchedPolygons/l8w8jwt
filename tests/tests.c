@@ -29,6 +29,15 @@ static void null_test_success(void** state)
     (void)state;
 }
 
+bool fail_malloc = false;
+
+void* __real_malloc(size_t size);
+
+void* __wrap_malloc(size_t size)
+{
+    return fail_malloc ? NULL : __real_malloc(size);
+}
+
 static void test_l8w8jwt_validate_encoding_params(void** state)
 {
     int r;
@@ -215,6 +224,16 @@ static void test_l8w8jwt_base64_encode_overflow_err(void** state)
 
     assert_int_equal(L8W8JWT_OVERFLOW, l8w8jwt_base64_encode(true, data, SIZE_MAX - 64, &out, &out_length));
     assert_int_equal(L8W8JWT_OVERFLOW, l8w8jwt_base64_encode(false, data, SIZE_MAX - 64, &out, &out_length));
+}
+
+static void test_l8w8jwt_base64_encode_out_of_memory_err(void** state)
+{
+    char* out = NULL;
+    size_t out_length = 0;
+    fail_malloc = true;
+    int r = l8w8jwt_base64_encode(false, "test", 4, &out, &out_length);
+    assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
+    fail_malloc = false;
 }
 
 static void test_l8w8jwt_base64_encode_success(void** state)
@@ -2249,6 +2268,7 @@ int main(void)
         cmocka_unit_test(test_l8w8jwt_base64_encode_null_arg_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_invalid_arg_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_overflow_err),
+        cmocka_unit_test(test_l8w8jwt_base64_encode_out_of_memory_err),
         cmocka_unit_test(test_l8w8jwt_base64_encode_success),
         cmocka_unit_test(test_l8w8jwt_base64_decode_null_arg_err),
         cmocka_unit_test(test_l8w8jwt_base64_decode_success),
