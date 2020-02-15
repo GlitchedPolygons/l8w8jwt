@@ -2338,6 +2338,10 @@ static void test_l8w8jwt_get_claim(void** state)
 
 int main(void)
 {
+    #if TEST_OOM
+    printf("\n\nGCC\n\n");
+    #endif
+    
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(null_test_success),
         cmocka_unit_test(test_l8w8jwt_validate_encoding_params),
