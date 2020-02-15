@@ -23,12 +23,15 @@
 #include "l8w8jwt/encode.h"
 #include "l8w8jwt/decode.h"
 
+#define TEST_OOM defined(__GNUC__) && !defined(__clang__)
+
 /* A test case that does nothing and succeeds. */
 static void null_test_success(void** state)
 {
     (void)state;
 }
 
+#if TEST_OOM
 bool fail_malloc = false;
 bool fail_calloc = false;
 
@@ -44,6 +47,7 @@ void* __wrap_calloc(size_t size)
 {
     return fail_calloc ? NULL : __real_calloc(size);
 }
+#endif
 
 static void test_l8w8jwt_validate_encoding_params(void** state)
 {
@@ -235,12 +239,14 @@ static void test_l8w8jwt_base64_encode_overflow_err(void** state)
 
 static void test_l8w8jwt_base64_encode_out_of_memory_err(void** state)
 {
+    #if TEST_OOM
     char* out = NULL;
     size_t out_length = 0;
     fail_malloc = true;
     int r = l8w8jwt_base64_encode(false, "test", 4, &out, &out_length);
     fail_malloc = false;
     assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
+    #endif
 }
 
 static void test_l8w8jwt_base64_encode_success(void** state)
@@ -265,12 +271,14 @@ static void test_l8w8jwt_base64_decode_null_arg_err(void** state)
 
 static void test_l8w8jwt_base64_decode_out_of_memory_err(void** state)
 {
+    #if TEST_OOM
     uint8_t* out;
     size_t out_length;
     fail_malloc = fail_calloc = true;
     int r = l8w8jwt_base64_decode(0, "MTIz", strlen("MTIz"), &out, &out_length);
     fail_malloc = fail_calloc = false;
     assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
+    #endif
 }
 
 static void test_l8w8jwt_base64_decode_success(void** state)
@@ -346,6 +354,7 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string(void** state
 
 static void test_l8w8jwt_encode_out_of_memory_err(void** state)
 {
+    #if TEST_OOM
     fail_malloc = true;
 
     int r;
@@ -369,6 +378,7 @@ static void test_l8w8jwt_encode_out_of_memory_err(void** state)
     fail_malloc = false;
 
     assert_int_equal(r, L8W8JWT_OUT_OF_MEM);
+    #endif
 }
 
 static void test_l8w8jwt_decode_null_arg_err(void** state)
