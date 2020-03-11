@@ -28,7 +28,9 @@ option(L8W8JWT_ENABLE_EXAMPLES "Build l8w8jwt example programs." OFF)
 option(ENABLE_TESTING "Build MbedTLS tests." OFF)
 option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
 
-add_subdirectory(lib/mbedtls mbedtls)
+if (NOT TARGET mbedtls)
+    add_subdirectory(lib/mbedtls mbedtls)
+endif ()
 
 set(l8w8jwt_headers
         ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn/jsmn.h
@@ -51,8 +53,8 @@ set(l8w8jwt_sources
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})
 
-target_include_directories(l8w8jwt PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
-target_include_directories(l8w8jwt PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include)
+target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
+target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn)
 target_include_directories(l8w8jwt PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
