@@ -36,6 +36,8 @@ If you don't want to use git submodules, you can also start vendoring a specific
 
 If you use CMake you can just `add_subdirectory(path_to_submodule)` and then `target_link_libraries(your_project PRIVATE l8w8jwt)` inside your **CMakeLists.txt** file.
 
+If you use GCC, [check out this issue's log here](https://github.com/GlitchedPolygons/l8w8jwt/issues/2).
+
 ## Examples
 
 ### Encoding and signing a token
