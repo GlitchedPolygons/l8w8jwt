@@ -36,6 +36,7 @@ extern "C" {
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/pk_internal.h>
+#include <mbedtls/x509_crt.h>
 
 static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, mbedtls_md_type_t* md_type, size_t* md_length)
 {
@@ -334,6 +335,22 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
             key_length++;
         }
 
+        const bool is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----");
+        if (is_cert)
+        {
+            mbedtls_x509_crt crt;
+            mbedtls_x509_crt_init(&crt);
+
+            r = mbedtls_x509_crt_parse(&crt, key, key_length);
+            if (r != 0)
+            {
+                r = L8W8JWT_KEY_PARSE_FAILURE;
+                goto exit;
+            }
+
+            pk = crt.pk;
+        }
+
         size_t md_length;
         mbedtls_md_type_t md_type;
         mbedtls_md_info_t* md_info;
@@ -380,11 +397,14 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
             case L8W8JWT_ALG_RS384:
             case L8W8JWT_ALG_RS512:
 
-                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
-                if (r != 0)
+                if (!is_cert)
                 {
-                    r = L8W8JWT_KEY_PARSE_FAILURE;
-                    goto exit;
+                    r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                    if (r != 0)
+                    {
+                        r = L8W8JWT_KEY_PARSE_FAILURE;
+                        goto exit;
+                    }
                 }
 
                 r = mbedtls_pk_verify(&pk, md_type, hash, md_length, (const unsigned char*)signature, signature_length);
@@ -400,11 +420,14 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
             case L8W8JWT_ALG_PS384:
             case L8W8JWT_ALG_PS512:
 
-                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
-                if (r != 0)
+                if (!is_cert)
                 {
-                    r = L8W8JWT_KEY_PARSE_FAILURE;
-                    goto exit;
+                    r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                    if (r != 0)
+                    {
+                        r = L8W8JWT_KEY_PARSE_FAILURE;
+                        goto exit;
+                    }
                 }
 
                 mbedtls_rsa_context* rsa = mbedtls_pk_rsa(pk);
@@ -424,11 +447,14 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
             case L8W8JWT_ALG_ES384:
             case L8W8JWT_ALG_ES512:
 
-                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
-                if (r != 0)
+                if (!is_cert)
                 {
-                    r = L8W8JWT_KEY_PARSE_FAILURE;
-                    goto exit;
+                    r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                    if (r != 0)
+                    {
+                        r = L8W8JWT_KEY_PARSE_FAILURE;
+                        goto exit;
+                    }
                 }
 
                 const size_t half_signature_length = signature_length / 2;
