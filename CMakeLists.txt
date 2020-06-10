@@ -73,9 +73,16 @@ if (L8W8JWT_ENABLE_TESTS)
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     endif ()
 
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests/cmocka cmocka)
+    find_package(cmocka)
 
-    set(TESTS 
+    if (NOT ${cmocka_FOUND})
+        message(STATUS "cmocka not found; using included version inside tests/ folder...")
+        add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests/cmocka cmocka)
+    else ()
+        message(STATUS "Found cmocka!")
+    endif ()
+
+    set(TESTS
             ${CMAKE_CURRENT_LIST_DIR}/tests/testkeys.h 
             ${CMAKE_CURRENT_LIST_DIR}/tests/tests.c
             )
