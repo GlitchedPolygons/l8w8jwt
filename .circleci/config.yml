@@ -11,7 +11,7 @@ jobs:
           command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake bash curl && rm -rf /var/lib/apt/lists/*'
       - run:
           name: Build and run tests
-          command: 'bash run-tests.sh'
+          command: 'bash -eo pipefail run-tests.sh'
       - run:
           name: Upload coverage reports
           when: on_success
