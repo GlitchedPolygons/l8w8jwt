@@ -53,7 +53,7 @@ set(l8w8jwt_sources
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})
 
-target_include_directories(l8w8jwt PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
+target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn)
@@ -67,21 +67,8 @@ endif ()
 
 if (L8W8JWT_ENABLE_TESTS)
 
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--wrap=malloc,--wrap=calloc")
-    endif ()
-
     if (WIN32 AND BUILD_SHARED_LIBS)
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    endif ()
-
-    find_package(cmocka)
-
-    if (NOT ${cmocka_FOUND})
-        message(STATUS "cmocka not found; using included version inside tests/ folder...")
-        add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tests/cmocka cmocka)
-    else ()
-        message(STATUS "Found cmocka!")
     endif ()
 
     set(TESTS
@@ -91,8 +78,9 @@ if (L8W8JWT_ENABLE_TESTS)
 
     add_executable(run_tests ${TESTS})
 
-    target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
-    target_link_libraries(run_tests PUBLIC l8w8jwt cmocka)
+    target_include_directories(run_tests PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/acutest/include)
+    target_include_directories(run_tests PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
+    target_link_libraries(run_tests PUBLIC l8w8jwt)
 
     if (ENABLE_COVERAGE)
         if (L8W8JWT_ENABLE_EXAMPLES)
