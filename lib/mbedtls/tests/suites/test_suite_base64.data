@@ -148,7 +148,7 @@ base64_encode_hex:"010203040506070809":"AQIDBAUGBwgJ":12:MBEDTLS_ERR_BASE64_BUFF
 Base64 encode hex #3
 base64_encode_hex:"0102030405060708":"AQIDBAUGBwg=":13:0
 
-Base64 l8w8jwt_encode hex #4
+Base64 encode hex #4
 base64_encode_hex:"01020304050607":"AQIDBAUGBw==":13:0
 
 Base64 decode hex #1

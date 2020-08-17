@@ -67,7 +67,9 @@ endif ()
 
 if (L8W8JWT_ENABLE_TESTS)
 
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--wrap=malloc,--wrap=calloc")
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--wrap=malloc,--wrap=calloc")
+    endif ()
 
     if (WIN32 AND BUILD_SHARED_LIBS)
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -83,10 +85,10 @@ if (L8W8JWT_ENABLE_TESTS)
     endif ()
 
     set(TESTS
-            ${CMAKE_CURRENT_LIST_DIR}/tests/testkeys.h 
+            ${CMAKE_CURRENT_LIST_DIR}/tests/testkeys.h
             ${CMAKE_CURRENT_LIST_DIR}/tests/tests.c
             )
-    
+
     add_executable(run_tests ${TESTS})
 
     target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
@@ -94,7 +96,7 @@ if (L8W8JWT_ENABLE_TESTS)
 
     if (ENABLE_COVERAGE)
         if (L8W8JWT_ENABLE_EXAMPLES)
-            message (FATAL_ERROR "ENABLE_COVERAGE and L8W8JWT_ENABLE_EXAMPLES are MUTUALLY EXCLUSIVE! Please enable either one or the other, but not both at the same time!")
+            message(FATAL_ERROR "ENABLE_COVERAGE and L8W8JWT_ENABLE_EXAMPLES are MUTUALLY EXCLUSIVE! Please enable either one or the other, but not both at the same time!")
         else ()
             find_package(codecov)
             add_coverage(l8w8jwt)
@@ -102,4 +104,4 @@ if (L8W8JWT_ENABLE_TESTS)
             coverage_evaluate()
         endif ()
     endif ()
-endif()
+endif ()

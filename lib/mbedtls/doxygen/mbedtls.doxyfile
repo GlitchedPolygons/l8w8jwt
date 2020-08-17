@@ -28,7 +28,7 @@ DOXYFILE_ENCODING      = UTF-8
 # identify the project. Note that if you do not use Doxywizard you need
 # to put quotes around the project name if it contains spaces.
 
-PROJECT_NAME           = "mbed TLS v2.16.3"
+PROJECT_NAME           = "mbed TLS v2.23.0"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
@@ -1051,7 +1051,7 @@ HHC_LOCATION           =
 GENERATE_CHI           = NO
 
 # If the GENERATE_HTMLHELP tag is set to YES, the CHM_INDEX_ENCODING
-# is used to l8w8jwt_encode HtmlHelp index (hhk), content (hhc) and project file
+# is used to encode HtmlHelp index (hhk), content (hhc) and project file
 # content.
 
 CHM_INDEX_ENCODING     =
@@ -1594,7 +1594,7 @@ SEARCH_INCLUDES        = YES
 # contain include files that are not input files but should be processed by
 # the preprocessor.
 
-INCLUDE_PATH           =
+INCLUDE_PATH           = ../include
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
