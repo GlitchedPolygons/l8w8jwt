@@ -42,6 +42,7 @@ set(l8w8jwt_headers
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/claim.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/encode.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/decode.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/version.h
         )
 
 set(l8w8jwt_sources
