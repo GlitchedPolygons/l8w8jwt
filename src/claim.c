@@ -23,6 +23,7 @@ extern "C" {
 
 #include <string.h>
 #include <mbedtls/md.h>
+#include <mbedtls/platform_util.h>
 
 void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count)
 {
@@ -33,9 +34,14 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count
             if (claim == NULL)
                 continue;
 
+            mbedtls_platform_zeroize(claim->key, claim->key_length);
+            mbedtls_platform_zeroize(claim->value, claim->value_length);
+
             free(claim->key);
             free(claim->value);
         }
+
+        mbedtls_platform_zeroize(claims,claims_count * sizeof(struct l8w8jwt_claim));
         free(claims);
     }
 }
