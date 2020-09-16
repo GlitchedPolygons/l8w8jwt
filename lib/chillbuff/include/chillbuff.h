@@ -127,7 +127,7 @@ typedef struct chillbuff
 static inline void _chillbuff_printerr(const char* error, const char* origin)
 {
     const size_t error_length = 64 + strlen(error) + strlen(origin);
-    char* error_msg = malloc(error_length * sizeof(char));
+    char* error_msg = (char*)malloc(error_length * sizeof(char)); // cast malloc because of compat with C++ D:
     if (error_msg != NULL)
     {
         snprintf(error_msg, error_length, "\nCHILLBUFF ERROR: (%s) %s\n", origin, error);

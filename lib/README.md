@@ -32,7 +32,7 @@ This library makes use of chillbuff; a generic, lightweight, header-only dynamic
 ---
 
 #### Chillbuff GitHub Repo: https://github.com/GlitchedPolygons/chillbuff
-#### Used commit: [`d5262716693db4e6dea5b9de81c479f7ca16b162`](https://github.com/GlitchedPolygons/chillbuff/tree/d5262716693db4e6dea5b9de81c479f7ca16b162)
+#### Used commit: [`58b1b5ac45b7f9a921350eaa81d057eae04d77e0`](https://github.com/GlitchedPolygons/chillbuff/tree/58b1b5ac45b7f9a921350eaa81d057eae04d77e0)
 
 ---
 </p>

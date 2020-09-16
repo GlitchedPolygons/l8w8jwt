@@ -12,22 +12,18 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+
 cmake_minimum_required(VERSION 3.1)
 set(CMAKE_C_STANDARD 11)
-project(chillbuff_tests C)
+project(tests C)
 
-find_package(cmocka REQUIRED)
+add_subdirectory(cmocka cmocka)
+add_subdirectory(../ chillbuff)
 
-if(NOT ${cmocka_FOUND})
-	message("Unit testing framework 'cmocka' not found: please follow installation instructions at https://gitlab.com/cmocka/cmocka/blob/master/INSTALL.md")
-endif()
-
-add_subdirectory(../ lib)
-
-set(TESTS chillbuff_tests.c)
+set(TESTS tests.c)
 
 add_executable(run_tests ${TESTS})
 
-target_include_directories(run_tests PRIVATE ${cmocka_INCLUDE_DIR})
+target_include_directories(run_tests PUBLIC ${cmocka_INCLUDE_DIR})
 
-target_link_libraries(run_tests PRIVATE chillbuff cmocka)
+target_link_libraries(run_tests PUBLIC chillbuff cmocka)
