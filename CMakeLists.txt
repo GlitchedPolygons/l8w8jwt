@@ -62,6 +62,7 @@ target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn)
 target_include_directories(l8w8jwt PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 
+target_link_libraries(l8w8jwt PUBLIC chillbuff)
 target_link_libraries(l8w8jwt PRIVATE mbedtls mbedx509 mbedcrypto chillbuff)
 
 if (L8W8JWT_ENABLE_EXAMPLES)
@@ -82,7 +83,6 @@ if (L8W8JWT_ENABLE_TESTS)
     add_executable(run_tests ${TESTS})
 
     target_include_directories(run_tests PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/acutest/include)
-    target_include_directories(run_tests PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
     target_link_libraries(run_tests PUBLIC l8w8jwt)
 
     if (ENABLE_COVERAGE)
