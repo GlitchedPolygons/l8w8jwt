@@ -32,9 +32,12 @@ if (NOT TARGET mbedtls)
     add_subdirectory(lib/mbedtls mbedtls)
 endif ()
 
+if (NOT TARGET chillbuff)
+    add_subdirectory(lib/chillbuff chillbuff)
+endif ()
+
 set(l8w8jwt_headers
         ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn/jsmn.h
-        ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include/chillbuff.h
         ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include/checknum.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/retcodes.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/algs.h
@@ -54,13 +57,12 @@ set(l8w8jwt_sources
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})
 
-target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/chillbuff/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn)
 target_include_directories(l8w8jwt PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 
-target_link_libraries(l8w8jwt PRIVATE mbedtls mbedx509 mbedcrypto)
+target_link_libraries(l8w8jwt PRIVATE mbedtls mbedx509 mbedcrypto chillbuff)
 
 if (L8W8JWT_ENABLE_EXAMPLES)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples)
