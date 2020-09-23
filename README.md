@@ -31,11 +31,25 @@ git submodule update --init --recursive
 
 If you don't want to use git submodules, you can also start vendoring a specific version of l8w8jwt by copying its full repo content into the folder where you keep your project's external libraries/dependencies.
 
-### Linking 
+### Building and linking 
 
 If you use CMake you can just `add_subdirectory(path_to_submodule)` and then `target_link_libraries(your_project PRIVATE l8w8jwt)` inside your **CMakeLists.txt** file.
 
 If you use GCC, [check out this issue's log here](https://github.com/GlitchedPolygons/l8w8jwt/issues/2).
+
+#### Build shared library/DLL
+
+```bash
+mkdir -p build && cd build
+cmake -DBUILD_SHARED_LIBS=On ..
+cmake --build . --config Release || exit
+```
+
+#### Build static library
+
+Same command as above, but `-DBUILD_SHARED_LIBS=Off`.
+
+**NOTE:** When compiling l8w8jwt as a static lib, remember to link against the MbedTLS libs too! Those will be placed inside the `build/mbedtls/library/` directory after successful compilation.
 
 ## Examples
 
