@@ -41,8 +41,8 @@ If you use GCC, [check out this issue's log here](https://github.com/GlitchedPol
 
 ```bash
 mkdir -p build && cd build
-cmake -DBUILD_SHARED_LIBS=On -DL8W8JWT_BUILD_DLL=On -DL8W8JWT_PACKAGE=On ..
-cmake --build . --config Debug && cmake --build . --config Release || exit
+cmake -DBUILD_SHARED_LIBS=On -DL8W8JWT_BUILD_DLL=On -DL8W8JWT_PACKAGE=On -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config Release
 ```
 **NOTE:** If you use the l8w8jwt shared library in your project on Windows, remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! Maybe even set it as a pre-processor definition. Otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
 
