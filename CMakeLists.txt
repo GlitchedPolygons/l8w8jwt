@@ -57,6 +57,8 @@ set(l8w8jwt_sources
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})
 
+add_custom_command(TARGET l8w8jwt POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/NOTICE $<TARGET_FILE_DIR:l8w8jwt>/NOTICE)
+
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn)
