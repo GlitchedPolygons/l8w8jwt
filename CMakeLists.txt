@@ -18,12 +18,18 @@ project(l8w8jwt C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+set(L8W8JWT_MAJOR 1)
+set(L8W8JWT_MINOR 0)
+set(L8W8JWT_PATCH 0)
+set(L8W8JWT_VERSION_STRING "${L8W8JWT_MAJOR}.${L8W8JWT_MINOR}.${L8W8JWT_PATCH}")
+
 if (WIN32 AND BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif ()
 
 option(L8W8JWT_ENABLE_TESTS "Build l8w8jwt tests." OFF)
 option(L8W8JWT_ENABLE_EXAMPLES "Build l8w8jwt example programs." OFF)
+option(L8W8JWT_PACKAGE "Build the library and package it into a .tar.gz after successfully building." OFF)
 
 option(ENABLE_TESTING "Build MbedTLS tests." OFF)
 option(ENABLE_PROGRAMS "Build MbedTLS example programs." OFF)
@@ -57,7 +63,38 @@ set(l8w8jwt_sources
 
 add_library(l8w8jwt ${l8w8jwt_headers} ${l8w8jwt_sources})
 
-add_custom_command(TARGET l8w8jwt POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_LIST_DIR}/NOTICE $<TARGET_FILE_DIR:l8w8jwt>/NOTICE)
+if (L8W8JWT_PACKAGE)
+    set_target_properties(l8w8jwt PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin"
+
+        ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/debug"
+        LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/debug"
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/debug"
+
+        ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/release"
+        LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/release"
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/bin/release"
+    )
+
+    add_custom_command(TARGET l8w8jwt 
+        POST_BUILD COMMAND ${CMAKE_COMMAND} 
+        -E copy ${CMAKE_CURRENT_LIST_DIR}/NOTICE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/NOTICE"
+    )
+
+    add_custom_command(TARGET l8w8jwt 
+        POST_BUILD COMMAND ${CMAKE_COMMAND} 
+        -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/include "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/include"
+    )
+
+    string(TOLOWER "l8w8jwt-${L8W8JWT_VERSION_STRING}-${CMAKE_SYSTEM_NAME}-${CMAKE_HOST_SYSTEM_PROCESSOR}.tar.gz" L8W8JWT_OUTPUT_ARCHIVE_FILENAME)
+
+    add_custom_command(TARGET l8w8jwt 
+        POST_BUILD COMMAND ${CMAKE_COMMAND} 
+        -E tar "czvf" ${L8W8JWT_OUTPUT_ARCHIVE_FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}
+    )
+endif()
 
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include)
 target_include_directories(l8w8jwt PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
