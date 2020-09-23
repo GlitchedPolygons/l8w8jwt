@@ -44,9 +44,9 @@ mkdir -p build && cd build
 cmake -DBUILD_SHARED_LIBS=On -DL8W8JWT_BUILD_DLL=On -DL8W8JWT_PACKAGE=On -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --config Release
 ```
-**NOTE:** If you use the l8w8jwt shared library in your project on Windows, remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! Maybe even set it as a pre-processor definition. Otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
-
 If the build succeeds, you should have a new _.tar.gz_ file inside the `build/` directory.
+
+**NOTE:** If you use the l8w8jwt shared library in your project on Windows, remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! Maybe even set it as a pre-processor definition. Otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
 
 #### Build static library
 
