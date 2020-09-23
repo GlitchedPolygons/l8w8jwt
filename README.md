@@ -33,7 +33,7 @@ If you don't want to use git submodules, you can also start vendoring a specific
 
 ### Building and linking 
 
-If you use CMake you can just `add_subdirectory(path_to_submodule)` and then `target_link_libraries(your_project PRIVATE l8w8jwt)` inside your **CMakeLists.txt** file.
+If you use CMake you can just `add_subdirectory(path_to_git_submodule)` and then `target_link_libraries(your_project PRIVATE l8w8jwt)` inside your **CMakeLists.txt** file.
 
 If you use GCC, [check out this issue's log here](https://github.com/GlitchedPolygons/l8w8jwt/issues/2).
 
@@ -41,13 +41,20 @@ If you use GCC, [check out this issue's log here](https://github.com/GlitchedPol
 
 ```bash
 mkdir -p build && cd build
-cmake -DBUILD_SHARED_LIBS=On ..
-cmake --build . --config Release || exit
+cmake -DBUILD_SHARED_LIBS=On -DL8W8JWT_BUILD_DLL=On -DL8W8JWT_PACKAGE=On ..
+cmake --build . --config Debug && cmake --build . --config Release || exit
 ```
+**NOTE:** If you use the l8w8jwt shared library in your project on Windows, remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! Maybe even set it as a pre-processor definition. Otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
+
+If the build succeeds, you should have a new _.tar.gz_ file inside the `build/` directory.
 
 #### Build static library
 
-Same command as above, but `-DBUILD_SHARED_LIBS=Off`.
+```bash
+mkdir -p build && cd build
+cmake -DBUILD_SHARED_LIBS=Off -DL8W8JWT_PACKAGE=On ..
+cmake --build . --config Debug && cmake --build . --config Release || exit
+```
 
 **NOTE:** When compiling l8w8jwt as a static lib, remember to link against the MbedTLS libs too! Those will be placed inside the `build/mbedtls/library/` directory after successful compilation.
 
