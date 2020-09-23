@@ -1,0 +1,33 @@
+l8w8jwt Notice
+
+---
+
+This project makes use of the following components, 
+which are, at the time of writing, open-source and
+freely available under their respective licenses:
+
+---
+
+* [MbedTLS](https://github.com/ARMmbed/mbedtls)
+* * License: Apache-2.0
+* * Copyright: ARM and the MbedTLS Contributors
+
+* [Checknum](https://github.com/GlitchedPolygons/checknum)
+* * License: Apache-2.0
+* * Copyright: Raphael Beck
+
+* [Chillbuff](https://github.com/GlitchedPolygons/chillbuff)
+* * License: Apache-2.0
+* * Copyright: Raphael Beck
+
+* [JSMN](https://github.com/zserge/jsmn)
+* * License: MIT
+* * Copyright: Serge A. Zaitsev
+
+* [Acutest](https://github.com/mity/acutest)
+* * License: MIT
+* * Copyright: Martin Mitáš
+
+---
+
+Raphael Beck, the 23rd of September, 2020
