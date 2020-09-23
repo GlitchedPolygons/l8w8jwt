@@ -29,9 +29,11 @@ extern "C" {
 
 #include <time.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include "l8w8jwt/algs.h"
 #include "l8w8jwt/claim.h"
+#include "l8w8jwt/version.h"
 #include "l8w8jwt/retcodes.h"
 
 #ifndef L8W8JWT_MAX_KEY_SIZE
@@ -216,14 +218,14 @@ struct l8w8jwt_decoding_params
  * Initializes a {@link #l8w8jwt_decoding_params} instance by setting its fields to default values.
  * @param params The l8w8jwt_decoding_params to initialize (set to default values).
  */
-void l8w8jwt_decoding_params_init(struct l8w8jwt_decoding_params* params);
+L8W8JWT_API void l8w8jwt_decoding_params_init(struct l8w8jwt_decoding_params* params);
 
 /**
  * Validates a set of l8w8jwt_decoding_params.
  * @param params The l8w8jwt_decoding_params to validate.
  * @return Return code as defined in retcodes.h
  */
-int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
+L8W8JWT_API int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
 
 /**
  * Decode (and validate) a JWT using specific parameters. <p>
@@ -248,7 +250,7 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
  *
  * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the out_validation_result argument; the returned int describes whether the actual parsing/decoding part failed).
  */
-int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length);
+L8W8JWT_API int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -33,6 +33,7 @@ extern "C" {
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
+#include "l8w8jwt/version.h"
 
 /**
  *  Encodes a byte array to a base-64 string. <p>
@@ -51,7 +52,7 @@ extern "C" {
  *
  *  @return Return code as defined in retcodes.h
  */
-int l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data_length, char** out, size_t* out_length);
+L8W8JWT_API int l8w8jwt_base64_encode(bool url, const uint8_t* data, size_t data_length, char** out, size_t* out_length);
 
 /**
  *  Decodes a base-64 encoded string to an array of bytes. <p>
@@ -68,7 +69,7 @@ int l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data
  *
  *  @return Return code as defined in retcodes.h
  */
-int l8w8jwt_base64_decode(const bool url, const char* data, const size_t data_length, uint8_t** out, size_t* out_length);
+L8W8JWT_API int l8w8jwt_base64_decode(bool url, const char* data, size_t data_length, uint8_t** out, size_t* out_length);
 
 #ifdef __cplusplus
 } // extern "C"

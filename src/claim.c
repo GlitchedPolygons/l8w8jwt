@@ -22,6 +22,7 @@ extern "C" {
 #include "l8w8jwt/retcodes.h"
 
 #include <string.h>
+#include <chillbuff.h>
 #include <mbedtls/md.h>
 #include <mbedtls/platform_util.h>
 
@@ -46,7 +47,7 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count
     }
 }
 
-int l8w8jwt_write_claims(chillbuff* stringbuilder, struct l8w8jwt_claim* claims, const size_t claims_count)
+int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* claims, const size_t claims_count)
 {
     if (stringbuilder == NULL || claims == NULL)
     {

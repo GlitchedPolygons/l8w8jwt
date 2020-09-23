@@ -32,6 +32,7 @@ extern "C" {
 #include <stdbool.h>
 #include "l8w8jwt/algs.h"
 #include "l8w8jwt/claim.h"
+#include "l8w8jwt/version.h"
 #include "l8w8jwt/retcodes.h"
 
 #ifndef L8W8JWT_MAX_KEY_SIZE
@@ -181,14 +182,14 @@ struct l8w8jwt_encoding_params
  * Initializes a {@link #l8w8jwt_encoding_params} instance by setting its fields to default values.
  * @param params The l8w8jwt_encoding_params to initialize (set to default values).
  */
-void l8w8jwt_encoding_params_init(struct l8w8jwt_encoding_params* params);
+L8W8JWT_API void l8w8jwt_encoding_params_init(struct l8w8jwt_encoding_params* params);
 
 /**
  * Validates a set of l8w8jwt_encoding_params.
  * @param params The l8w8jwt_encoding_params to validate.
  * @return Return code as defined in retcodes.h
  */
-int l8w8jwt_validate_encoding_params(struct l8w8jwt_encoding_params* params);
+L8W8JWT_API int l8w8jwt_validate_encoding_params(struct l8w8jwt_encoding_params* params);
 
 /**
  * Creates, signs and encodes a Json-Web-Token. <p>
@@ -197,7 +198,7 @@ int l8w8jwt_validate_encoding_params(struct l8w8jwt_encoding_params* params);
  * @return Return code as defined in retcodes.h
  * @see l8w8jwt_encoding_params
  */
-int l8w8jwt_encode(struct l8w8jwt_encoding_params* params);
+L8W8JWT_API int l8w8jwt_encode(struct l8w8jwt_encoding_params* params);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -100,7 +100,7 @@ after February 11, 2012 is no longer under the GPL v2 option.
 
 */
 
-/* https://github.com/gaspardpetit/base64/ */
+/* https://github.com/gaspardpetit/base64 */
 
 #include <stdio.h>
 #include <stdlib.h>

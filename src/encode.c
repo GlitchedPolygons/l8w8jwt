@@ -24,6 +24,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <inttypes.h>
+#include <chillbuff.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/md.h>
 #include <mbedtls/rsa.h>

@@ -37,6 +37,16 @@ extern "C" {
  */
 #define L8W8JWT_VERSION_STR "1.0.0"
 
+#if defined(_WIN32) && defined(L8W8JWT_DLL)
+#ifdef L8W8JWT_BUILD_DLL
+#define L8W8JWT_API __declspec(dllexport)
+#else
+#define L8W8JWT_API __declspec(dllimport)
+#endif
+#else
+#define L8W8JWT_API
+#endif
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
