@@ -25,6 +25,7 @@
 #include "l8w8jwt/decode.h"
 
 #include <acutest.h>
+#include <chillbuff.h>
 
 /* A test case that does nothing and succeeds. */
 static void null_test_success()
@@ -2579,7 +2580,7 @@ static void test_l8w8jwt_write_claims()
         { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN },
         { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL }
     };
-    chillbuff cb;
+    struct chillbuff cb;
     chillbuff_init(&cb, 16, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     TEST_ASSERT(L8W8JWT_NULL_ARG == l8w8jwt_write_claims(NULL, claims, 5));
     TEST_ASSERT(L8W8JWT_NULL_ARG == l8w8jwt_write_claims(&cb, NULL, 1));

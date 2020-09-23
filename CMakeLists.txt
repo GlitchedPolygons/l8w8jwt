@@ -140,6 +140,7 @@ if (L8W8JWT_ENABLE_TESTS)
     add_executable(run_tests ${TESTS})
 
     target_include_directories(run_tests PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/acutest/include)
+
     target_link_libraries(run_tests PUBLIC ${PROJECT_NAME})
 
     if (ENABLE_COVERAGE)

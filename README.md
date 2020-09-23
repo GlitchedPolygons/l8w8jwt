@@ -52,8 +52,8 @@ If the build succeeds, you should have a new _.tar.gz_ file inside the `build/` 
 
 ```bash
 mkdir -p build && cd build
-cmake -DBUILD_SHARED_LIBS=Off -DL8W8JWT_PACKAGE=On ..
-cmake --build . --config Debug && cmake --build . --config Release || exit
+cmake -DBUILD_SHARED_LIBS=Off -DL8W8JWT_PACKAGE=On -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config Release
 ```
 
 **NOTE:** When compiling l8w8jwt as a static lib, remember to link against the MbedTLS libs too! Those will be placed inside the `build/mbedtls/library/` directory after successful compilation.
