@@ -6,7 +6,7 @@
 <strong>ARM MbedTLS</strong>
 </summary>
 <p>
-This library makes use of the MbedTLS crypto/SSL library from ARM, which at the time of writing (03. February 2020) is stable at version 2.16.4, <a href="https://github.com/ARMmbed/mbedtls/blob/master/LICENSE">Apache-2.0 licensed</a> and available here: https://tls.mbed.org/download
+This library makes use of the MbedTLS crypto/SSL library from ARM, which at the time of writing (23. September, 2020) is stable at version 2.24.0, <a href="https://github.com/ARMmbed/mbedtls/blob/master/LICENSE">Apache-2.0 licensed</a> and available here: https://tls.mbed.org/download
 </p>
 <p>
 All credits for MbedTLS go to ARM and <a href="https://github.com/ARMmbed/mbedtls/contributors">its contributors</a>.
@@ -14,7 +14,7 @@ All credits for MbedTLS go to ARM and <a href="https://github.com/ARMmbed/mbedtl
 ---
 
 #### [ARM MbedTLS](https://en.wikipedia.org/wiki/Mbed_TLS) GitHub Repo: https://github.com/ARMmbed/mbedtls
-#### Used stable version 2.16.4: https://tls.mbed.org/download/start/mbedtls-2.16.4-apache.tgz
+#### Used stable version 2.24.0: https://github.com/ARMmbed/mbedtls/releases/tag/v2.24.0
 
 ---
 </p>
@@ -25,7 +25,7 @@ All credits for MbedTLS go to ARM and <a href="https://github.com/ARMmbed/mbedtl
 <strong>Chillbuff</strong>
 </summary>
 <p>
-This library makes use of chillbuff; a generic, lightweight, header-only dynamic-size array, which at the time of writing (03. February 2020) is <a href="https://github.com/GlitchedPolygons/chillbuff/blob/master/LICENSE">Apache-2.0 licensed</a> and available on GitHub.
+This library makes use of chillbuff; a generic, lightweight, header-only dynamic-size array, which at the time of writing (23. September, 2020) is <a href="https://github.com/GlitchedPolygons/chillbuff/blob/master/LICENSE">Apache-2.0 licensed</a> and available on GitHub.
 </p>
 <p>
 
@@ -43,7 +43,7 @@ This library makes use of chillbuff; a generic, lightweight, header-only dynamic
 <strong>Checknum</strong>
 </summary>
 <p>
-This library makes use of checknum; a single header containing a function for checking whether a given C-string contains an integer or a floating-point number. <a href="https://github.com/GlitchedPolygons/checknum/blob/master/LICENSE">Apache-2.0 licensed</a> at the time of writing (11. February 2020) and available on GitHub.
+This library makes use of checknum; a single header containing a function for checking whether a given C-string contains an integer or a floating-point number. <a href="https://github.com/GlitchedPolygons/checknum/blob/master/LICENSE">Apache-2.0 licensed</a> at the time of writing (23. September, 2020) and available on GitHub.
 </p>
 <p>
 
@@ -61,7 +61,7 @@ This library makes use of checknum; a single header containing a function for ch
 <strong>JSMN</strong>
 </summary>
 <p>
-This library makes use of JSMN; a minimalistic, lightweight, header-only JSON parser in C, which at the time of writing (03. February 2020) is <a href="https://github.com/zserge/jsmn/blob/master/LICENSE">MIT licensed</a> and available on GitHub.
+This library makes use of JSMN; a minimalistic, lightweight, header-only JSON parser in C, which at the time of writing (23. September, 2020) is <a href="https://github.com/zserge/jsmn/blob/master/LICENSE">MIT licensed</a> and available on GitHub.
 </p>
 <p>
 
