@@ -40,11 +40,11 @@ If you use GCC, [check out this issue's log here](https://github.com/GlitchedPol
 #### Build shared library/DLL
 
 ```bash
-mkdir -p build && cd build
-cmake -DBUILD_SHARED_LIBS=On -DL8W8JWT_BUILD_DLL=On -DL8W8JWT_PACKAGE=On -DCMAKE_BUILD_TYPE=Release ..
-cmake --build . --config Release
+bash build.sh
 ```
 If the build succeeds, you should have a new _.tar.gz_ file inside the `build/` directory.
+
+This command works on Windows too: just use the [Git Bash for Windows](https://git-scm.com/download/win) CLI!
 
 **NOTE:** If you use the l8w8jwt shared library in your project on Windows, remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! Maybe even set it as a pre-processor definition. Otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
 
