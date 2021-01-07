@@ -213,13 +213,19 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     char* signature = NULL;
     size_t signature_length = 0, signature_bytes_length = 0;
 
-    unsigned char signature_bytes[4096];
-    memset(signature_bytes, '\0', sizeof(signature_bytes));
+    unsigned char * signature_bytes = calloc(1, 4096);
+    if (!signature_bytes) {
+      r = L8W8JWT_OUT_OF_MEM;
+      goto exit;
+    }
 
-    unsigned char key[L8W8JWT_MAX_KEY_SIZE];
+    unsigned char * key = calloc(1, L8W8JWT_MAX_KEY_SIZE);
+    if (!key) {
+      r = L8W8JWT_OUT_OF_MEM;
+      goto exit;
+    }
     size_t key_length = params->secret_key_length;
 
-    memset(key, '\0', sizeof(key));
     memcpy(key, params->secret_key, key_length);
 
     /*
@@ -498,7 +504,8 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     chillbuff_push_back(stringbuilder, signature, signature_length);
 
 exit:
-    memset(key, '\0', key_length);
+    if (signature_bytes) free(signature_bytes);
+    if (key) free(key);
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
     mbedtls_pk_free(&pk);
