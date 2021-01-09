@@ -110,7 +110,7 @@ after February 11, 2012 is no longer under the GPL v2 option.
 static const uint8_t TABLE[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static const uint8_t URL_SAFE_TABLE[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-int l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data_length, char** out, size_t* out_length)
+int l8w8jwt_base64_encode(const int url, const uint8_t* data, const size_t data_length, char** out, size_t* out_length)
 {
     if (out == NULL || data == NULL || out_length == NULL)
     {
@@ -201,7 +201,7 @@ int l8w8jwt_base64_encode(const bool url, const uint8_t* data, const size_t data
     return L8W8JWT_SUCCESS;
 }
 
-int l8w8jwt_base64_decode(const bool url, const char* data, const size_t data_length, uint8_t** out, size_t* out_length)
+int l8w8jwt_base64_decode(const int url, const char* data, const size_t data_length, uint8_t** out, size_t* out_length)
 {
     if (data == NULL || out == NULL || out_length == NULL)
     {
@@ -253,7 +253,6 @@ int l8w8jwt_base64_decode(const bool url, const char* data, const size_t data_le
     {
         return L8W8JWT_OUT_OF_MEM;
     }
-
 
     count = 0;
     int pad = 0;

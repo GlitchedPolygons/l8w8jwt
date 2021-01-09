@@ -29,7 +29,6 @@ extern "C" {
 
 #include <time.h>
 #include <stddef.h>
-#include <stdbool.h>
 #include "l8w8jwt/algs.h"
 #include "l8w8jwt/claim.h"
 #include "l8w8jwt/version.h"

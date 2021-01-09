@@ -47,6 +47,14 @@ extern "C" {
 #define L8W8JWT_API
 #endif
 
+#ifndef L8W8JWT_SMALL_STACK
+/**
+ * Set this pre-processor definition to \c 1 if you're using this
+ * on a low-memory device with increased risk of stack overflow.
+ */
+#define L8W8JWT_SMALL_STACK 0
+#endif
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

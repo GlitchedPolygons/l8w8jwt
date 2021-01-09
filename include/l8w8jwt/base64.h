@@ -32,7 +32,6 @@ extern "C" {
 
 #include <stdint.h>
 #include <string.h>
-#include <stdbool.h>
 #include "l8w8jwt/version.h"
 
 /**
@@ -44,15 +43,15 @@ extern "C" {
  *  @note The NUL terminator is NOT included in the <code>out_length</code>.
  *  @note DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!
  *
- *  @param url base64url l8w8jwt_encode instead of base64?
- *  @param data The data (array of bytes) to base-64 l8w8jwt_encode.
+ *  @param url base64url encode instead of base64? Set to \c 0 for \c false; anything else for \c true.
+ *  @param data The data (array of bytes) to base-64 encode.
  *  @param data_length The length of the input data array (in case of a C string: array size - 1 in order to omit the NUL terminator).
  *  @param out Output where the base-64 encoded string should be written into (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!).
  *  @param out_length Pointer to a <code>size_t</code> variable containing the length of the output buffer minus the NUL terminator.
  *
  *  @return Return code as defined in retcodes.h
  */
-L8W8JWT_API int l8w8jwt_base64_encode(bool url, const uint8_t* data, size_t data_length, char** out, size_t* out_length);
+L8W8JWT_API int l8w8jwt_base64_encode(int url, const uint8_t* data, size_t data_length, char** out, size_t* out_length);
 
 /**
  *  Decodes a base-64 encoded string to an array of bytes. <p>
@@ -61,7 +60,7 @@ L8W8JWT_API int l8w8jwt_base64_encode(bool url, const uint8_t* data, size_t data
  *  @note The NUL terminator is NOT included in the <code>out_length</code>.
  *  @note DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!
  *
- *  @param url Decode using base64url instead of base64?
+ *  @param url Decode using base64url instead of base64? Set to \c 0 for \c false; anything else for \c true.
  *  @param data The base-64 encoded string to decode (obtained via {@link #l8w8jwt_base64_encode}).
  *  @param data_length The length of the string to decode.
  *  @param out Output where the decoded bytes should be written into (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!).
@@ -69,7 +68,7 @@ L8W8JWT_API int l8w8jwt_base64_encode(bool url, const uint8_t* data, size_t data
  *
  *  @return Return code as defined in retcodes.h
  */
-L8W8JWT_API int l8w8jwt_base64_decode(bool url, const char* data, size_t data_length, uint8_t** out, size_t* out_length);
+L8W8JWT_API int l8w8jwt_base64_decode(int url, const char* data, size_t data_length, uint8_t** out, size_t* out_length);
 
 #ifdef __cplusplus
 } // extern "C"

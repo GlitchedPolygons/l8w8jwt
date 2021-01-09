@@ -30,7 +30,7 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count
 {
     if (claims != NULL && claims_count > 0)
     {
-        for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; claim++)
+        for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
         {
             if (claim == NULL)
                 continue;
@@ -42,7 +42,7 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count
             free(claim->value);
         }
 
-        mbedtls_platform_zeroize(claims,claims_count * sizeof(struct l8w8jwt_claim));
+        mbedtls_platform_zeroize(claims, claims_count * sizeof(struct l8w8jwt_claim));
         free(claims);
     }
 }
@@ -60,7 +60,7 @@ int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* 
     }
 
     int first = 1;
-    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; claim++)
+    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
     {
         if (claim->key == NULL)
         {
@@ -95,7 +95,7 @@ struct l8w8jwt_claim* l8w8jwt_get_claim(struct l8w8jwt_claim* claims, const size
     if (claims == NULL || key == NULL || claims_count == 0 || key_length == 0)
         return NULL;
 
-    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; claim++)
+    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
     {
         if (strncmp(claim->key, key, key_length) == 0)
             return claim;

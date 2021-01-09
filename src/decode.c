@@ -22,17 +22,16 @@ extern "C" {
 
 #include "l8w8jwt/decode.h"
 #include "l8w8jwt/base64.h"
-#include "l8w8jwt/retcodes.h"
 
 #include <jsmn.h>
 #include <string.h>
-#include <stdbool.h>
 #include <inttypes.h>
 #include <checknum.h>
 #include <chillbuff.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
+#include <mbedtls/platform_util.h>
 #include <mbedtls/rsa.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
@@ -325,10 +324,17 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         mbedtls_ctr_drbg_context ctr_drbg;
         mbedtls_ctr_drbg_init(&ctr_drbg);
 
-        unsigned char key[L8W8JWT_MAX_KEY_SIZE];
+#if L8W8JWT_SMALL_STACK
+        unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
+        if (key == NULL)
+        {
+            r = L8W8JWT_OUT_OF_MEM;
+            goto exit;
+        }
+#else
+        unsigned char key[L8W8JWT_MAX_KEY_SIZE] = { 0x00 };
+#endif
         size_t key_length = params->verification_key_length;
-
-        memset(key, '\0', sizeof(key));
         memcpy(key, params->verification_key, key_length);
 
         if (key[key_length - 1] != '\0')
@@ -336,7 +342,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
             key_length++;
         }
 
-        const bool is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----");
+        const int is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----") != NULL;
         if (is_cert)
         {
             mbedtls_x509_crt crt;
@@ -495,10 +501,13 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 break;
         }
 
-        memset(key, '\0', sizeof(key));
+        mbedtls_platform_zeroize(key, L8W8JWT_MAX_KEY_SIZE);
         mbedtls_ctr_drbg_free(&ctr_drbg);
         mbedtls_entropy_free(&entropy);
         mbedtls_pk_free(&pk);
+#if L8W8JWT_SMALL_STACK
+        free(key);
+#endif
     }
 
     r = l8w8jwt_parse_claims(&claims, header, header_length);

@@ -20,9 +20,7 @@ extern "C" {
 
 #include "l8w8jwt/encode.h"
 #include "l8w8jwt/base64.h"
-#include "l8w8jwt/retcodes.h"
 
-#include <stdbool.h>
 #include <inttypes.h>
 #include <chillbuff.h>
 #include <mbedtls/pk.h>
@@ -31,6 +29,7 @@ extern "C" {
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/md_internal.h>
+#include <mbedtls/platform_util.h>
 
 static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, mbedtls_md_type_t* md_type, size_t* md_length)
 {
@@ -134,7 +133,7 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
     char* segment;
     size_t segment_length;
 
-    r = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment, &segment_length);
+    r = l8w8jwt_base64_encode(1, buff.array, buff.length, &segment, &segment_length);
     if (r != L8W8JWT_SUCCESS)
     {
         chillbuff_free(&buff);
@@ -188,7 +187,7 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
 
     chillbuff_push_back(&buff, "}", 1);
 
-    r = l8w8jwt_base64_encode(true, buff.array, buff.length, &segment, &segment_length);
+    r = l8w8jwt_base64_encode(1, buff.array, buff.length, &segment, &segment_length);
     if (r != L8W8JWT_SUCCESS)
     {
         chillbuff_free(&buff);
@@ -211,15 +210,27 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     const int alg = params->alg;
 
     char* signature = NULL;
-    size_t signature_length = 0, signature_bytes_length = 0;
+    size_t signature_length = 0, signature_bytes_length = 0, key_length = 0;
 
-    unsigned char signature_bytes[4096];
-    memset(signature_bytes, '\0', sizeof(signature_bytes));
+    mbedtls_pk_context pk;
+    mbedtls_entropy_context entropy;
+    mbedtls_ctr_drbg_context ctr_drbg;
 
-    unsigned char key[L8W8JWT_MAX_KEY_SIZE];
-    size_t key_length = params->secret_key_length;
+#if L8W8JWT_SMALL_STACK
+    unsigned char* signature_bytes = calloc(sizeof(unsigned char), 4096);
+    unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
 
-    memset(key, '\0', sizeof(key));
+    if (signature_bytes == NULL || key == NULL)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
+    }
+#else
+    unsigned char signature_bytes[4096] = { 0x00 };
+    unsigned char key[L8W8JWT_MAX_KEY_SIZE] = { 0x00 };
+#endif
+
+    key_length = params->secret_key_length;
     memcpy(key, params->secret_key, key_length);
 
     /*
@@ -232,13 +243,8 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
         key_length++;
     }
 
-    mbedtls_pk_context pk;
     mbedtls_pk_init(&pk);
-
-    mbedtls_entropy_context entropy;
     mbedtls_entropy_init(&entropy);
-
-    mbedtls_ctr_drbg_context ctr_drbg;
     mbedtls_ctr_drbg_init(&ctr_drbg);
 
     r = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char*)"l8w8jwt_mbedtls_pers.!#@", 24);
@@ -254,8 +260,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
 
     md_info_from_alg(alg, &md_info, &md_type, &md_length);
 
-    unsigned char hash[64];
-    memset(hash, '\0', sizeof(hash));
+    unsigned char hash[64] = { 0x00 };
 
     switch (alg)
     {
@@ -487,7 +492,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     /*
      * If this succeeds, it mallocs "signature" and assigns the resulting string length to "signature_length".
      */
-    r = l8w8jwt_base64_encode(true, (uint8_t*)signature_bytes, signature_bytes_length, &signature, &signature_length);
+    r = l8w8jwt_base64_encode(1, (uint8_t*)signature_bytes, signature_bytes_length, &signature, &signature_length);
     if (r != L8W8JWT_SUCCESS)
     {
         r = L8W8JWT_BASE64_FAILURE;
@@ -498,11 +503,15 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     chillbuff_push_back(stringbuilder, signature, signature_length);
 
 exit:
-    memset(key, '\0', key_length);
+    mbedtls_platform_zeroize(key, L8W8JWT_MAX_KEY_SIZE);
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
     mbedtls_pk_free(&pk);
     free(signature);
+#if L8W8JWT_SMALL_STACK
+    free(key);
+    free(signature_bytes);
+#endif
     return r;
 }
 

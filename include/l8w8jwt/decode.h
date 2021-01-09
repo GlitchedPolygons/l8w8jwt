@@ -30,7 +30,6 @@ extern "C" {
 #include <time.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include "l8w8jwt/algs.h"
 #include "l8w8jwt/claim.h"
 #include "l8w8jwt/version.h"
@@ -167,38 +166,38 @@ struct l8w8jwt_decoding_params
 
     /**
      * Should the expiration claim be verified?
-     * If this is set to <code>true</code>, the <code>exp</code> claim will be compared to the current date and time + {@link #exp_tolerance_seconds}
+     * If this is set to <code>1</code>, the <code>exp</code> claim will be compared to the current date and time + {@link #exp_tolerance_seconds}
      */
-    bool validate_exp;
+    int validate_exp;
 
     /**
      * Should the "not before" claim be verified?
-     * If this is set to <code>true</code>, the <code>nbf</code> claim will be compared to the current date and time + {@link #nbf_tolerance_seconds}
+     * If this is set to <code>1</code>, the <code>nbf</code> claim will be compared to the current date and time + {@link #nbf_tolerance_seconds}
      */
-    bool validate_nbf;
+    int validate_nbf;
 
     /**
      * Should the "issued at" claim be verified?
-     * If this is set to <code>true</code>, the <code>iat</code> claim will be compared to the current date and time + {@link #iat_tolerance_seconds}
+     * If this is set to <code>1</code>, the <code>iat</code> claim will be compared to the current date and time + {@link #iat_tolerance_seconds}
      */
-    bool validate_iat;
+    int validate_iat;
 
     /**
      * Small inconsistencies in time can happen, or also latency between clients and servers.
      * That's just life. You can forgive a few seconds of expiration, but don't exaggerate this! <p>
-     * Only taken into consideration if {@link #validate_exp} is set to <code>true</code>.
+     * Only taken into consideration if {@link #validate_exp} is set to <code>1</code>.
      */
     uint8_t exp_tolerance_seconds;
 
     /**
      * The amount of seconds to subtract from the current time when comparing the "not before" claim, to allow for a small tolerance time frame.
-     * Only taken into consideration if {@link #validate_nbf} is set to <code>true</code>.
+     * Only taken into consideration if {@link #validate_nbf} is set to <code>1</code>.
      */
     uint8_t nbf_tolerance_seconds;
 
     /**
      * The amount of seconds to subtract from the current time when comparing the "issued at" claim, to allow for a small tolerance time frame.
-     * Only taken into consideration if {@link #validate_iat} is set to <code>true</code>.
+     * Only taken into consideration if {@link #validate_iat} is set to <code>1</code>.
      */
     uint8_t iat_tolerance_seconds;
 
