@@ -78,24 +78,23 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
-<code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="algs_8h_source.html">l8w8jwt/algs.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="claim_8h_source.html">l8w8jwt/claim.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="version_8h_source.html">l8w8jwt/version.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="retcodes_8h_source.html">l8w8jwt/retcodes.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for encode.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="encode_8h__incl.png" border="0" usemap="#include_2l8w8jwt_2encode_8h" alt=""/></div>
 <map name="include_2l8w8jwt_2encode_8h" id="include_2l8w8jwt_2encode_8h">
-<area shape="rect" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="191,5,358,32"/>
+<area shape="rect" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="214,5,381,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,64,107"/>
 <area shape="rect" title=" " alt="" coords="89,80,157,107"/>
-<area shape="rect" title=" " alt="" coords="181,80,256,107"/>
-<area shape="rect" href="algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="281,80,383,107"/>
-<area shape="rect" href="claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="407,80,518,107"/>
-<area shape="rect" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="542,80,671,107"/>
-<area shape="rect" title=" " alt="" coords="383,155,447,181"/>
-<area shape="rect" title=" " alt="" coords="471,155,547,181"/>
+<area shape="rect" href="algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="181,80,283,107"/>
+<area shape="rect" href="claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="307,80,418,107"/>
+<area shape="rect" href="version_8h.html" title="l8w8jwt version checking." alt="" coords="397,155,515,181"/>
+<area shape="rect" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="494,80,623,107"/>
+<area shape="rect" title=" " alt="" coords="308,155,372,181"/>
 </map>
 </div>
 </div>
@@ -114,25 +113,25 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a71fc59115fb975217782ab5eca5e1cf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a71fc59115fb975217782ab5eca5e1cf1">l8w8jwt_encoding_params_init</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
-<tr class="separator:a71fc59115fb975217782ab5eca5e1cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e72a1f76a9a689891e5ca81b7d1eebc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a6e72a1f76a9a689891e5ca81b7d1eebc">l8w8jwt_validate_encoding_params</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
-<tr class="separator:a6e72a1f76a9a689891e5ca81b7d1eebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40daedaabd8cd9dfe7133644a9869bef"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a40daedaabd8cd9dfe7133644a9869bef">l8w8jwt_encode</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
-<tr class="separator:a40daedaabd8cd9dfe7133644a9869bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fb32622347f1de69947a311c9af8621"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a9fb32622347f1de69947a311c9af8621">l8w8jwt_encoding_params_init</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
+<tr class="separator:a9fb32622347f1de69947a311c9af8621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a489f0316311f70eaee999ea265838d65"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#a489f0316311f70eaee999ea265838d65">l8w8jwt_validate_encoding_params</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
+<tr class="separator:a489f0316311f70eaee999ea265838d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac51d9592ef1a73a1db46147fc96bc584"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encode_8h.html#ac51d9592ef1a73a1db46147fc96bc584">l8w8jwt_encode</a> (struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *params)</td></tr>
+<tr class="separator:ac51d9592ef1a73a1db46147fc96bc584"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing. </p>
 <dl class="section author"><dt>Author</dt><dd>Raphael Beck </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a40daedaabd8cd9dfe7133644a9869bef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40daedaabd8cd9dfe7133644a9869bef">&#9670;&nbsp;</a></span>l8w8jwt_encode()</h2>
+<a id="ac51d9592ef1a73a1db46147fc96bc584"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac51d9592ef1a73a1db46147fc96bc584">&#9670;&nbsp;</a></span>l8w8jwt_encode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int l8w8jwt_encode </td>
+          <td class="memname">L8W8JWT_API int l8w8jwt_encode </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>
@@ -153,14 +152,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a71fc59115fb975217782ab5eca5e1cf1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71fc59115fb975217782ab5eca5e1cf1">&#9670;&nbsp;</a></span>l8w8jwt_encoding_params_init()</h2>
+<a id="a9fb32622347f1de69947a311c9af8621"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fb32622347f1de69947a311c9af8621">&#9670;&nbsp;</a></span>l8w8jwt_encoding_params_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void l8w8jwt_encoding_params_init </td>
+          <td class="memname">L8W8JWT_API void l8w8jwt_encoding_params_init </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>
@@ -177,14 +176,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6e72a1f76a9a689891e5ca81b7d1eebc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e72a1f76a9a689891e5ca81b7d1eebc">&#9670;&nbsp;</a></span>l8w8jwt_validate_encoding_params()</h2>
+<a id="a489f0316311f70eaee999ea265838d65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a489f0316311f70eaee999ea265838d65">&#9670;&nbsp;</a></span>l8w8jwt_validate_encoding_params()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int l8w8jwt_validate_encoding_params </td>
+          <td class="memname">L8W8JWT_API int l8w8jwt_validate_encoding_params </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__encoding__params.html">l8w8jwt_encoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>

@@ -79,24 +79,25 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;stddef.h&gt;</code><br />
-<code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="algs_8h_source.html">l8w8jwt/algs.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="claim_8h_source.html">l8w8jwt/claim.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="version_8h_source.html">l8w8jwt/version.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="retcodes_8h_source.html">l8w8jwt/retcodes.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for decode.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="decode_8h__incl.png" border="0" usemap="#include_2l8w8jwt_2decode_8h" alt=""/></div>
 <map name="include_2l8w8jwt_2decode_8h" id="include_2l8w8jwt_2decode_8h">
-<area shape="rect" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="191,5,358,32"/>
+<area shape="rect" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="238,5,405,32"/>
 <area shape="rect" title=" " alt="" coords="5,80,64,107"/>
 <area shape="rect" title=" " alt="" coords="89,80,157,107"/>
-<area shape="rect" title=" " alt="" coords="181,80,256,107"/>
-<area shape="rect" href="algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="281,80,383,107"/>
-<area shape="rect" href="claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="407,80,518,107"/>
-<area shape="rect" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="542,80,671,107"/>
-<area shape="rect" title=" " alt="" coords="383,155,447,181"/>
-<area shape="rect" title=" " alt="" coords="471,155,547,181"/>
+<area shape="rect" title=" " alt="" coords="181,80,246,107"/>
+<area shape="rect" href="algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="270,80,373,107"/>
+<area shape="rect" href="claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="397,80,507,107"/>
+<area shape="rect" href="version_8h.html" title="l8w8jwt version checking." alt="" coords="486,155,605,181"/>
+<area shape="rect" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="583,80,713,107"/>
+<area shape="rect" title=" " alt="" coords="397,155,461,181"/>
 </map>
 </div>
 </div>
@@ -133,12 +134,12 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4be6dc5b925d6157509d90881aecd5b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#a4be6dc5b925d6157509d90881aecd5b8">l8w8jwt_decoding_params_init</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params)</td></tr>
-<tr class="separator:a4be6dc5b925d6157509d90881aecd5b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac83dd7a29368eafc23dd8ae39ad78e61"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#ac83dd7a29368eafc23dd8ae39ad78e61">l8w8jwt_validate_decoding_params</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params)</td></tr>
-<tr class="separator:ac83dd7a29368eafc23dd8ae39ad78e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a603ee77b0a2f8baf35aa4c492799934b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#a603ee77b0a2f8baf35aa4c492799934b">l8w8jwt_decode</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params, enum <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> *out_validation_result, struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> **out_claims, size_t *out_claims_length)</td></tr>
-<tr class="separator:a603ee77b0a2f8baf35aa4c492799934b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15550cb34d61f380e42548e108676e44"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#a15550cb34d61f380e42548e108676e44">l8w8jwt_decoding_params_init</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params)</td></tr>
+<tr class="separator:a15550cb34d61f380e42548e108676e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9f603d7cbbc9ab1c7dd8fef18b99b23"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#ae9f603d7cbbc9ab1c7dd8fef18b99b23">l8w8jwt_validate_decoding_params</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params)</td></tr>
+<tr class="separator:ae9f603d7cbbc9ab1c7dd8fef18b99b23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dfb9087f2c416a760ee8e50509d3459"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="decode_8h.html#a4dfb9087f2c416a760ee8e50509d3459">l8w8jwt_decode</a> (struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *params, enum <a class="el" href="decode_8h.html#ab290426e6c23685fd1065e19c368c402">l8w8jwt_validation_result</a> *out_validation_result, struct <a class="el" href="structl8w8jwt__claim.html">l8w8jwt_claim</a> **out_claims, size_t *out_claims_length)</td></tr>
+<tr class="separator:a4dfb9087f2c416a760ee8e50509d3459"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core DECODE function for l8w8jwt. Use this to decode and validate a JWT! </p>
@@ -180,14 +181,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a603ee77b0a2f8baf35aa4c492799934b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a603ee77b0a2f8baf35aa4c492799934b">&#9670;&nbsp;</a></span>l8w8jwt_decode()</h2>
+<a id="a4dfb9087f2c416a760ee8e50509d3459"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dfb9087f2c416a760ee8e50509d3459">&#9670;&nbsp;</a></span>l8w8jwt_decode()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int l8w8jwt_decode </td>
+          <td class="memname">L8W8JWT_API int l8w8jwt_decode </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em>, </td>
@@ -231,19 +232,19 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>If you decide to keep the claims stored in the <code>out_claims</code> parameter, REMEMBER to call <a class="el" href="claim_8h.html#ab2eb81aa76c21ccc3e8f2faaa6b3a013">l8w8jwt_free_claims()</a> on it once you're done using them!</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If you decide to keep the claims stored in the <code>out_claims</code> parameter, REMEMBER to call <a class="el" href="claim_8h.html#a26b08014ee52ae818e3b3a4f40d97916">l8w8jwt_free_claims()</a> on it once you're done using them!</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>Return code as defined in <a class="el" href="retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions.">retcodes.h</a> (this is NOT the validation result that's written into the out_validation_result argument; the returned int describes whether the actual parsing/decoding part failed). </dd></dl>
 
 </div>
 </div>
-<a id="a4be6dc5b925d6157509d90881aecd5b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4be6dc5b925d6157509d90881aecd5b8">&#9670;&nbsp;</a></span>l8w8jwt_decoding_params_init()</h2>
+<a id="a15550cb34d61f380e42548e108676e44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15550cb34d61f380e42548e108676e44">&#9670;&nbsp;</a></span>l8w8jwt_decoding_params_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void l8w8jwt_decoding_params_init </td>
+          <td class="memname">L8W8JWT_API void l8w8jwt_decoding_params_init </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>
@@ -260,14 +261,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac83dd7a29368eafc23dd8ae39ad78e61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac83dd7a29368eafc23dd8ae39ad78e61">&#9670;&nbsp;</a></span>l8w8jwt_validate_decoding_params()</h2>
+<a id="ae9f603d7cbbc9ab1c7dd8fef18b99b23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9f603d7cbbc9ab1c7dd8fef18b99b23">&#9670;&nbsp;</a></span>l8w8jwt_validate_decoding_params()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int l8w8jwt_validate_decoding_params </td>
+          <td class="memname">L8W8JWT_API int l8w8jwt_validate_decoding_params </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structl8w8jwt__decoding__params.html">l8w8jwt_decoding_params</a> *&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>

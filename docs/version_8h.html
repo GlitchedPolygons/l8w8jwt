@@ -74,7 +74,19 @@ $(function() {
 
 <p>l8w8jwt version checking.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="version_8h__dep__incl.png" border="0" usemap="#include_2l8w8jwt_2version_8hdep" alt=""/></div>
+<map name="include_2l8w8jwt_2version_8hdep" id="include_2l8w8jwt_2version_8hdep">
+<area shape="rect" title="l8w8jwt version checking." alt="" coords="185,5,349,32"/>
+<area shape="rect" href="base64_8h.html" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="5,80,172,107"/>
+<area shape="rect" href="claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="247,80,402,107"/>
+<area shape="rect" href="decode_8h.html" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="145,155,312,181"/>
+<area shape="rect" href="encode_8h.html" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="345,155,512,181"/>
+</map>
+</div>
+</div>
 <p><a href="version_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -83,11 +95,31 @@ Macros</h2></td></tr>
 <tr class="separator:a4626940acbd108f82b61f3b099b653bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a270a82a8994642435127efc0a59a9eb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a270a82a8994642435127efc0a59a9eb8">L8W8JWT_VERSION_STR</a>&#160;&#160;&#160;&quot;1.0.0&quot;</td></tr>
 <tr class="separator:a270a82a8994642435127efc0a59a9eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b2ba8c808b82933cda9083e528be81a"><td class="memItemLeft" align="right" valign="top"><a id="a5b2ba8c808b82933cda9083e528be81a"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>L8W8JWT_API</b></td></tr>
+<tr class="separator:a5b2ba8c808b82933cda9083e528be81a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16dcdf673ed70b70e59b5a7ec5dc149e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a16dcdf673ed70b70e59b5a7ec5dc149e">L8W8JWT_SMALL_STACK</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a16dcdf673ed70b70e59b5a7ec5dc149e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>l8w8jwt version checking. </p>
 <dl class="section author"><dt>Author</dt><dd>Raphael Beck </dd></dl>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a16dcdf673ed70b70e59b5a7ec5dc149e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16dcdf673ed70b70e59b5a7ec5dc149e">&#9670;&nbsp;</a></span>L8W8JWT_SMALL_STACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define L8W8JWT_SMALL_STACK&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set this pre-processor definition to <code>1</code> if you're using this on a low-memory device with increased risk of stack overflow. </p>
+
+</div>
+</div>
 <a id="a4626940acbd108f82b61f3b099b653bd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4626940acbd108f82b61f3b099b653bd">&#9670;&nbsp;</a></span>L8W8JWT_VERSION</h2>
 

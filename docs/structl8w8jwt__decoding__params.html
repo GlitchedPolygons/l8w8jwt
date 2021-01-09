@@ -95,12 +95,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a51fb2069e35d1186557818ad634abaef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0aa8ad49c38feee387bbbbcdd29d236"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#ab0aa8ad49c38feee387bbbbcdd29d236">validate_jti_length</a></td></tr>
 <tr class="separator:ab0aa8ad49c38feee387bbbbcdd29d236"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39cdad931d20f2dc5f8f7db9c106772c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#a39cdad931d20f2dc5f8f7db9c106772c">validate_exp</a></td></tr>
-<tr class="separator:a39cdad931d20f2dc5f8f7db9c106772c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb79a31a8ccfef34cd2e75265d11fb08"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#aeb79a31a8ccfef34cd2e75265d11fb08">validate_nbf</a></td></tr>
-<tr class="separator:aeb79a31a8ccfef34cd2e75265d11fb08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec92fd8b5883cae8fb3200919936a325"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#aec92fd8b5883cae8fb3200919936a325">validate_iat</a></td></tr>
-<tr class="separator:aec92fd8b5883cae8fb3200919936a325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78e1278b897e58a4a56ba7e857a8d672"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#a78e1278b897e58a4a56ba7e857a8d672">validate_exp</a></td></tr>
+<tr class="separator:a78e1278b897e58a4a56ba7e857a8d672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d16e5c10676157d9d5b83486a1b00e0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#a0d16e5c10676157d9d5b83486a1b00e0">validate_nbf</a></td></tr>
+<tr class="separator:a0d16e5c10676157d9d5b83486a1b00e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcf86bc0b5c133372740e083dac04219"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#abcf86bc0b5c133372740e083dac04219">validate_iat</a></td></tr>
+<tr class="separator:abcf86bc0b5c133372740e083dac04219"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0ef21e8425991d8540669ab64205f01"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#aa0ef21e8425991d8540669ab64205f01">exp_tolerance_seconds</a></td></tr>
 <tr class="separator:aa0ef21e8425991d8540669ab64205f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa06c18153fe45feeb19941d2c9882d80"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#aa06c18153fe45feeb19941d2c9882d80">nbf_tolerance_seconds</a></td></tr>
@@ -144,7 +144,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Small inconsistencies in time can happen, or also latency between clients and servers. That's just life. You can forgive a few seconds of expiration, but don't exaggerate this! </p>
-<p>Only taken into consideration if <a class="el" href="structl8w8jwt__decoding__params.html#a39cdad931d20f2dc5f8f7db9c106772c">validate_exp</a> is set to <code>true</code>. </p>
+<p>Only taken into consideration if <a class="el" href="structl8w8jwt__decoding__params.html#a78e1278b897e58a4a56ba7e857a8d672">validate_exp</a> is set to <code>1</code>. </p>
 
 </div>
 </div>
@@ -159,7 +159,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The amount of seconds to subtract from the current time when comparing the "issued at" claim, to allow for a small tolerance time frame. Only taken into consideration if <a class="el" href="structl8w8jwt__decoding__params.html#aec92fd8b5883cae8fb3200919936a325">validate_iat</a> is set to <code>true</code>. </p>
+<p>The amount of seconds to subtract from the current time when comparing the "issued at" claim, to allow for a small tolerance time frame. Only taken into consideration if <a class="el" href="structl8w8jwt__decoding__params.html#abcf86bc0b5c133372740e083dac04219">validate_iat</a> is set to <code>1</code>. </p>
 
 </div>
 </div>
@@ -204,7 +204,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The amount of seconds to subtract from the current time when comparing the "not before" claim, to allow for a small tolerance time frame. Only taken into consideration if <a class="el" href="structl8w8jwt__decoding__params.html#aeb79a31a8ccfef34cd2e75265d11fb08">validate_nbf</a> is set to <code>true</code>. </p>
+<p>The amount of seconds to subtract from the current time when comparing the "not before" claim, to allow for a small tolerance time frame. Only taken into consideration if <a class="el" href="structl8w8jwt__decoding__params.html#a0d16e5c10676157d9d5b83486a1b00e0">validate_nbf</a> is set to <code>1</code>. </p>
 
 </div>
 </div>
@@ -240,33 +240,33 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a39cdad931d20f2dc5f8f7db9c106772c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39cdad931d20f2dc5f8f7db9c106772c">&#9670;&nbsp;</a></span>validate_exp</h2>
+<a id="a78e1278b897e58a4a56ba7e857a8d672"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78e1278b897e58a4a56ba7e857a8d672">&#9670;&nbsp;</a></span>validate_exp</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool l8w8jwt_decoding_params::validate_exp</td>
+          <td class="memname">int l8w8jwt_decoding_params::validate_exp</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Should the expiration claim be verified? If this is set to <code>true</code>, the <code>exp</code> claim will be compared to the current date and time + <a class="el" href="structl8w8jwt__decoding__params.html#aa0ef21e8425991d8540669ab64205f01">exp_tolerance_seconds</a> </p>
+<p>Should the expiration claim be verified? If this is set to <code>1</code>, the <code>exp</code> claim will be compared to the current date and time + <a class="el" href="structl8w8jwt__decoding__params.html#aa0ef21e8425991d8540669ab64205f01">exp_tolerance_seconds</a> </p>
 
 </div>
 </div>
-<a id="aec92fd8b5883cae8fb3200919936a325"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec92fd8b5883cae8fb3200919936a325">&#9670;&nbsp;</a></span>validate_iat</h2>
+<a id="abcf86bc0b5c133372740e083dac04219"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcf86bc0b5c133372740e083dac04219">&#9670;&nbsp;</a></span>validate_iat</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool l8w8jwt_decoding_params::validate_iat</td>
+          <td class="memname">int l8w8jwt_decoding_params::validate_iat</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Should the "issued at" claim be verified? If this is set to <code>true</code>, the <code>iat</code> claim will be compared to the current date and time + <a class="el" href="structl8w8jwt__decoding__params.html#acc989e7e2824e4ecc18ca5119b53851c">iat_tolerance_seconds</a> </p>
+<p>Should the "issued at" claim be verified? If this is set to <code>1</code>, the <code>iat</code> claim will be compared to the current date and time + <a class="el" href="structl8w8jwt__decoding__params.html#acc989e7e2824e4ecc18ca5119b53851c">iat_tolerance_seconds</a> </p>
 
 </div>
 </div>
@@ -334,18 +334,18 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aeb79a31a8ccfef34cd2e75265d11fb08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb79a31a8ccfef34cd2e75265d11fb08">&#9670;&nbsp;</a></span>validate_nbf</h2>
+<a id="a0d16e5c10676157d9d5b83486a1b00e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d16e5c10676157d9d5b83486a1b00e0">&#9670;&nbsp;</a></span>validate_nbf</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool l8w8jwt_decoding_params::validate_nbf</td>
+          <td class="memname">int l8w8jwt_decoding_params::validate_nbf</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Should the "not before" claim be verified? If this is set to <code>true</code>, the <code>nbf</code> claim will be compared to the current date and time + <a class="el" href="structl8w8jwt__decoding__params.html#aa06c18153fe45feeb19941d2c9882d80">nbf_tolerance_seconds</a> </p>
+<p>Should the "not before" claim be verified? If this is set to <code>1</code>, the <code>nbf</code> claim will be compared to the current date and time + <a class="el" href="structl8w8jwt__decoding__params.html#aa06c18153fe45feeb19941d2c9882d80">nbf_tolerance_seconds</a> </p>
 
 </div>
 </div>

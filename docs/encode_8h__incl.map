@@ -1,11 +1,10 @@
 <map id="include/l8w8jwt/encode.h" name="include/l8w8jwt/encode.h">
-<area shape="rect" id="node1" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="191,5,358,32"/>
+<area shape="rect" id="node1" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="214,5,381,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,80,64,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="89,80,157,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="181,80,256,107"/>
-<area shape="rect" id="node5" href="$algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="281,80,383,107"/>
-<area shape="rect" id="node6" href="$claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="407,80,518,107"/>
-<area shape="rect" id="node9" href="$retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="542,80,671,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="383,155,447,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="471,155,547,181"/>
+<area shape="rect" id="node4" href="$algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="181,80,283,107"/>
+<area shape="rect" id="node5" href="$claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="307,80,418,107"/>
+<area shape="rect" id="node7" href="$version_8h.html" title="l8w8jwt version checking." alt="" coords="397,155,515,181"/>
+<area shape="rect" id="node8" href="$retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="494,80,623,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="308,155,372,181"/>
 </map>
