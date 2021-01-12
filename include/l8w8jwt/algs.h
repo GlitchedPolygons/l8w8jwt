@@ -87,6 +87,11 @@ extern "C" {
  */
 #define L8W8JWT_ALG_ES512 11
 
+/**
+ * ECDSA over secp256k1 + SHA256 signing algorithm.
+ */
+#define L8W8JWT_ALG_ES256K 12
+
 
 #ifdef __cplusplus
 } // extern "C"
