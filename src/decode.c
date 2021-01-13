@@ -46,6 +46,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_RS256:
         case L8W8JWT_ALG_PS256:
         case L8W8JWT_ALG_ES256:
+        case L8W8JWT_ALG_ES256K:
             *md_length = 32;
             *md_type = MBEDTLS_MD_SHA256;
             *md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
@@ -451,6 +452,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 break;
 
             case L8W8JWT_ALG_ES256:
+            case L8W8JWT_ALG_ES256K:
             case L8W8JWT_ALG_ES384:
             case L8W8JWT_ALG_ES512:
 

@@ -39,6 +39,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_RS256:
         case L8W8JWT_ALG_PS256:
         case L8W8JWT_ALG_ES256:
+        case L8W8JWT_ALG_ES256K:
             *md_length = 32;
             *md_type = MBEDTLS_MD_SHA256;
             *md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
@@ -116,6 +117,9 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
             break;
         case L8W8JWT_ALG_ES512:
             chillbuff_push_back(&buff, "{\"alg\":\"ES512\",\"typ\":\"JWT\"", 26);
+            break;
+        case L8W8JWT_ALG_ES256K:
+            chillbuff_push_back(&buff, "{\"alg\":\"ES256K\",\"typ\":\"JWT\",\"kty\":\"EC\",\"crv\":\"secp256k1\"", 56);
             break;
         default:
             chillbuff_free(&buff);
@@ -377,7 +381,8 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
 
         case L8W8JWT_ALG_ES256:
         case L8W8JWT_ALG_ES384:
-        case L8W8JWT_ALG_ES512: {
+        case L8W8JWT_ALG_ES512:
+        case L8W8JWT_ALG_ES256K: {
 
             mbedtls_ecdsa_context ecdsa;
             mbedtls_ecdsa_init(&ecdsa);
@@ -417,14 +422,38 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             switch (alg)
             {
                 case L8W8JWT_ALG_ES256:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP256R1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
+                    signature_bytes_length = 64;
+                    r = mbedtls_pk_get_bitlen(&pk) == 256;
+                    break;
+                case L8W8JWT_ALG_ES256K:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP256K1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
                     signature_bytes_length = 64;
                     r = mbedtls_pk_get_bitlen(&pk) == 256;
                     break;
                 case L8W8JWT_ALG_ES384:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP384R1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
                     signature_bytes_length = 96;
                     r = mbedtls_pk_get_bitlen(&pk) == 384;
                     break;
                 case L8W8JWT_ALG_ES512:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP521R1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
                     signature_bytes_length = 132;
                     r = mbedtls_pk_get_bitlen(&pk) == 521;
                     break;
@@ -436,7 +465,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
              * Ensure that the passed elliptic-curve cryptography key
              * has a size that is valid and compatible with the selected JWT alg.
              */
-            if (!r)
+            if (r == 0)
             {
                 r = L8W8JWT_WRONG_KEY_TYPE;
                 goto ecdsa_exit;

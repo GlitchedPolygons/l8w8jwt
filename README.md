@@ -129,10 +129,10 @@ int main(void)
     params.validate_sub = "Gordon Freeman";
 
     /* Expiration validation set to false here only because the above example token is already expired! */
-    params.validate_exp = false; 
+    params.validate_exp = 0; 
     params.exp_tolerance_seconds = 60;
 
-    params.validate_iat = true;
+    params.validate_iat = 1;
     params.iat_tolerance_seconds = 60;
 
     enum l8w8jwt_validation_result validation_result;

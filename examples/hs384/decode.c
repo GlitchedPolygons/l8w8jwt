@@ -40,10 +40,10 @@ int main(void)
     params.validate_sub = "Gordon Freeman";
     params.validate_sub_length = strlen(params.validate_sub);
 
-    params.validate_exp = true;
+    params.validate_exp = 1;
     params.exp_tolerance_seconds = 60;
 
-    params.validate_iat = true;
+    params.validate_iat = 1;
     params.iat_tolerance_seconds = 60;
 
     enum l8w8jwt_validation_result validation_result;

@@ -25,6 +25,17 @@ static const char ES256_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
                                        "NGyQ+P4bc/RmNEq1NpsogiMB5eXC7jUcD/XqxP9HCIhdRBcQHx7aOo3ayQ==\n"
                                        "-----END PUBLIC KEY-----";
 
+static const char ES256K_PRIVATE_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
+                                         "MHQCAQEEIMRr0qJ5P1yLSjiVGVxrpSH2XHsEFbnLVG3IJ5UofWVWoAcGBSuBBAAK\n"
+                                         "oUQDQgAEKDFMxQ2xpH+AabiiGGo+sXCeD52MYgufyE+AqMgsXbq9cD/TGFuqrCH3\n"
+                                         "JncFWxLGamxuYQ9gdNZ9uJzk9pwgGw==\n"
+                                         "-----END EC PRIVATE KEY-----";
+
+static const char ES256K_PUBLIC_KEY[] = "-----BEGIN PUBLIC KEY-----\n"
+                                        "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEKDFMxQ2xpH+AabiiGGo+sXCeD52MYguf\n"
+                                        "yE+AqMgsXbq9cD/TGFuqrCH3JncFWxLGamxuYQ9gdNZ9uJzk9pwgGw==\n"
+                                        "-----END PUBLIC KEY-----";
+
 static const char ES384_PRIVATE_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
                                         "MIGkAgEBBDCmT7i4o8x5NZDT2nk1D4TUxKDknyx9xGL3F0eRATDndq6MNVmkdAwl\n"
                                         "+8BaWL6xAS6gBwYFK4EEACKhZANiAASmzsk7PEHrovqP3HvWz3lRKpWM0lv//O2A\n"

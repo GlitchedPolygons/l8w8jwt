@@ -25,6 +25,7 @@ add_executable(l8w8jwt_example_rs384_encode ${CMAKE_CURRENT_LIST_DIR}/rs384/enco
 add_executable(l8w8jwt_example_rs512_encode ${CMAKE_CURRENT_LIST_DIR}/rs512/encode.c)
 
 add_executable(l8w8jwt_example_es256_encode ${CMAKE_CURRENT_LIST_DIR}/es256/encode.c)
+add_executable(l8w8jwt_example_es256k_encode ${CMAKE_CURRENT_LIST_DIR}/es256k/encode.c)
 add_executable(l8w8jwt_example_es384_encode ${CMAKE_CURRENT_LIST_DIR}/es384/encode.c)
 add_executable(l8w8jwt_example_es512_encode ${CMAKE_CURRENT_LIST_DIR}/es512/encode.c)
 
@@ -41,6 +42,7 @@ target_link_libraries(l8w8jwt_example_rs384_encode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_rs512_encode PRIVATE l8w8jwt)
 
 target_link_libraries(l8w8jwt_example_es256_encode PRIVATE l8w8jwt)
+target_link_libraries(l8w8jwt_example_es256k_encode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es384_encode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es512_encode PRIVATE l8w8jwt)
 
@@ -57,6 +59,7 @@ add_executable(l8w8jwt_example_rs384_decode ${CMAKE_CURRENT_LIST_DIR}/rs384/deco
 add_executable(l8w8jwt_example_rs512_decode ${CMAKE_CURRENT_LIST_DIR}/rs512/decode.c)
 
 add_executable(l8w8jwt_example_es256_decode ${CMAKE_CURRENT_LIST_DIR}/es256/decode.c)
+add_executable(l8w8jwt_example_es256k_decode ${CMAKE_CURRENT_LIST_DIR}/es256k/decode.c)
 add_executable(l8w8jwt_example_es384_decode ${CMAKE_CURRENT_LIST_DIR}/es384/decode.c)
 add_executable(l8w8jwt_example_es512_decode ${CMAKE_CURRENT_LIST_DIR}/es512/decode.c)
 
@@ -73,6 +76,7 @@ target_link_libraries(l8w8jwt_example_rs384_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_rs512_decode PRIVATE l8w8jwt)
 
 target_link_libraries(l8w8jwt_example_es256_decode PRIVATE l8w8jwt)
+target_link_libraries(l8w8jwt_example_es256k_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es384_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es512_decode PRIVATE l8w8jwt)
 
