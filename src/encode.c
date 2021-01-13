@@ -381,7 +381,8 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
 
         case L8W8JWT_ALG_ES256:
         case L8W8JWT_ALG_ES384:
-        case L8W8JWT_ALG_ES512: {
+        case L8W8JWT_ALG_ES512:
+        case L8W8JWT_ALG_ES256K: {
 
             mbedtls_ecdsa_context ecdsa;
             mbedtls_ecdsa_init(&ecdsa);
@@ -421,15 +422,38 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             switch (alg)
             {
                 case L8W8JWT_ALG_ES256:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP256R1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
+                    signature_bytes_length = 64;
+                    r = mbedtls_pk_get_bitlen(&pk) == 256;
+                    break;
                 case L8W8JWT_ALG_ES256K:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP256K1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
                     signature_bytes_length = 64;
                     r = mbedtls_pk_get_bitlen(&pk) == 256;
                     break;
                 case L8W8JWT_ALG_ES384:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP384R1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
                     signature_bytes_length = 96;
                     r = mbedtls_pk_get_bitlen(&pk) == 384;
                     break;
                 case L8W8JWT_ALG_ES512:
+                    if (ecdsa.grp.id != MBEDTLS_ECP_DP_SECP521R1)
+                    {
+                        r = L8W8JWT_WRONG_KEY_TYPE;
+                        goto ecdsa_exit;
+                    }
                     signature_bytes_length = 132;
                     r = mbedtls_pk_get_bitlen(&pk) == 521;
                     break;

@@ -858,6 +858,94 @@ static void test_l8w8jwt_decode_invalid_signature_es256()
     free(jwt);
 }
 
+static void test_l8w8jwt_encode_es256_es256k_wrong_curve_alg()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ES256K;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES256_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES256_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r != L8W8JWT_SUCCESS);
+}
+
+static void test_l8w8jwt_encode_es256k_es256_wrong_curve_alg()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ES256;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES256K_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES256K_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r != L8W8JWT_SUCCESS);
+}
+
+static void test_l8w8jwt_encode_es384_wrong_curve_alg()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ES384;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES256_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES256_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r != L8W8JWT_SUCCESS);
+}
+
+static void test_l8w8jwt_encode_es512_wrong_curve_alg()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ES512;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES384_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES384_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r != L8W8JWT_SUCCESS);
+}
+
 static void test_l8w8jwt_decode_invalid_signature_es384()
 {
     int r;
@@ -2641,6 +2729,10 @@ TEST_LIST = {
     { "test_l8w8jwt_decode_invalid_signature_es256", test_l8w8jwt_decode_invalid_signature_es256 }, //
     { "test_l8w8jwt_decode_invalid_signature_es384", test_l8w8jwt_decode_invalid_signature_es384 }, //
     { "test_l8w8jwt_decode_invalid_signature_es512", test_l8w8jwt_decode_invalid_signature_es512 }, //
+    { "test_l8w8jwt_encode_es256_es256k_wrong_curve_alg", test_l8w8jwt_encode_es256_es256k_wrong_curve_alg }, //
+    { "test_l8w8jwt_encode_es256k_es256_wrong_curve_alg", test_l8w8jwt_encode_es256k_es256_wrong_curve_alg }, //
+    { "test_l8w8jwt_encode_es384_wrong_curve_alg", test_l8w8jwt_encode_es384_wrong_curve_alg }, //
+    { "test_l8w8jwt_encode_es512_wrong_curve_alg", test_l8w8jwt_encode_es512_wrong_curve_alg }, //
     { "test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type", test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type }, //
     { "test_l8w8jwt_decode_invalid_exp", test_l8w8jwt_decode_invalid_exp }, //
     { "test_l8w8jwt_decode_invalid_nbf", test_l8w8jwt_decode_invalid_nbf }, //
