@@ -142,6 +142,17 @@ static const char ES256_PUBLIC_KEY_2[] = "-----BEGIN PUBLIC KEY-----\n"
                                          "j5TqFfjnLQRK7Cf6CmA7yQCT4W5yQBB5ovNcAqvUQP6RYgW83oKAL/2OHw==\n"
                                          "-----END PUBLIC KEY-----";
 
+static const char ES256K_PRIVATE_KEY_2[] = "-----BEGIN EC PRIVATE KEY-----\n"
+                                           "MHQCAQEEIIJdznAvHYWd2xtgyjLswkcR125d/qT/3NmVgz5n4IPJoAcGBSuBBAAK\n"
+                                           "oUQDQgAETvR1FEA+mmeTm/FQS0kTDVmFVVGClB6fFRJi0+HGbvDAeCDfjnOoB0+X\n"
+                                           "c68+6ATR5CwQu/FTAr1JfuiFC2pF7A==\n"
+                                           "-----END EC PRIVATE KEY-----";
+
+static const char ES256K_PUBLIC_KEY_2[] = "-----BEGIN PUBLIC KEY-----\n"
+                                          "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAETvR1FEA+mmeTm/FQS0kTDVmFVVGClB6f\n"
+                                          "FRJi0+HGbvDAeCDfjnOoB0+Xc68+6ATR5CwQu/FTAr1JfuiFC2pF7A==\n"
+                                          "-----END PUBLIC KEY-----";
+
 static const char ES384_PRIVATE_KEY_2[] = "-----BEGIN EC PRIVATE KEY-----\n"
                                           "MIGkAgEBBDCbjS+/FTuuhjJ7Lklyo9h1nlMH/0VcyCZlge58liaZ9g9Um/DSTT0V\n"
                                           "utL4VoxWFjGgBwYFK4EEACKhZANiAAQiH6BZV7ZHw5m9LY7ZOzK7uD97Vyi9u0B2\n"
@@ -342,47 +353,47 @@ static const char X509_PRIME256v1_TEST_CERTIFICATE[] = "-----BEGIN CERTIFICATE--
                                                        "-----END CERTIFICATE-----";
 
 static const char X509_secp384r1_PRIVATE_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
-                                                  "MIGkAgEBBDCkVvIFUjOekkdP6UerGMmntywhvr5aAlprrHfOqFOHlTPD+l0ZEir4\n"
-                                                  "CPhr1mDLZf2gBwYFK4EEACKhZANiAARyd/EVDm6z6icabt1GoHxLj9uitL35+FZp\n"
-                                                  "/1a9F4jImEEKYt1hMzriOi9Zj8DkD/z31qSmdyq4ohD+5mhd772v8QcSqSFH+k5y\n"
-                                                  "ymGs00E29TuZQqp5QOTYhpoJ0OjPr6Y=\n"
-                                                  "-----END EC PRIVATE KEY-----";
+                                                 "MIGkAgEBBDCkVvIFUjOekkdP6UerGMmntywhvr5aAlprrHfOqFOHlTPD+l0ZEir4\n"
+                                                 "CPhr1mDLZf2gBwYFK4EEACKhZANiAARyd/EVDm6z6icabt1GoHxLj9uitL35+FZp\n"
+                                                 "/1a9F4jImEEKYt1hMzriOi9Zj8DkD/z31qSmdyq4ohD+5mhd772v8QcSqSFH+k5y\n"
+                                                 "ymGs00E29TuZQqp5QOTYhpoJ0OjPr6Y=\n"
+                                                 "-----END EC PRIVATE KEY-----";
 
 static const char X509_secp384r1_TEST_CERTIFICATE[] = "-----BEGIN CERTIFICATE-----\n"
-                                                       "MIICHDCCAaKgAwIBAgIUDbxqitqfqp/DskfCgkvk1TW1aaQwCgYIKoZIzj0EAwIw\n"
-                                                       "RTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGElu\n"
-                                                       "dGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAeFw0yMDA1MjYxOTQxMzRaFw0yMDA2MjUx\n"
-                                                       "OTQxMzRaMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYD\n"
-                                                       "VQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwdjAQBgcqhkjOPQIBBgUrgQQA\n"
-                                                       "IgNiAARyd/EVDm6z6icabt1GoHxLj9uitL35+FZp/1a9F4jImEEKYt1hMzriOi9Z\n"
-                                                       "j8DkD/z31qSmdyq4ohD+5mhd772v8QcSqSFH+k5yymGs00E29TuZQqp5QOTYhpoJ\n"
-                                                       "0OjPr6ajUzBRMB0GA1UdDgQWBBS+xOmGTrBlk/677qzvIs/gewVxhjAfBgNVHSME\n"
-                                                       "GDAWgBS+xOmGTrBlk/677qzvIs/gewVxhjAPBgNVHRMBAf8EBTADAQH/MAoGCCqG\n"
-                                                       "SM49BAMCA2gAMGUCMQC8br7MgMThMzd9dJlO13RnZCVw2DrNOZqulE7+v4jtNTka\n"
-                                                       "UKa9Fd4wEvVg0n3ne0MCMDb3xpm5ifheqrhM9M12aqfOcIboEWrYUJImfFsefEX9\n"
-                                                       "Y/l9iG2WlcjQde6Zmng8Ew==\n"
-                                                       "-----END CERTIFICATE-----";
+                                                      "MIICHDCCAaKgAwIBAgIUDbxqitqfqp/DskfCgkvk1TW1aaQwCgYIKoZIzj0EAwIw\n"
+                                                      "RTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGElu\n"
+                                                      "dGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAeFw0yMDA1MjYxOTQxMzRaFw0yMDA2MjUx\n"
+                                                      "OTQxMzRaMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYD\n"
+                                                      "VQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwdjAQBgcqhkjOPQIBBgUrgQQA\n"
+                                                      "IgNiAARyd/EVDm6z6icabt1GoHxLj9uitL35+FZp/1a9F4jImEEKYt1hMzriOi9Z\n"
+                                                      "j8DkD/z31qSmdyq4ohD+5mhd772v8QcSqSFH+k5yymGs00E29TuZQqp5QOTYhpoJ\n"
+                                                      "0OjPr6ajUzBRMB0GA1UdDgQWBBS+xOmGTrBlk/677qzvIs/gewVxhjAfBgNVHSME\n"
+                                                      "GDAWgBS+xOmGTrBlk/677qzvIs/gewVxhjAPBgNVHRMBAf8EBTADAQH/MAoGCCqG\n"
+                                                      "SM49BAMCA2gAMGUCMQC8br7MgMThMzd9dJlO13RnZCVw2DrNOZqulE7+v4jtNTka\n"
+                                                      "UKa9Fd4wEvVg0n3ne0MCMDb3xpm5ifheqrhM9M12aqfOcIboEWrYUJImfFsefEX9\n"
+                                                      "Y/l9iG2WlcjQde6Zmng8Ew==\n"
+                                                      "-----END CERTIFICATE-----";
 
 static const char X509_secp521r1_PRIVATE_KEY[] = "-----BEGIN EC PRIVATE KEY-----\n"
-                                                  "MIHcAgEBBEIBSutIgzxJHFREmub2Z+G6+8AQgLhrSe3Y0I/OjGpKvbZhNtJEqBU5\n"
-                                                  "n2NsOss0ql9fj4Y4REAnfauGiG4Rf1T1DJOgBwYFK4EEACOhgYkDgYYABAHiyIMu\n"
-                                                  "KSknoSGbqZuWVP97r1Gj38+MCpbBJ/38MwnmUiF+dFX7eGp8g+V1PmHHF+pMY/CX\n"
-                                                  "JzhFmhr3DIzEoWRYCQEt07lXFmzJbNatmlyc5MFdaSjK4QcHZ9/lF33mQJgk4KSf\n"
-                                                  "v9sOG1Wk07izG+W5fhb9jZfjvvuy5RZxzyl+pyXiKA==\n"
-                                                  "-----END EC PRIVATE KEY-----";
+                                                 "MIHcAgEBBEIBSutIgzxJHFREmub2Z+G6+8AQgLhrSe3Y0I/OjGpKvbZhNtJEqBU5\n"
+                                                 "n2NsOss0ql9fj4Y4REAnfauGiG4Rf1T1DJOgBwYFK4EEACOhgYkDgYYABAHiyIMu\n"
+                                                 "KSknoSGbqZuWVP97r1Gj38+MCpbBJ/38MwnmUiF+dFX7eGp8g+V1PmHHF+pMY/CX\n"
+                                                 "JzhFmhr3DIzEoWRYCQEt07lXFmzJbNatmlyc5MFdaSjK4QcHZ9/lF33mQJgk4KSf\n"
+                                                 "v9sOG1Wk07izG+W5fhb9jZfjvvuy5RZxzyl+pyXiKA==\n"
+                                                 "-----END EC PRIVATE KEY-----";
 
 static const char X509_secp521r1_TEST_CERTIFICATE[] = "-----BEGIN CERTIFICATE-----\n"
-                                                       "MIICZjCCAcigAwIBAgIUL3Bgye4TnXTHC7m8OM2MZIQXf3swCgYIKoZIzj0EAwIw\n"
-                                                       "RTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGElu\n"
-                                                       "dGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAeFw0yMDA1MjYxOTQyNDhaFw0yMDA2MjUx\n"
-                                                       "OTQyNDhaMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYD\n"
-                                                       "VQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwgZswEAYHKoZIzj0CAQYFK4EE\n"
-                                                       "ACMDgYYABAHiyIMuKSknoSGbqZuWVP97r1Gj38+MCpbBJ/38MwnmUiF+dFX7eGp8\n"
-                                                       "g+V1PmHHF+pMY/CXJzhFmhr3DIzEoWRYCQEt07lXFmzJbNatmlyc5MFdaSjK4QcH\n"
-                                                       "Z9/lF33mQJgk4KSfv9sOG1Wk07izG+W5fhb9jZfjvvuy5RZxzyl+pyXiKKNTMFEw\n"
-                                                       "HQYDVR0OBBYEFAz0kG1xSb0rb1jYbJdkgkpGawE3MB8GA1UdIwQYMBaAFAz0kG1x\n"
-                                                       "Sb0rb1jYbJdkgkpGawE3MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDgYsA\n"
-                                                       "MIGHAkIArian16qdRWFjJ3DxxkdeuEHMy8CswiSBtR8+Xjq2o/7V3YpBeL4LU9pe\n"
-                                                       "Ksc7e3m4rS12AxGvKFI8266mRAUGYWUCQQMnZkxtO2WAuLiCy4T0gXCtNdxn7ZT0\n"
-                                                       "E4KoHQH30hR4Rst+bNUNZm7g3iNZZZ4eBXn9ZrdoUI6sB/2UI4Tvd+zA\n"
-                                                       "-----END CERTIFICATE-----";
+                                                      "MIICZjCCAcigAwIBAgIUL3Bgye4TnXTHC7m8OM2MZIQXf3swCgYIKoZIzj0EAwIw\n"
+                                                      "RTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGElu\n"
+                                                      "dGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAeFw0yMDA1MjYxOTQyNDhaFw0yMDA2MjUx\n"
+                                                      "OTQyNDhaMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYD\n"
+                                                      "VQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwgZswEAYHKoZIzj0CAQYFK4EE\n"
+                                                      "ACMDgYYABAHiyIMuKSknoSGbqZuWVP97r1Gj38+MCpbBJ/38MwnmUiF+dFX7eGp8\n"
+                                                      "g+V1PmHHF+pMY/CXJzhFmhr3DIzEoWRYCQEt07lXFmzJbNatmlyc5MFdaSjK4QcH\n"
+                                                      "Z9/lF33mQJgk4KSfv9sOG1Wk07izG+W5fhb9jZfjvvuy5RZxzyl+pyXiKKNTMFEw\n"
+                                                      "HQYDVR0OBBYEFAz0kG1xSb0rb1jYbJdkgkpGawE3MB8GA1UdIwQYMBaAFAz0kG1x\n"
+                                                      "Sb0rb1jYbJdkgkpGawE3MA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwIDgYsA\n"
+                                                      "MIGHAkIArian16qdRWFjJ3DxxkdeuEHMy8CswiSBtR8+Xjq2o/7V3YpBeL4LU9pe\n"
+                                                      "Ksc7e3m4rS12AxGvKFI8266mRAUGYWUCQQMnZkxtO2WAuLiCy4T0gXCtNdxn7ZT0\n"
+                                                      "E4KoHQH30hR4Rst+bNUNZm7g3iNZZZ4eBXn9ZrdoUI6sB/2UI4Tvd+zA\n"
+                                                      "-----END CERTIFICATE-----";

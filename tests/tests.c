@@ -858,6 +858,44 @@ static void test_l8w8jwt_decode_invalid_signature_es256()
     free(jwt);
 }
 
+static void test_l8w8jwt_decode_invalid_signature_es256k()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ES256K;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ES256K_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ES256K_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_ES256;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)ES256K_PUBLIC_KEY_2;
+    decoding_params.verification_key_length = strlen(ES256K_PUBLIC_KEY_2);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
+    free(jwt);
+}
+
 static void test_l8w8jwt_encode_es256_es256k_wrong_curve_alg()
 {
     int r;
@@ -2727,6 +2765,7 @@ TEST_LIST = {
     { "test_l8w8jwt_decode_invalid_signature_ps384", test_l8w8jwt_decode_invalid_signature_ps384 }, //
     { "test_l8w8jwt_decode_invalid_signature_ps512", test_l8w8jwt_decode_invalid_signature_ps512 }, //
     { "test_l8w8jwt_decode_invalid_signature_es256", test_l8w8jwt_decode_invalid_signature_es256 }, //
+    { "test_l8w8jwt_decode_invalid_signature_es256k", test_l8w8jwt_decode_invalid_signature_es256k }, //
     { "test_l8w8jwt_decode_invalid_signature_es384", test_l8w8jwt_decode_invalid_signature_es384 }, //
     { "test_l8w8jwt_decode_invalid_signature_es512", test_l8w8jwt_decode_invalid_signature_es512 }, //
     { "test_l8w8jwt_encode_es256_es256k_wrong_curve_alg", test_l8w8jwt_encode_es256_es256k_wrong_curve_alg }, //
