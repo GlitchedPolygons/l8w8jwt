@@ -1,0 +1,15 @@
+[submodule "lib/mbedtls"]
+	path = lib/mbedtls
+	url = https://github.com/ARMmbed/mbedtls
+[submodule "lib/chillbuff"]
+	path = lib/chillbuff
+	url = https://github.com/GlitchedPolygons/chillbuff
+[submodule "lib/jsmn"]
+	path = lib/jsmn
+	url = https://github.com/zserge/jsmn
+[submodule "lib/checknum"]
+	path = lib/checknum
+	url = https://github.com/GlitchedPolygons/checknum
+[submodule "lib/acutest"]
+	path = lib/acutest
+	url = https://github.com/mity/acutest
