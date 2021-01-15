@@ -41,7 +41,7 @@ extern "C" {
  *
  *  @note The output buffer is NUL-terminated to make it easier to use as a C string.
  *  @note The NUL terminator is NOT included in the <code>out_length</code>.
- *  @note DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!
+ *  @note DO NOT FORGET to free the output buffer once you're done using it!
  *
  *  @param url base64url encode instead of base64? Set to \c 0 for \c false; anything else for \c true.
  *  @param data The data (array of bytes) to base-64 encode.
@@ -58,7 +58,7 @@ L8W8JWT_API int l8w8jwt_base64_encode(int url, const uint8_t* data, size_t data_
  *
  *  @note The returned bytes buffer is NUL-terminated to allow usage as a C string.
  *  @note The NUL terminator is NOT included in the <code>out_length</code>.
- *  @note DO NOT FORGET to call <code>free()</code> on the output buffer once you're done using it!
+ *  @note DO NOT FORGET to free the output buffer once you're done using it!
  *
  *  @param url Decode using base64url instead of base64? Set to \c 0 for \c false; anything else for \c true.
  *  @param data The base-64 encoded string to decode (obtained via {@link #l8w8jwt_base64_encode}).

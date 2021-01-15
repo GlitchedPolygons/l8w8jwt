@@ -18,18 +18,21 @@
 extern "C" {
 #endif
 
+#include "l8w8jwt/util.h"
 #include "l8w8jwt/encode.h"
 #include "l8w8jwt/base64.h"
 
 #include <inttypes.h>
 #include <chillbuff.h>
 #include <mbedtls/pk.h>
-#include <mbedtls/md.h>
-#include <mbedtls/rsa.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/md_internal.h>
 #include <mbedtls/platform_util.h>
+
+#if L8W8JWT_ENABLE_EDDSA
+#include <ed25519.h>
+#endif
 
 static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, mbedtls_md_type_t* md_type, size_t* md_length)
 {
@@ -121,6 +124,9 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
         case L8W8JWT_ALG_ES256K:
             chillbuff_push_back(&buff, "{\"alg\":\"ES256K\",\"typ\":\"JWT\",\"kty\":\"EC\",\"crv\":\"secp256k1\"", 56);
             break;
+        case L8W8JWT_ALG_ED25519:
+            chillbuff_push_back(&buff, "{\"alg\":\"EdDSA\",\"typ\":\"JWT\",\"kty\":\"EC\",\"crv\":\"Ed25519\"", 53);
+            break;
         default:
             chillbuff_free(&buff);
             return L8W8JWT_INVALID_ARG;
@@ -146,12 +152,12 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
 
     chillbuff_push_back(stringbuilder, segment, segment_length);
 
-    free(segment);
-    segment = NULL;
     chillbuff_clear(&buff);
 
-    char iatnbfexp[64];
-    memset(iatnbfexp, '\0', sizeof(iatnbfexp));
+    l8w8jwt_free(segment);
+    segment = NULL;
+
+    char iatnbfexp[64] = { 0x00 };
 
     if (params->iat)
     {
@@ -201,7 +207,7 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
     chillbuff_push_back(stringbuilder, ".", 1);
     chillbuff_push_back(stringbuilder, segment, segment_length);
 
-    free(segment);
+    l8w8jwt_free(segment);
     chillbuff_free(&buff);
 
     return L8W8JWT_SUCCESS;
@@ -219,6 +225,10 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     mbedtls_pk_context pk;
     mbedtls_entropy_context entropy;
     mbedtls_ctr_drbg_context ctr_drbg;
+
+    mbedtls_pk_init(&pk);
+    mbedtls_entropy_init(&entropy);
+    mbedtls_ctr_drbg_init(&ctr_drbg);
 
 #if L8W8JWT_SMALL_STACK
     unsigned char* signature_bytes = calloc(sizeof(unsigned char), 4096);
@@ -242,14 +252,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
      * in the PEM-formatted key string passed to the key parse function.
      * HMAC-key variants should subtract 1 from key_length again to compensate.
      */
-    if (key[key_length - 1] != '\0')
-    {
-        key_length++;
-    }
-
-    mbedtls_pk_init(&pk);
-    mbedtls_entropy_init(&entropy);
-    mbedtls_ctr_drbg_init(&ctr_drbg);
+    key_length += key[key_length - 1] != '\0';
 
     r = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char*)"l8w8jwt_mbedtls_pers.!#@", 24);
     if (r != 0)
@@ -288,7 +291,6 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             signature_bytes_length = 32 + (16 * params->alg);
             break;
         }
-
         case L8W8JWT_ALG_RS256:
         case L8W8JWT_ALG_RS384:
         case L8W8JWT_ALG_RS512: {
@@ -333,7 +335,6 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
 
             break;
         }
-
         case L8W8JWT_ALG_PS256:
         case L8W8JWT_ALG_PS384:
         case L8W8JWT_ALG_PS512: {
@@ -378,7 +379,6 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             signature_bytes_length = mbedtls_pk_get_bitlen(&pk) / 8;
             break;
         }
-
         case L8W8JWT_ALG_ES256:
         case L8W8JWT_ALG_ES384:
         case L8W8JWT_ALG_ES512:
@@ -506,10 +506,37 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             }
             break;
         }
+        case L8W8JWT_ALG_ED25519: {
 
-        default:
+#if L8W8JWT_ENABLE_EDDSA
+            if (params->secret_key_length != 128 && !(params->secret_key_length == 129 && params->secret_key[128] == 0x00))
+            {
+                r = L8W8JWT_WRONG_KEY_TYPE;
+                goto exit;
+            }
+
+            unsigned char private_key_ref10[64 + 1] = { 0x00 };
+
+            if (l8w8jwt_hexstr2bin((const char*)params->secret_key, params->secret_key_length, private_key_ref10, sizeof(private_key_ref10), NULL) != 0)
+            {
+                r = L8W8JWT_WRONG_KEY_TYPE;
+                goto exit;
+            }
+
+            ed25519_sign_ref10(signature_bytes, (const unsigned char*)stringbuilder->array, stringbuilder->length, private_key_ref10);
+            signature_bytes_length = 64;
+
+            mbedtls_platform_zeroize(private_key_ref10, sizeof(private_key_ref10));
+            break;
+#else
+            r = L8W8JWT_UNSUPPORTED_ALG;
+            goto exit;
+#endif
+        }
+        default: {
             r = L8W8JWT_INVALID_ARG;
             goto exit;
+        }
     }
 
     if (signature_bytes_length == 0)
@@ -536,11 +563,12 @@ exit:
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
     mbedtls_pk_free(&pk);
-    free(signature);
+    l8w8jwt_free(signature);
 #if L8W8JWT_SMALL_STACK
-    free(key);
-    free(signature_bytes);
+    l8w8jwt_free(key);
+    l8w8jwt_free(signature_bytes);
 #endif
+
     return r;
 }
 

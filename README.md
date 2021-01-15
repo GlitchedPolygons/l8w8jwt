@@ -18,7 +18,9 @@ The others are extremely lightweight header-only libraries for JSON handling and
 
 ### How to clone
 
-`git clone https://github.com/GlitchedPolygons/l8w8jwt.git`
+`git clone --recursive https://github.com/GlitchedPolygons/l8w8jwt.git`
+
+Make sure to do a recursive clone, otherwise you need to `git submodule update --init --recursive` at a later point!
 
 ### How to use
 
@@ -36,6 +38,8 @@ If you don't want to use git submodules, you can also start vendoring a specific
 If you use CMake you can just `add_subdirectory(path_to_git_submodule)` and then `target_link_libraries(your_project PRIVATE l8w8jwt)` inside your **CMakeLists.txt** file.
 
 If you use GCC, [check out this issue's log here](https://github.com/GlitchedPolygons/l8w8jwt/issues/2).
+
+For devices with a particularly small stack, please define the `L8W8JWT_SMALL_STACK` pre-processor definition and set it to `1`.
 
 #### Build shared library/DLL
 
@@ -93,7 +97,7 @@ int main(void)
     printf("\n l8w8jwt example HS512 token: %s \n", r == L8W8JWT_SUCCESS ? jwt : " (encoding failure) ");
 
     /* Always free the output jwt string! */
-    free(jwt);
+    l8w8jwt_free(jwt);
 
     return 0;
 }
@@ -149,9 +153,13 @@ int main(void)
     }
     
     /*
-     * decode_results describes whether decoding/parsing the token succeeded or failed;
+     * decode_result describes whether decoding/parsing the token succeeded or failed;
      * the output l8w8jwt_validation_result variable contains actual information about
      * JWT signature verification status and claims validation (e.g. expiration check).
+     * 
+     * If you need the claims, pass an (ideally stack pre-allocated) array of struct l8w8jwt_claim
+     * instead of NULL,NULL into the corresponding l8w8jwt_decode() function parameters.
+     * If that array is heap-allocated, remember to free it yourself!
      */
 
     return 0;
@@ -191,5 +199,35 @@ Here is the overview of minimal **required** parameters that can't be omitted fo
     <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#aeafb73bb540cf91f61dbda889a470d96">l8w8jwt_encoding_params.verification_key_length</a></li>
 </ul>
 </details>
+
+### EdDSA
+
+L8w8jwt supports the [EdDSA](https://en.wikipedia.org/wiki/EdDSA) signing algorithm. The [Ed25519 curve](https://ed25519.cr.yp.to) is used.
+By default it is turned off though (to avoid a potentially unnecessary dependency to the Ed25519 library inside `lib/ed25519`).
+
+To turn it on, define the compiler pre-processor definition `L8W8JWT_ENABLE_EDDSA` (set it to `1` to enable it).
+
+Correspondingly, for shared library usage, you'd need to build the l8w8jwt DLL/.so yourself, since **the pre-built binary available on the [Releases page](https://github.com/GlitchedPolygons/l8w8jwt/releases) is built without it!**
+
+=> For CMake, to do so you'd just need to pass `-DL8W8JWT_ENABLE_EDDSA=On` to the CMake command before building!
+
+For generating the keys, you should use the library that is also used by l8w8jwt for signing and verifying JWT signatures:
+[`lib/ed25519`](https://github.com/GlitchedPolygons/GlitchEd25519) (a fork of [ORLP's ed25519](https://github.com/orlp/ed25519), kudos to [Orson Peters](https://github.com/orlp) for writing this great and super-simple C lib!). It's inside this repo's `lib/` folder as a git submodule.
+
+### Note for the key parameter
+
+* When using the `HS256`, `HS384` and `HS512` signing algorithms (symmetric), the l8w8jwt key parameter is the HMAC secret.
+* For the `RS256`, `RS384`, `RS512`, `PS256`, `PS384` and `PS512` signature algos it's the PEM-formatted RSA key string.
+* `ES256` => PEM-formatted NIST P-256 key.
+* `ES384` => PEM-formatted NIST P-384 key.
+* `ES512` => PEM-formatted NIST P-521 key.
+* `ES256K` => PEM-formatted secp256k1 key.
+* `EdDSA` => Hex-encoded Ed25519 key string (Ref10 format)
+* * For Ed25519 signing specifically, the private key must be in the Ref10 Ed25519 format: exactly like the ones you'd get out of [libsodium](https://github.com/jedisct1/libsodium), [NaCl](https://nacl.cr.yp.to), [SUPERCOP](https://bench.cr.yp.to/supercop.html), ...
+* * Check out the l8w8jwt EdDSA examples for more information and demo usage!
+
+To find out how you would go about generating these keys, check out the [`examples/`](https://github.com/GlitchedPolygons/l8w8jwt/tree/master/examples): there's comments at the top of those files containing the commands that were used for key generation.
+
+---
 
 [![View on jwt.io](http://jwt.io/img/badge.svg)](https://jwt.io)

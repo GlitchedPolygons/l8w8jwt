@@ -40,22 +40,13 @@ static void test_l8w8jwt_validate_encoding_params()
     size_t out_length;
     struct l8w8jwt_encoding_params params;
 
-    struct l8w8jwt_claim header_claims[] =
-    {{ .key = "kid",
-      .key_length = 3,
-      .value = "some-key-id-here-012345",
-      .value_length = 0, /* Setting this to 0 makes it use strlen(), which in this case is fine. */
-      .type = L8W8JWT_CLAIM_TYPE_STRING
-    }};
+    struct l8w8jwt_claim header_claims[] = { { .key = "kid",
+            .key_length = 3,
+            .value = "some-key-id-here-012345",
+            .value_length = 0, /* Setting this to 0 makes it use strlen(), which in this case is fine. */
+            .type = L8W8JWT_CLAIM_TYPE_STRING } };
 
-    struct l8w8jwt_claim payload_claims[] =
-    {{
-        .key = "tst",
-        .key_length = 3,
-        .value = "some-test-claim-here-012345",
-        .value_length = 0,
-        .type = L8W8JWT_CLAIM_TYPE_STRING
-    }};
+    struct l8w8jwt_claim payload_claims[] = { { .key = "tst", .key_length = 3, .value = "some-test-claim-here-012345", .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_STRING } };
 
     r = l8w8jwt_validate_encoding_params(NULL);
     TEST_ASSERT(r == L8W8JWT_NULL_ARG);
@@ -1060,6 +1051,44 @@ static void test_l8w8jwt_decode_invalid_signature_es512()
     free(jwt);
 }
 
+static void test_l8w8jwt_decode_invalid_signature_eddsa()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ED25519;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ED25519_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ED25519_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_ED25519;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)ED25519_PUBLIC_KEY_2;
+    decoding_params.verification_key_length = strlen(ED25519_PUBLIC_KEY_2);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
+    free(jwt);
+}
+
 static void test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type()
 {
     int r;
@@ -1143,24 +1172,8 @@ static void test_l8w8jwt_decode_valid_signature_hs256()
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
 
-    struct l8w8jwt_claim additional_header_claims[] =
-    {
-        { .key = "test",
-          .key_length = 4,
-          .value = "value",
-          .value_length = 5,
-          .type = L8W8JWT_CLAIM_TYPE_STRING
-        }
-    };
-    struct l8w8jwt_claim additional_payload_claims[] =
-    {
-        { .key = "test",
-          .key_length = 4,
-          .value = "value",
-          .value_length = 5,
-          .type = L8W8JWT_CLAIM_TYPE_STRING
-        }
-    };
+    struct l8w8jwt_claim additional_header_claims[] = { { .key = "test", .key_length = 4, .value = "value", .value_length = 5, .type = L8W8JWT_CLAIM_TYPE_STRING } };
+    struct l8w8jwt_claim additional_payload_claims[] = { { .key = "test", .key_length = 4, .value = "value", .value_length = 5, .type = L8W8JWT_CLAIM_TYPE_STRING } };
 
     encoding_params.alg = L8W8JWT_ALG_HS256;
     encoding_params.iat = time(NULL);
@@ -1692,7 +1705,8 @@ static void test_l8w8jwt_decode_valid_signature_ps512()
     free(jwt);
 }
 
-static void test_l8w8jwt_decode_valid_signature_ps512_with_x509_certificate(){
+static void test_l8w8jwt_decode_valid_signature_ps512_with_x509_certificate()
+{
     int r;
     char* jwt;
     size_t jwt_length;
@@ -1720,6 +1734,82 @@ static void test_l8w8jwt_decode_valid_signature_ps512_with_x509_certificate(){
     decoding_params.jwt_length = jwt_length;
     decoding_params.verification_key = (unsigned char*)X509_TEST_CERTIFICATE;
     decoding_params.verification_key_length = strlen(X509_TEST_CERTIFICATE);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result == L8W8JWT_VALID);
+    free(jwt);
+}
+
+static void test_l8w8jwt_decode_valid_signature_eddsa()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ED25519;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ED25519_PRIVATE_KEY;
+    encoding_params.secret_key_length = strlen(ED25519_PRIVATE_KEY);
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_ED25519;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)ED25519_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(ED25519_PUBLIC_KEY);
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result == L8W8JWT_VALID);
+    free(jwt);
+}
+
+static void test_l8w8jwt_decode_valid_signature_eddsa_alt()
+{
+    int r;
+    char* jwt;
+    size_t jwt_length;
+    struct l8w8jwt_encoding_params encoding_params;
+    l8w8jwt_encoding_params_init(&encoding_params);
+
+    encoding_params.alg = L8W8JWT_ALG_ED25519;
+    encoding_params.iat = time(NULL);
+    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+
+    encoding_params.secret_key = (unsigned char*)ED25519_PRIVATE_KEY_2;
+    encoding_params.secret_key_length = strlen(ED25519_PRIVATE_KEY_2) + 1;
+
+    encoding_params.out = &jwt;
+    encoding_params.out_length = &jwt_length;
+
+    r = l8w8jwt_encode(&encoding_params);
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_ED25519;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)ED25519_PUBLIC_KEY_2;
+    decoding_params.verification_key_length = strlen(ED25519_PUBLIC_KEY_2);
 
     enum l8w8jwt_validation_result validation_result;
     r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
@@ -2698,14 +2788,8 @@ static void test_l8w8jwt_decode_valid_jti()
 
 static void test_l8w8jwt_write_claims()
 {
-    struct l8w8jwt_claim claims[] =
-    {
-        { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING },
-        { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER },
-        { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
-        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN },
-        { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL }
-    };
+    struct l8w8jwt_claim claims[] = { { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING }, { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER }, { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
+        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN }, { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL } };
     struct chillbuff cb;
     chillbuff_init(&cb, 16, sizeof(char), CHILLBUFF_GROW_DUPLICATIVE);
     TEST_ASSERT(L8W8JWT_NULL_ARG == l8w8jwt_write_claims(NULL, claims, 5));
@@ -2716,14 +2800,8 @@ static void test_l8w8jwt_write_claims()
 
 static void test_l8w8jwt_get_claim()
 {
-    struct l8w8jwt_claim claims[] =
-    {
-        { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING },
-        { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER },
-        { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
-        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN },
-        { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL }
-    };
+    struct l8w8jwt_claim claims[] = { { .key = "ctx", .key_length = 3, .value = "Unforseen Consequences", .value_length = strlen("Unforseen Consequences"), .type = L8W8JWT_CLAIM_TYPE_STRING }, { .key = "age", .key_length = 3, .value = "27", .value_length = strlen("27"), .type = L8W8JWT_CLAIM_TYPE_INTEGER }, { .key = "size", .key_length = strlen("size"), .value = "1.85", .value_length = strlen("1.85"), .type = L8W8JWT_CLAIM_TYPE_NUMBER },
+        { .key = "alive", .key_length = strlen("alive"), .value = "true", .value_length = strlen("true"), .type = L8W8JWT_CLAIM_TYPE_BOOLEAN }, { .key = "nulltest", .key_length = strlen("nulltest"), .value = "null", .value_length = strlen("null"), .type = L8W8JWT_CLAIM_TYPE_NULL } };
     TEST_ASSERT(NULL == l8w8jwt_get_claim(NULL, 5, "alive", 5));
     TEST_ASSERT(NULL == l8w8jwt_get_claim(claims, 0, "alive", 5));
     TEST_ASSERT(NULL == l8w8jwt_get_claim(claims, 5, "test", 4));
@@ -2768,6 +2846,7 @@ TEST_LIST = {
     { "test_l8w8jwt_decode_invalid_signature_es256k", test_l8w8jwt_decode_invalid_signature_es256k }, //
     { "test_l8w8jwt_decode_invalid_signature_es384", test_l8w8jwt_decode_invalid_signature_es384 }, //
     { "test_l8w8jwt_decode_invalid_signature_es512", test_l8w8jwt_decode_invalid_signature_es512 }, //
+    { "test_l8w8jwt_decode_invalid_signature_eddsa", test_l8w8jwt_decode_invalid_signature_eddsa }, //
     { "test_l8w8jwt_encode_es256_es256k_wrong_curve_alg", test_l8w8jwt_encode_es256_es256k_wrong_curve_alg }, //
     { "test_l8w8jwt_encode_es256k_es256_wrong_curve_alg", test_l8w8jwt_encode_es256k_es256_wrong_curve_alg }, //
     { "test_l8w8jwt_encode_es384_wrong_curve_alg", test_l8w8jwt_encode_es384_wrong_curve_alg }, //
@@ -2780,6 +2859,8 @@ TEST_LIST = {
     { "test_l8w8jwt_decode_invalid_aud", test_l8w8jwt_decode_invalid_aud }, //
     { "test_l8w8jwt_decode_invalid_iss", test_l8w8jwt_decode_invalid_iss }, //
     { "test_l8w8jwt_decode_invalid_jti", test_l8w8jwt_decode_invalid_jti }, //
+    { "test_l8w8jwt_decode_valid_signature_eddsa", test_l8w8jwt_decode_valid_signature_eddsa }, //
+    { "test_l8w8jwt_decode_valid_signature_eddsa_alt", test_l8w8jwt_decode_valid_signature_eddsa_alt }, //
     { "test_l8w8jwt_decode_valid_signature_hs256", test_l8w8jwt_decode_valid_signature_hs256 }, //
     { "test_l8w8jwt_decode_valid_signature_hs384", test_l8w8jwt_decode_valid_signature_hs384 }, //
     { "test_l8w8jwt_decode_valid_signature_hs512", test_l8w8jwt_decode_valid_signature_hs512 }, //

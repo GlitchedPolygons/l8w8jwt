@@ -242,6 +242,7 @@ L8W8JWT_API int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params*
  * [OPTIONAL] Where the decoded claims (header + payload claims together) should be written into.
  * This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer!
  * If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...).
+ * REMEMBER to call <code>l8w8jwt_free()</code> on it once you're done using it!
  *
  * @param out_claims_length Where to write the decoded claims count into. This will receive the value of how many claims were written into "out_claims" (0 if you decided to set "out_claims" to <code>NULL</code>).
  *

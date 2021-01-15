@@ -167,7 +167,7 @@ struct l8w8jwt_encoding_params
 
     /**
      * Where the encoded token should be written into
-     * (will be malloc'ed, so make sure to <code>free()</code> this as soon as you're done using it!).
+     * (will be malloc'ed, so make sure to <code>l8w8jwt_free()</code> this as soon as you're done using it!).
      */
     char** out;
 

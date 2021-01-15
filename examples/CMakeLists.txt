@@ -28,6 +28,7 @@ add_executable(l8w8jwt_example_es256_encode ${CMAKE_CURRENT_LIST_DIR}/es256/enco
 add_executable(l8w8jwt_example_es256k_encode ${CMAKE_CURRENT_LIST_DIR}/es256k/encode.c)
 add_executable(l8w8jwt_example_es384_encode ${CMAKE_CURRENT_LIST_DIR}/es384/encode.c)
 add_executable(l8w8jwt_example_es512_encode ${CMAKE_CURRENT_LIST_DIR}/es512/encode.c)
+add_executable(l8w8jwt_example_eddsa_encode ${CMAKE_CURRENT_LIST_DIR}/eddsa/encode.c)
 
 add_executable(l8w8jwt_example_ps256_encode ${CMAKE_CURRENT_LIST_DIR}/ps256/encode.c)
 add_executable(l8w8jwt_example_ps384_encode ${CMAKE_CURRENT_LIST_DIR}/ps384/encode.c)
@@ -45,6 +46,7 @@ target_link_libraries(l8w8jwt_example_es256_encode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es256k_encode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es384_encode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es512_encode PRIVATE l8w8jwt)
+target_link_libraries(l8w8jwt_example_eddsa_encode PRIVATE l8w8jwt)
 
 target_link_libraries(l8w8jwt_example_ps256_encode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_ps384_encode PRIVATE l8w8jwt)
@@ -62,6 +64,7 @@ add_executable(l8w8jwt_example_es256_decode ${CMAKE_CURRENT_LIST_DIR}/es256/deco
 add_executable(l8w8jwt_example_es256k_decode ${CMAKE_CURRENT_LIST_DIR}/es256k/decode.c)
 add_executable(l8w8jwt_example_es384_decode ${CMAKE_CURRENT_LIST_DIR}/es384/decode.c)
 add_executable(l8w8jwt_example_es512_decode ${CMAKE_CURRENT_LIST_DIR}/es512/decode.c)
+add_executable(l8w8jwt_example_eddsa_decode ${CMAKE_CURRENT_LIST_DIR}/eddsa/decode.c)
 
 add_executable(l8w8jwt_example_ps256_decode ${CMAKE_CURRENT_LIST_DIR}/ps256/decode.c)
 add_executable(l8w8jwt_example_ps384_decode ${CMAKE_CURRENT_LIST_DIR}/ps384/decode.c)
@@ -79,7 +82,11 @@ target_link_libraries(l8w8jwt_example_es256_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es256k_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es384_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_es512_decode PRIVATE l8w8jwt)
+target_link_libraries(l8w8jwt_example_eddsa_decode PRIVATE l8w8jwt)
 
 target_link_libraries(l8w8jwt_example_ps256_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_ps384_decode PRIVATE l8w8jwt)
 target_link_libraries(l8w8jwt_example_ps512_decode PRIVATE l8w8jwt)
+
+add_executable(l8w8jwt_example_eddsa_generate_keypair ${CMAKE_CURRENT_LIST_DIR}/eddsa/keygen.c)
+target_link_libraries(l8w8jwt_example_eddsa_generate_keypair PRIVATE l8w8jwt)

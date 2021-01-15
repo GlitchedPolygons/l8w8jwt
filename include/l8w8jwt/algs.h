@@ -92,6 +92,17 @@ extern "C" {
  */
 #define L8W8JWT_ALG_ES256K 12
 
+/**
+ * EdDSA over ed25519 + SHA512 signing algorithm.
+ */
+#define L8W8JWT_ALG_ED25519 13
+
+#ifndef L8W8JWT_ENABLE_EDDSA
+/**
+ * Set this to \c 1 if you want to enable the EdDSA signing algorithm
+ */
+#define L8W8JWT_ENABLE_EDDSA 0
+#endif
 
 #ifdef __cplusplus
 } // extern "C"

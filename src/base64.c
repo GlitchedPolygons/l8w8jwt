@@ -105,6 +105,7 @@ after February 11, 2012 is no longer under the GPL v2 option.
 #include <stdio.h>
 #include <stdlib.h>
 #include "l8w8jwt/base64.h"
+#include "l8w8jwt/version.h"
 #include "l8w8jwt/retcodes.h"
 
 static const uint8_t TABLE[64 + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -293,7 +294,7 @@ int l8w8jwt_base64_decode(const int url, const char* data, const size_t data_len
                 }
                 else
                 {
-                    free(*out);
+                    l8w8jwt_free(*out);
                     *out = NULL;
                     return L8W8JWT_INVALID_ARG; // Invalid padding...
                 }

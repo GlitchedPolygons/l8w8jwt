@@ -94,6 +94,12 @@ extern "C" {
  */
 #define L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE 700
 
+/**
+ * Returned if the JWT signing alg parameter that was passed is not supported (e.g. the used l8w8jwt library was built without support for that algo, e.g. Ed25519).
+ * See the README.md for more details!
+ */
+#define L8W8JWT_UNSUPPORTED_ALG 800
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
