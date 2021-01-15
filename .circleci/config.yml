@@ -3,7 +3,8 @@ jobs:
   build:
     docker:
       - image: ubuntu:latest
-
+        environment:
+          DEBIAN_FRONTEND: noninteractive
     steps:
       - checkout
       - run:
