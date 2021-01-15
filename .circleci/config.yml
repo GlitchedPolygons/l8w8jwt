@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ubuntu:latest
+      - image: ubuntu:focal
         environment:
           DEBIAN_FRONTEND: noninteractive
     steps:
@@ -11,8 +11,11 @@ jobs:
           name: Install dependencies
           command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake bash curl uuid-dev && rm -rf /var/lib/apt/lists/*'
       - run:
+          name: Fetch submodules
+          command: 'git submodule update --init --recursive'
+      - run:
           name: Build and run tests
-          command: 'git submodule update --init --recursive && bash -eo pipefail test.sh cov'
+          command: 'bash -eo pipefail test.sh cov'
       - run:
           name: Upload coverage reports
           when: on_success
