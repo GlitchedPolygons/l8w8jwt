@@ -111,7 +111,7 @@ int main(void)
     params.out_length = &jwt_length;
 
     int r = l8w8jwt_encode(&params);
-    printf("\nl8w8jwt_encode_ed25519 function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
+    printf("\nl8w8jwt_encode_eddsa function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
 
     l8w8jwt_free(jwt); /* Never forget to free the jwt string! */
     return 0;

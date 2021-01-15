@@ -38,8 +38,8 @@ int main(void)
     params.jwt = (char*)JWT;
     params.jwt_length = strlen(JWT);
 
-    params.verification_key = (unsigned char*)ECDSA_PUBLIC_KEY;
-    params.verification_key_length = strlen(ECDSA_PUBLIC_KEY);
+    params.verification_key = (unsigned char*)EDDSA_PUBLIC_KEY;
+    params.verification_key_length = strlen(EDDSA_PUBLIC_KEY);
 
     params.validate_iss = "Black Mesa";
     params.validate_iss_length = strlen(params.validate_iss);
@@ -56,7 +56,7 @@ int main(void)
     enum l8w8jwt_validation_result validation_result;
     int r = l8w8jwt_decode(&params, &validation_result, NULL, NULL);
 
-    printf("\nl8w8jwt_decode_es256 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
+    printf("\nl8w8jwt_decode_eddsa function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
 
     return 0;
 }
