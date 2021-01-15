@@ -12,7 +12,7 @@ jobs:
           command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake bash curl uuid-dev && rm -rf /var/lib/apt/lists/*'
       - run:
           name: Build and run tests
-          command: 'bash -eo pipefail test.sh cov'
+          command: 'git submodule update --init --recursive && bash -eo pipefail test.sh cov'
       - run:
           name: Upload coverage reports
           when: on_success
