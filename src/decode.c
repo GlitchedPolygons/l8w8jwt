@@ -63,6 +63,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_RS512:
         case L8W8JWT_ALG_PS512:
         case L8W8JWT_ALG_ES512:
+        case L8W8JWT_ALG_ED25519:
             *md_length = 64;
             *md_type = MBEDTLS_MD_SHA512;
             *md_info = (mbedtls_md_info_t*)(&mbedtls_sha512_info);
@@ -216,6 +217,13 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
     {
         return L8W8JWT_INVALID_ARG;
     }
+
+#if !L8W8JWT_ENABLE_EDDSA
+    if (params->alg == L8W8JWT_ALG_ED25519)
+    {
+        return L8W8JWT_UNSUPPORTED_ALG;
+    }
+#endif
 
     return L8W8JWT_SUCCESS;
 }
@@ -398,10 +406,9 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
 
                 break;
             }
-
             case L8W8JWT_ALG_RS256:
             case L8W8JWT_ALG_RS384:
-            case L8W8JWT_ALG_RS512:
+            case L8W8JWT_ALG_RS512: {
 
                 if (!is_cert)
                 {
@@ -421,10 +428,10 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 }
 
                 break;
-
+            }
             case L8W8JWT_ALG_PS256:
             case L8W8JWT_ALG_PS384:
-            case L8W8JWT_ALG_PS512:
+            case L8W8JWT_ALG_PS512: {
 
                 if (!is_cert)
                 {
@@ -448,11 +455,11 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 }
 
                 break;
-
+            }
             case L8W8JWT_ALG_ES256:
             case L8W8JWT_ALG_ES256K:
             case L8W8JWT_ALG_ES384:
-            case L8W8JWT_ALG_ES512:
+            case L8W8JWT_ALG_ES512: {
 
                 if (!is_cert)
                 {
@@ -496,7 +503,11 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 mbedtls_mpi_free(&sig_s);
                 mbedtls_ecdsa_free(&ecdsa);
                 break;
-
+            }
+            case L8W8JWT_ALG_ED25519: {
+                // TODO: verify sig here!
+                break;
+            }
             default:
                 break;
         }

@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 
+#include "l8w8jwt/util.h"
 #include "l8w8jwt/encode.h"
 #include "l8w8jwt/base64.h"
 
@@ -518,9 +519,24 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             r = L8W8JWT_UNSUPPORTED_ALG;
             goto exit;
 #endif
+            if (params->secret_key_length != 128 && !(params->secret_key_length == 129 && params->secret_key[128] == 0x00))
+            {
+                r = L8W8JWT_WRONG_KEY_TYPE;
+                goto exit;
+            }
 
-            //ed25519_sign(signature_bytes, (const unsigned char*)stringbuilder->array, stringbuilder->length, pub, prv);
+            unsigned char private_key_ref10[64 + 1] = { 0x00 };
+
+            if (l8w8jwt_hexstr2bin((const char*)params->secret_key, params->secret_key_length, private_key_ref10, sizeof(private_key_ref10), NULL) != 0)
+            {
+                r = L8W8JWT_WRONG_KEY_TYPE;
+                goto exit;
+            }
+
+            ed25519_sign_ref10(signature_bytes, (const unsigned char*)stringbuilder->array, stringbuilder->length, private_key_ref10);
             signature_bytes_length = 64;
+
+            mbedtls_platform_zeroize(private_key_ref10, sizeof(private_key_ref10));
             break;
         }
 

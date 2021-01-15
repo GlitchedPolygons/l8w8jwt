@@ -220,10 +220,9 @@ For generating the keys, you should use the library that is also used by l8w8jwt
 * `ES384` => PEM-formatted NIST P-384 key.
 * `ES512` => PEM-formatted NIST P-521 key.
 * `ES256K` => PEM-formatted secp256k1 key.
-* `EdDSA` => Hex-encoded Ed25519 key
-* * For Ed25519 specifically, the private key must be in the orlp ed25519 format (pre-hashed), **NOT** in the Ref10 format!
-* * You can convert Ref10 keys into the more performant orlp ed25519 format with the [ed25519_key_convert_ref10_to_orlp()](https://github.com/GlitchedPolygons/GlitchEd25519/blob/master/src/ed25519.h) helper function (uses lib/ed25519).
-* * Check out the examples for more information and demo usage!
+* `EdDSA` => Hex-encoded Ed25519 key string (Ref10 format)
+* * For Ed25519 signing specifically, the private key must be in the Ref10 Ed25519 format: exactly like the ones you'd get out of [libsodium](https://github.com/jedisct1/libsodium), [NaCl](https://nacl.cr.yp.to), [SUPERCOP](https://bench.cr.yp.to/supercop.html), ...
+* * Check out the l8w8jwt EdDSA examples for more information and demo usage!
 
 To find out how you would go about generating these keys, check out the [`examples/`](https://github.com/GlitchedPolygons/l8w8jwt/tree/master/examples): there's comments at the top of those files containing the commands that were used for key generation.
 

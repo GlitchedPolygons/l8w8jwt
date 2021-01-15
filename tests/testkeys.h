@@ -397,3 +397,11 @@ static const char X509_secp521r1_TEST_CERTIFICATE[] = "-----BEGIN CERTIFICATE---
                                                       "Ksc7e3m4rS12AxGvKFI8266mRAUGYWUCQQMnZkxtO2WAuLiCy4T0gXCtNdxn7ZT0\n"
                                                       "E4KoHQH30hR4Rst+bNUNZm7g3iNZZZ4eBXn9ZrdoUI6sB/2UI4Tvd+zA\n"
                                                       "-----END CERTIFICATE-----";
+
+static const char EDDSA_PRIVATE_KEY[] = "4070f09e0040304000e0f0200e1c00a058c49d1db349cbec05bf412615aad05c4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
+
+static const char EDDSA_PUBLIC_KEY[] = "4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
+
+static const char EDDSA_PRIVATE_KEY_2[] = "e0f0206c80c0284000906080c1db0080dafa10c2bf6200025319785f42e41003d0577779b8c762ea4fcf845baefc33073d93975e5dbc5f5a385c76428870a224";
+
+static const char EDDSA_PUBLIC_KEY_2[] = "d0577779b8c762ea4fcf845baefc33073d93975e5dbc5f5a385c76428870a224";

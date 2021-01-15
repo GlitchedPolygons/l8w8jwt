@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    ed25519_create_keypair(public_key, private_key, seed);
+    ed25519_create_keypair_ref10(public_key, private_key, seed);
 
     // Print it out as a hex-encoded string:
 
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
     {
         printf("%02x", public_key[i]);
     }
-    printf("\n\n---\n\nPrivate Key:\n");
+    printf("\n\n---\n\nPrivate Key:   (Ref10-format)\n");
     for (int i = 0; i < sizeof(private_key); ++i)
     {
         printf("%02x", private_key[i]);

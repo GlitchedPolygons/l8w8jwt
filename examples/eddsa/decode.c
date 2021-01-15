@@ -22,18 +22,18 @@
 
 // Key generation for the other JWT algos is more straightforward and standardized (e.g. PEM-formatted RSA keys, etc...).
 
-static const char EDDSA_PRIVATE_KEY[] = "1079233b37b80963eeb85de266ff0be5439ad4671005dbb7872a45ddf266fd678b9f8d5ed3af1833d420ccb97266912bc8813e86933bd51001fcb8117ff63657";
+static const char EDDSA_PRIVATE_KEY[] = "4070f09e0040304000e0f0200e1c00a058c49d1db349cbec05bf412615aad05c4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
 
-static const char EDDSA_PUBLIC_KEY[] = "961fae5216dc15ca9f10ba197157f40f8f972b04a70b8e05bd104ef09f2ee162";
+static const char EDDSA_PUBLIC_KEY[] = "4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
 
-static const char JWT[] = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE1ODAzNTM3MjUsImV4cCI6MTU4MDM1NDMyNSwic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.piI9-ViSixpwMS-hA8jOpoaLL7i9Lat66eSC-GqH22k2p_xbY6-ZMLF36OtqapaITGBKSnGWI1cPcYhOrP3IJQ";
+static const char JWT[] = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImt0eSI6IkVDIiwiY3J2IjoiRWQyNTUxOSIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE2MTA3MzE2ODYsImV4cCI6MTYxMDczMjI4Niwic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.t-7rWBZ_ePAQc1K3oILvUTuzM1ZphuOhe_Hbfum4AbJrIoYU4CGni_A8IIg7ci_5ifvD7Z78rJzivImvyf8eBA";
 
 int main(void)
 {
     struct l8w8jwt_decoding_params params;
     l8w8jwt_decoding_params_init(&params);
 
-    params.alg = L8W8JWT_ALG_ES256;
+    params.alg = L8W8JWT_ALG_ED25519;
 
     params.jwt = (char*)JWT;
     params.jwt_length = strlen(JWT);

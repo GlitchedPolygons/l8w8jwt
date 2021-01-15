@@ -63,6 +63,7 @@ set(l8w8jwt_headers
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/retcodes.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/algs.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/base64.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/util.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/claim.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/encode.h
         ${CMAKE_CURRENT_LIST_DIR}/include/l8w8jwt/decode.h
@@ -71,6 +72,7 @@ set(l8w8jwt_headers
 
 set(l8w8jwt_sources
         ${CMAKE_CURRENT_LIST_DIR}/src/base64.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/util.c
         ${CMAKE_CURRENT_LIST_DIR}/src/claim.c
         ${CMAKE_CURRENT_LIST_DIR}/src/encode.c
         ${CMAKE_CURRENT_LIST_DIR}/src/decode.c

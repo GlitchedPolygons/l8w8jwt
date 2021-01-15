@@ -104,7 +104,6 @@ extern "C" {
 #define L8W8JWT_ENABLE_EDDSA 0
 #endif
 
-
 #ifdef __cplusplus
 } // extern "C"
 #endif
