@@ -26,6 +26,7 @@ set(L8W8JWT_VERSION_STRING "${L8W8JWT_MAJOR}.${L8W8JWT_MINOR}.${L8W8JWT_PATCH}")
 option(L8W8JWT_ENABLE_TESTS "Build l8w8jwt tests." OFF)
 option(L8W8JWT_ENABLE_EXAMPLES "Build l8w8jwt example programs." OFF)
 option(L8W8JWT_PACKAGE "Build the library and package it into a .tar.gz after successfully building." OFF)
+option(L8W8JWT_ENABLE_EDDSA "Build the library with EdDSA support (this will include a dependency for lib/ed25519)." OFF)
 
 option(L8W8JWT_DLL "Use l8w8jwt as a DLL." OFF)
 option(L8W8JWT_BUILD_DLL "Build l8w8jwt as a DLL." OFF)
@@ -37,6 +38,12 @@ endif ()
 
 if (L8W8JWT_DLL)
     add_compile_definitions("L8W8JWT_DLL=1")
+endif ()
+
+if (L8W8JWT_ENABLE_EDDSA)
+    add_compile_definitions("L8W8JWT_ENABLE_EDDSA=1")
+else ()
+    add_compile_definitions("L8W8JWT_ENABLE_EDDSA=0")
 endif ()
 
 option(ENABLE_TESTING "Build MbedTLS tests." OFF)
@@ -70,7 +77,32 @@ set(l8w8jwt_sources
         ${CMAKE_CURRENT_LIST_DIR}/src/version.c
         )
 
-add_library(${PROJECT_NAME} ${l8w8jwt_headers} ${l8w8jwt_sources})
+if (L8W8JWT_ENABLE_EDDSA)
+    set(l8w8jwt_sources_eddsa
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/add_scalar.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/ed25519.h
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/fe.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/fe.h
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/fixedint.h
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/ge.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/ge.h
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/key_convert.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/key_exchange.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/keypair.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/precomp_data.h
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/sc.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/sc.h
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/seed.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/sha512.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/sha512.h
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/sign.c
+            ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src/verify.c
+            )
+else ()
+    set(l8w8jwt_sources_eddsa "")
+endif ()
+
+add_library(${PROJECT_NAME} ${l8w8jwt_headers} ${l8w8jwt_sources} ${l8w8jwt_sources_eddsa})
 
 if (L8W8JWT_BUILD_DLL OR BUILD_SHARED_LIBS)
     set_property(TARGET mbedtls PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -115,13 +147,32 @@ if (L8W8JWT_PACKAGE)
             )
 endif ()
 
+if (L8W8JWT_ENABLE_EDDSA)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/ed25519/src)
+endif ()
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/checknum/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/mbedtls/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/lib/jsmn)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC chillbuff)
-target_link_libraries(${PROJECT_NAME} PRIVATE mbedtls mbedx509 mbedcrypto chillbuff)
+target_link_libraries(${PROJECT_NAME}
+        PUBLIC chillbuff
+        )
+
+target_link_libraries(${PROJECT_NAME}
+        PRIVATE mbedtls
+        PRIVATE mbedx509
+        PRIVATE mbedcrypto
+        )
+
+if ((${CMAKE_SYSTEM_NAME} STREQUAL "Linux") OR (${CYGWIN}))
+    target_link_libraries(${PROJECT_NAME} PRIVATE -luuid -lm)
+endif ()
+
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PUBLIC bcrypt)
+endif ()
 
 if (L8W8JWT_ENABLE_EXAMPLES)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples)

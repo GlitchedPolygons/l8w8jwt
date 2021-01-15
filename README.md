@@ -18,7 +18,9 @@ The others are extremely lightweight header-only libraries for JSON handling and
 
 ### How to clone
 
-`git clone https://github.com/GlitchedPolygons/l8w8jwt.git`
+`git clone --recursive https://github.com/GlitchedPolygons/l8w8jwt.git`
+
+Make sure to do a recursive clone, otherwise you need to `git submodule update --init --recursive` at a later point!
 
 ### How to use
 
@@ -195,5 +197,36 @@ Here is the overview of minimal **required** parameters that can't be omitted fo
     <li><a href="https://glitchedpolygons.github.io/l8w8jwt/structl8w8jwt__decoding__params.html#aeafb73bb540cf91f61dbda889a470d96">l8w8jwt_encoding_params.verification_key_length</a></li>
 </ul>
 </details>
+
+### EdDSA
+
+L8w8jwt supports the [EdDSA](https://en.wikipedia.org/wiki/EdDSA) signing algorithm. The [Ed25519 curve](https://ed25519.cr.yp.to) is used.
+By default it is turned off though (to avoid a potentially unnecessary dependency to the Ed25519 library inside `lib/ed25519`).
+
+To turn it on, define the compiler pre-processor definition `L8W8JWT_ENABLE_EDDSA` (set it to `1` to enable it).
+
+Correspondingly, for shared library usage, you'd need to build the l8w8jwt DLL/.so yourself, since **the pre-built binary available on the [Releases page](https://github.com/GlitchedPolygons/l8w8jwt/releases) is built without it!**
+
+=> For CMake, to do so you'd just need to pass `-DL8W8JWT_ENABLE_EDDSA=On` to the CMake command before building!
+
+For generating the keys, you should use the library that is also used by l8w8jwt for signing and verifying JWT signatures:
+[`lib/ed25519`](https://github.com/GlitchedPolygons/GlitchEd25519) (a fork of [ORLP's ed25519](https://github.com/orlp/ed25519), kudos to [Orson Peters](https://github.com/orlp) for writing this great and super-simple C lib!). It's inside this repo's `lib/` folder as a git submodule.
+
+### Note for the key parameter
+
+* When using the `HS256`, `HS384` and `HS512` signing algorithms (symmetric), the l8w8jwt key parameter is the HMAC secret.
+* For the `RS256`, `RS384`, `RS512`, `PS256`, `PS384` and `PS512` signature algos it's the PEM-formatted RSA key string.
+* `ES256` => PEM-formatted NIST P-256 key.
+* `ES384` => PEM-formatted NIST P-384 key.
+* `ES512` => PEM-formatted NIST P-521 key.
+* `ES256K` => PEM-formatted secp256k1 key.
+* `EdDSA` => Hex-encoded Ed25519 key
+* * For Ed25519 specifically, the private key must be in the orlp ed25519 format (pre-hashed), **NOT** in the Ref10 format!
+* * You can convert Ref10 keys into the more performant orlp ed25519 format with the [ed25519_key_convert_ref10_to_orlp()](https://github.com/GlitchedPolygons/GlitchEd25519/blob/master/src/ed25519.h) helper function (uses lib/ed25519).
+* * Check out the examples for more information and demo usage!
+
+To find out how you would go about generating these keys, check out the [`examples/`](https://github.com/GlitchedPolygons/l8w8jwt/tree/master/examples): there's comments at the top of those files containing the commands that were used for key generation.
+
+---
 
 [![View on jwt.io](http://jwt.io/img/badge.svg)](https://jwt.io)

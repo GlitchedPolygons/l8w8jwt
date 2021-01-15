@@ -29,6 +29,10 @@ extern "C" {
 #include <mbedtls/md_internal.h>
 #include <mbedtls/platform_util.h>
 
+#if L8W8JWT_ENABLE_EDDSA
+#include <ed25519.h>
+#endif
+
 static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, mbedtls_md_type_t* md_type, size_t* md_length)
 {
     switch (alg)
@@ -38,7 +42,6 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_PS256:
         case L8W8JWT_ALG_ES256:
         case L8W8JWT_ALG_ES256K:
-        case L8W8JWT_ALG_ED25519:
             *md_length = 32;
             *md_type = MBEDTLS_MD_SHA256;
             *md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
@@ -509,16 +512,15 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             break;
         }
 
-        case L8W8JWT_ALG_ED25519:
-        {
-            // TODO
-            r = mbedtls_md(md_info, (const unsigned char*)stringbuilder->array, stringbuilder->length, hash);
-            if (r != L8W8JWT_SUCCESS)
-            {
-                r = L8W8JWT_SHA2_FAILURE;
-                goto exit;
-            }
-            
+        case L8W8JWT_ALG_ED25519: {
+
+#if !L8W8JWT_ENABLE_EDDSA
+            r = L8W8JWT_UNSUPPORTED_ALG;
+            goto exit;
+#endif
+
+            //ed25519_sign(signature_bytes, (const unsigned char*)stringbuilder->array, stringbuilder->length, pub, prv);
+            signature_bytes_length = 64;
             break;
         }
 

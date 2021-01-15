@@ -13,3 +13,6 @@
 [submodule "lib/acutest"]
 	path = lib/acutest
 	url = https://github.com/mity/acutest
+[submodule "lib/ed25519"]
+	path = lib/ed25519
+	url = https://github.com/GlitchedPolygons/GlitchEd25519
