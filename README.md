@@ -93,7 +93,7 @@ int main(void)
     printf("\n l8w8jwt example HS512 token: %s \n", r == L8W8JWT_SUCCESS ? jwt : " (encoding failure) ");
 
     /* Always free the output jwt string! */
-    free(jwt);
+    l8w8jwt_free(jwt);
 
     return 0;
 }
@@ -149,9 +149,13 @@ int main(void)
     }
     
     /*
-     * decode_results describes whether decoding/parsing the token succeeded or failed;
+     * decode_result describes whether decoding/parsing the token succeeded or failed;
      * the output l8w8jwt_validation_result variable contains actual information about
      * JWT signature verification status and claims validation (e.g. expiration check).
+     * 
+     * If you need the claims, pass an (ideally stack pre-allocated) array of struct l8w8jwt_claim
+     * instead of NULL,NULL into the corresponding l8w8jwt_decode() function parameters.
+     * If that array is heap-allocated, remember to free it yourself!
      */
 
     return 0;

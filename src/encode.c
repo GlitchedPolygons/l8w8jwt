@@ -24,8 +24,6 @@ extern "C" {
 #include <inttypes.h>
 #include <chillbuff.h>
 #include <mbedtls/pk.h>
-#include <mbedtls/md.h>
-#include <mbedtls/rsa.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/md_internal.h>
@@ -40,6 +38,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_PS256:
         case L8W8JWT_ALG_ES256:
         case L8W8JWT_ALG_ES256K:
+        case L8W8JWT_ALG_ED25519:
             *md_length = 32;
             *md_type = MBEDTLS_MD_SHA256;
             *md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
@@ -121,6 +120,9 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
         case L8W8JWT_ALG_ES256K:
             chillbuff_push_back(&buff, "{\"alg\":\"ES256K\",\"typ\":\"JWT\",\"kty\":\"EC\",\"crv\":\"secp256k1\"", 56);
             break;
+        case L8W8JWT_ALG_ED25519:
+            chillbuff_push_back(&buff, "{\"alg\":\"EdDSA\",\"typ\":\"JWT\",\"kty\":\"EC\",\"crv\":\"Ed25519\"", 53);
+            break;
         default:
             chillbuff_free(&buff);
             return L8W8JWT_INVALID_ARG;
@@ -146,7 +148,7 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
 
     chillbuff_push_back(stringbuilder, segment, segment_length);
 
-    free(segment);
+    l8w8jwt_free(segment);
     segment = NULL;
     chillbuff_clear(&buff);
 
@@ -201,7 +203,7 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
     chillbuff_push_back(stringbuilder, ".", 1);
     chillbuff_push_back(stringbuilder, segment, segment_length);
 
-    free(segment);
+    l8w8jwt_free(segment);
     chillbuff_free(&buff);
 
     return L8W8JWT_SUCCESS;
@@ -507,6 +509,19 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             break;
         }
 
+        case L8W8JWT_ALG_ED25519:
+        {
+            // TODO
+            r = mbedtls_md(md_info, (const unsigned char*)stringbuilder->array, stringbuilder->length, hash);
+            if (r != L8W8JWT_SUCCESS)
+            {
+                r = L8W8JWT_SHA2_FAILURE;
+                goto exit;
+            }
+            
+            break;
+        }
+
         default:
             r = L8W8JWT_INVALID_ARG;
             goto exit;
@@ -536,10 +551,10 @@ exit:
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
     mbedtls_pk_free(&pk);
-    free(signature);
+    l8w8jwt_free(signature);
 #if L8W8JWT_SMALL_STACK
-    free(key);
-    free(signature_bytes);
+    l8w8jwt_free(key);
+    l8w8jwt_free(signature_bytes);
 #endif
     return r;
 }

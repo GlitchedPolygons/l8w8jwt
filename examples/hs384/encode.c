@@ -105,6 +105,6 @@ int main(void)
     int r = l8w8jwt_encode(&params);
     printf("\nl8w8jwt_encode_hs384 function returned %s (code %d).\n\nCreated token: \n%s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, jwt);
 
-    free(jwt);
+    l8w8jwt_free(jwt);
     return 0;
 }

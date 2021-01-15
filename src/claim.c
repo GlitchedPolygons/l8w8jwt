@@ -19,6 +19,7 @@ extern "C" {
 #endif
 
 #include "l8w8jwt/claim.h"
+#include "l8w8jwt/version.h"
 #include "l8w8jwt/retcodes.h"
 
 #include <string.h>
@@ -38,12 +39,12 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count
             mbedtls_platform_zeroize(claim->key, claim->key_length);
             mbedtls_platform_zeroize(claim->value, claim->value_length);
 
-            free(claim->key);
-            free(claim->value);
+            l8w8jwt_free(claim->key);
+            l8w8jwt_free(claim->value);
         }
 
         mbedtls_platform_zeroize(claims, claims_count * sizeof(struct l8w8jwt_claim));
-        free(claims);
+        l8w8jwt_free(claims);
     }
 }
 

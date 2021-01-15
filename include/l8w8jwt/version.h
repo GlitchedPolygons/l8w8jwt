@@ -55,6 +55,12 @@ extern "C" {
 #define L8W8JWT_SMALL_STACK 0
 #endif
 
+/**
+ * Free memory that was allocated by L8W8JWT.
+ * @param mem The memory to free.
+ */
+L8W8JWT_API void l8w8jwt_free(void* mem);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

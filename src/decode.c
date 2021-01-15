@@ -29,10 +29,8 @@ extern "C" {
 #include <checknum.h>
 #include <chillbuff.h>
 #include <mbedtls/pk.h>
-#include <mbedtls/md.h>
 #include <mbedtls/md_internal.h>
 #include <mbedtls/platform_util.h>
-#include <mbedtls/rsa.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/pk_internal.h>
@@ -192,7 +190,7 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
 exit:
     if (tokens != _tokens)
     {
-        free(tokens);
+        l8w8jwt_free(tokens);
     }
     return r;
 }
@@ -508,7 +506,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         mbedtls_entropy_free(&entropy);
         mbedtls_pk_free(&pk);
 #if L8W8JWT_SMALL_STACK
-        free(key);
+        l8w8jwt_free(key);
 #endif
     }
 
@@ -601,9 +599,9 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     }
 
 exit:
-    free(header);
-    free(payload);
-    free(signature);
+    l8w8jwt_free(header);
+    l8w8jwt_free(payload);
+    l8w8jwt_free(signature);
 
     if (out_claims == NULL || r != L8W8JWT_SUCCESS)
     {

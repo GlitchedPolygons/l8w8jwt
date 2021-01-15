@@ -67,6 +67,7 @@ set(l8w8jwt_sources
         ${CMAKE_CURRENT_LIST_DIR}/src/claim.c
         ${CMAKE_CURRENT_LIST_DIR}/src/encode.c
         ${CMAKE_CURRENT_LIST_DIR}/src/decode.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/version.c
         )
 
 add_library(${PROJECT_NAME} ${l8w8jwt_headers} ${l8w8jwt_sources})
