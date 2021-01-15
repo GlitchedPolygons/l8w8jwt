@@ -39,6 +39,8 @@ If you use CMake you can just `add_subdirectory(path_to_git_submodule)` and then
 
 If you use GCC, [check out this issue's log here](https://github.com/GlitchedPolygons/l8w8jwt/issues/2).
 
+For devices with a particularly small stack, please define the `L8W8JWT_SMALL_STACK` pre-processor definition and set it to `1`.
+
 #### Build shared library/DLL
 
 ```bash

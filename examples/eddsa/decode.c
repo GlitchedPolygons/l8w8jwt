@@ -22,11 +22,11 @@
 
 // Key generation for the other JWT algos is more straightforward and standardized (e.g. PEM-formatted RSA keys, etc...).
 
-static const char EDDSA_PRIVATE_KEY[] = "4070f09e0040304000e0f0200e1c00a058c49d1db349cbec05bf412615aad05c4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
+static const char ED25519_PRIVATE_KEY[] = "4070f09e0040304000e0f0200e1c00a058c49d1db349cbec05bf412615aad05c4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
 
-static const char EDDSA_PUBLIC_KEY[] = "4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
+static const char ED25519_PUBLIC_KEY[] = "4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
 
-static const char JWT[] = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImt0eSI6IkVDIiwiY3J2IjoiRWQyNTUxOSIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE2MTA3MzE2ODYsImV4cCI6MTYxMDczMjI4Niwic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.t-7rWBZ_ePAQc1K3oILvUTuzM1ZphuOhe_Hbfum4AbJrIoYU4CGni_A8IIg7ci_5ifvD7Z78rJzivImvyf8eBA";
+static const char JWT[] = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCIsImt0eSI6IkVDIiwiY3J2IjoiRWQyNTUxOSIsImtpZCI6InNvbWUta2V5LWlkLWhlcmUtMDEyMzQ1In0.eyJpYXQiOjE2MTA3MzQwMDEsImV4cCI6MTYxMDczNDYwMSwic3ViIjoiR29yZG9uIEZyZWVtYW4iLCJpc3MiOiJCbGFjayBNZXNhIiwiYXVkIjoiQWRtaW5pc3RyYXRvciIsImN0eCI6IlVuZm9yc2VlbiBDb25zZXF1ZW5jZXMiLCJhZ2UiOjI3LCJzaXplIjoxLjg1LCJhbGl2ZSI6dHJ1ZSwibnVsbHRlc3QiOm51bGx9.DoXYMXT7tCt51V0QdziP7NObCSsTKc_sqZUFY14nX_uPLL4LfYorQtwi3zFNVF9act_Nz5LruvH16XIxSderCA";
 
 int main(void)
 {
@@ -38,8 +38,8 @@ int main(void)
     params.jwt = (char*)JWT;
     params.jwt_length = strlen(JWT);
 
-    params.verification_key = (unsigned char*)EDDSA_PUBLIC_KEY;
-    params.verification_key_length = strlen(EDDSA_PUBLIC_KEY);
+    params.verification_key = (unsigned char*)ED25519_PUBLIC_KEY;
+    params.verification_key_length = strlen(ED25519_PUBLIC_KEY);
 
     params.validate_iss = "Black Mesa";
     params.validate_iss_length = strlen(params.validate_iss);

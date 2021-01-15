@@ -22,9 +22,9 @@
 
 // Key generation for the other JWT algos is more straightforward and standardized (e.g. PEM-formatted RSA keys, etc...).
 
-static const char EDDSA_PRIVATE_KEY[] = "4070f09e0040304000e0f0200e1c00a058c49d1db349cbec05bf412615aad05c4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
+static const char ED25519_PRIVATE_KEY[] = "4070f09e0040304000e0f0200e1c00a058c49d1db349cbec05bf412615aad05c4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
 
-static const char EDDSA_PUBLIC_KEY[] = "4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
+static const char ED25519_PUBLIC_KEY[] = "4675103fa2eb4d570875d58476426818cfe37b62e751b7092ee4a6606c8b7ca2";
 
 int main(void)
 {
@@ -104,8 +104,8 @@ int main(void)
     params.additional_payload_claims = payload_claims;
     params.additional_payload_claims_count = sizeof(payload_claims) / sizeof(struct l8w8jwt_claim);
 
-    params.secret_key = (unsigned char*)EDDSA_PRIVATE_KEY;
-    params.secret_key_length = strlen(EDDSA_PRIVATE_KEY);
+    params.secret_key = (unsigned char*)ED25519_PRIVATE_KEY;
+    params.secret_key_length = strlen(ED25519_PRIVATE_KEY);
 
     params.out = &jwt;
     params.out_length = &jwt_length;

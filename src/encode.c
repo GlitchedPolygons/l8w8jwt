@@ -152,12 +152,12 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
 
     chillbuff_push_back(stringbuilder, segment, segment_length);
 
-    l8w8jwt_free(segment);
-    segment = NULL;
     chillbuff_clear(&buff);
 
-    char iatnbfexp[64];
-    memset(iatnbfexp, '\0', sizeof(iatnbfexp));
+    l8w8jwt_free(segment);
+    segment = NULL;
+
+    char iatnbfexp[64] = { 0x00 };
 
     if (params->iat)
     {
@@ -226,6 +226,10 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     mbedtls_entropy_context entropy;
     mbedtls_ctr_drbg_context ctr_drbg;
 
+    mbedtls_pk_init(&pk);
+    mbedtls_entropy_init(&entropy);
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+
 #if L8W8JWT_SMALL_STACK
     unsigned char* signature_bytes = calloc(sizeof(unsigned char), 4096);
     unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
@@ -248,14 +252,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
      * in the PEM-formatted key string passed to the key parse function.
      * HMAC-key variants should subtract 1 from key_length again to compensate.
      */
-    if (key[key_length - 1] != '\0')
-    {
-        key_length++;
-    }
-
-    mbedtls_pk_init(&pk);
-    mbedtls_entropy_init(&entropy);
-    mbedtls_ctr_drbg_init(&ctr_drbg);
+    key_length += key[key_length - 1] != '\0';
 
     r = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char*)"l8w8jwt_mbedtls_pers.!#@", 24);
     if (r != 0)
@@ -294,7 +291,6 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             signature_bytes_length = 32 + (16 * params->alg);
             break;
         }
-
         case L8W8JWT_ALG_RS256:
         case L8W8JWT_ALG_RS384:
         case L8W8JWT_ALG_RS512: {
@@ -339,7 +335,6 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
 
             break;
         }
-
         case L8W8JWT_ALG_PS256:
         case L8W8JWT_ALG_PS384:
         case L8W8JWT_ALG_PS512: {
@@ -384,7 +379,6 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             signature_bytes_length = mbedtls_pk_get_bitlen(&pk) / 8;
             break;
         }
-
         case L8W8JWT_ALG_ES256:
         case L8W8JWT_ALG_ES384:
         case L8W8JWT_ALG_ES512:
@@ -512,13 +506,9 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             }
             break;
         }
-
         case L8W8JWT_ALG_ED25519: {
 
-#if !L8W8JWT_ENABLE_EDDSA
-            r = L8W8JWT_UNSUPPORTED_ALG;
-            goto exit;
-#endif
+#if L8W8JWT_ENABLE_EDDSA
             if (params->secret_key_length != 128 && !(params->secret_key_length == 129 && params->secret_key[128] == 0x00))
             {
                 r = L8W8JWT_WRONG_KEY_TYPE;
@@ -538,11 +528,15 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
 
             mbedtls_platform_zeroize(private_key_ref10, sizeof(private_key_ref10));
             break;
+#else
+            r = L8W8JWT_UNSUPPORTED_ALG;
+            goto exit;
+#endif
         }
-
-        default:
+        default: {
             r = L8W8JWT_INVALID_ARG;
             goto exit;
+        }
     }
 
     if (signature_bytes_length == 0)
@@ -574,6 +568,7 @@ exit:
     l8w8jwt_free(key);
     l8w8jwt_free(signature_bytes);
 #endif
+
     return r;
 }
 
