@@ -115,6 +115,8 @@ Macros</h2></td></tr>
 <tr class="separator:ab26241148ccad4d16f08c2ab409a8eeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8af1ed938d5e7144a14986480da24a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#ad8af1ed938d5e7144a14986480da24a7">L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE</a>&#160;&#160;&#160;700</td></tr>
 <tr class="separator:ad8af1ed938d5e7144a14986480da24a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20fc1b7decb69be2c3576eef2b5a311d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="retcodes_8h.html#a20fc1b7decb69be2c3576eef2b5a311d">L8W8JWT_UNSUPPORTED_ALG</a>&#160;&#160;&#160;800</td></tr>
+<tr class="separator:a20fc1b7decb69be2c3576eef2b5a311d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Macros for possible integer codes returned by the various l8w8jwt functions. </p>
@@ -297,6 +299,21 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Returned from a l8w8jwt function when everything went smooth 'n' chill. Time to get Schwifty, Morteyy! </p>
+
+</div>
+</div>
+<a id="a20fc1b7decb69be2c3576eef2b5a311d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20fc1b7decb69be2c3576eef2b5a311d">&#9670;&nbsp;</a></span>L8W8JWT_UNSUPPORTED_ALG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define L8W8JWT_UNSUPPORTED_ALG&#160;&#160;&#160;800</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returned if the JWT signing alg parameter that was passed is not supported (e.g. the used l8w8jwt library was built without support for that algo, e.g. Ed25519). See the README.md for more details! </p>
 
 </div>
 </div>
