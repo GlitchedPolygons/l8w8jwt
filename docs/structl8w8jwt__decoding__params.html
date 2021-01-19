@@ -111,6 +111,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:af3a727dbda6d1a1b06934249a86b05c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeafb73bb540cf91f61dbda889a470d96"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#aeafb73bb540cf91f61dbda889a470d96">verification_key_length</a></td></tr>
 <tr class="separator:aeafb73bb540cf91f61dbda889a470d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd1ba89e6711e88737cf2aa6f8baecf0"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#afd1ba89e6711e88737cf2aa6f8baecf0">validate_typ</a></td></tr>
+<tr class="separator:afd1ba89e6711e88737cf2aa6f8baecf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a413a660dc265f49ca68f9965d193c138"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structl8w8jwt__decoding__params.html#a413a660dc265f49ca68f9965d193c138">validate_typ_length</a></td></tr>
+<tr class="separator:a413a660dc265f49ca68f9965d193c138"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct containing the parameters to use for decoding and validating a JWT. </p>
@@ -378,6 +382,37 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>validate_sub string length. </p>
+
+</div>
+</div>
+<a id="afd1ba89e6711e88737cf2aa6f8baecf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd1ba89e6711e88737cf2aa6f8baecf0">&#9670;&nbsp;</a></span>validate_typ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* l8w8jwt_decoding_params::validate_typ</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>[OPTIONAL] The typ claim (what type is the token?). </p>
+<p>Set to <code>NULL</code> if you don't want to validate the "typ" claim. </p>
+
+</div>
+</div>
+<a id="a413a660dc265f49ca68f9965d193c138"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a413a660dc265f49ca68f9965d193c138">&#9670;&nbsp;</a></span>validate_typ_length</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t l8w8jwt_decoding_params::validate_typ_length</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>validate_typ string length. </p>
 
 </div>
 </div>

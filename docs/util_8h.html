@@ -75,13 +75,15 @@ $(function() {
 <p>Useful utility functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="version_8h_source.html">version.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for util.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="util_8h__incl.png" border="0" usemap="#include_2l8w8jwt_2util_8h" alt=""/></div>
 <map name="include_2l8w8jwt_2util_8h" id="include_2l8w8jwt_2util_8h">
-<area shape="rect" title="Useful utility functions." alt="" coords="5,5,147,32"/>
-<area shape="rect" title=" " alt="" coords="42,80,110,107"/>
+<area shape="rect" title="Useful utility functions." alt="" coords="15,5,157,32"/>
+<area shape="rect" title=" " alt="" coords="5,80,73,107"/>
+<area shape="rect" href="version_8h.html" title="l8w8jwt version checking." alt="" coords="97,80,171,107"/>
 </map>
 </div>
 </div>
@@ -89,21 +91,23 @@ Include dependency graph for util.h:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acd8e7c7ae59074334188ce3ca28a71da"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#acd8e7c7ae59074334188ce3ca28a71da">l8w8jwt_hexstr2bin</a> (const char *hexstr, size_t hexstr_length, unsigned char *output, size_t output_size, size_t *output_length)</td></tr>
-<tr class="separator:acd8e7c7ae59074334188ce3ca28a71da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a744d5faba6c1ead8611bd615527b11f3"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a744d5faba6c1ead8611bd615527b11f3">l8w8jwt_hexstr2bin</a> (const char *hexstr, size_t hexstr_length, unsigned char *output, size_t output_size, size_t *output_length)</td></tr>
+<tr class="separator:a744d5faba6c1ead8611bd615527b11f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45ca6b04ce77733549bc4317987477c1"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a45ca6b04ce77733549bc4317987477c1">l8w8jwt_strncmpic</a> (const char *str1, const char *str2, size_t n)</td></tr>
+<tr class="separator:a45ca6b04ce77733549bc4317987477c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Useful utility functions. </p>
 <dl class="section author"><dt>Author</dt><dd>Raphael Beck </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="acd8e7c7ae59074334188ce3ca28a71da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd8e7c7ae59074334188ce3ca28a71da">&#9670;&nbsp;</a></span>l8w8jwt_hexstr2bin()</h2>
+<a id="a744d5faba6c1ead8611bd615527b11f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a744d5faba6c1ead8611bd615527b11f3">&#9670;&nbsp;</a></span>l8w8jwt_hexstr2bin()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int l8w8jwt_hexstr2bin </td>
+          <td class="memname">L8W8JWT_API int l8w8jwt_hexstr2bin </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>hexstr</em>, </td>
@@ -151,6 +155,49 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>0</code> if conversion succeeded. <code>1</code> if one or more required arguments were <code>NULL</code> or invalid. <code>2</code> if the hexadecimal string is in an invalid format (e.g. not divisible by 2). <code>3</code> if output buffer size was insufficient (needs to be at least <code>(hexstr_length / 2) + 1</code> bytes). </dd></dl>
+
+</div>
+</div>
+<a id="a45ca6b04ce77733549bc4317987477c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45ca6b04ce77733549bc4317987477c1">&#9670;&nbsp;</a></span>l8w8jwt_strncmpic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">L8W8JWT_API int l8w8jwt_strncmpic </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Compares two strings ignoring UPPER vs. lowercase. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str1</td><td>String to compare. </td></tr>
+    <tr><td class="paramname">str2</td><td>String to compare to. </td></tr>
+    <tr><td class="paramname">n</td><td>How many characters of the string should be compared (starting from index 0)? </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If the strings are equal, <code>0</code> is returned. Otherwise, something else. </dd></dl>
 
 </div>
 </div>

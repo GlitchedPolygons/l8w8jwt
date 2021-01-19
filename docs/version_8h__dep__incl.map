@@ -1,7 +1,8 @@
 <map id="include/l8w8jwt/version.h" name="include/l8w8jwt/version.h">
-<area shape="rect" id="node1" title="l8w8jwt version checking." alt="" coords="185,5,349,32"/>
+<area shape="rect" id="node1" title="l8w8jwt version checking." alt="" coords="243,5,407,32"/>
 <area shape="rect" id="node2" href="$base64_8h.html" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="5,80,172,107"/>
 <area shape="rect" id="node3" href="$claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="247,80,402,107"/>
 <area shape="rect" id="node4" href="$decode_8h.html" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="145,155,312,181"/>
 <area shape="rect" id="node5" href="$encode_8h.html" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="345,155,512,181"/>
+<area shape="rect" id="node6" href="$util_8h.html" title="Useful utility functions." alt="" coords="477,80,618,107"/>
 </map>
