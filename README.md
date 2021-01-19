@@ -59,7 +59,7 @@ bash build-mingw.sh
 ```
 Run this using e.g. "Git Bash for Windows". Make sure that you have your MinGW installation directory inside your `PATH` - otherwise this script will fail when trying to call `mingw32-make.exe`.
 
-* Official release builds are made using `mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe`.
+Official release builds are made using `mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe`.
 
 #### Build static library
 

@@ -21,9 +21,6 @@ if [ "$(whoami)" = "root" ]; then
   exit
 fi
 
-PREVCC="$CC"
-PREVCXX="$CXX"
-
 REPO=$(dirname "$0")
 rm -rf "$REPO"/out
 rm -rf "$REPO"/build-mingw
