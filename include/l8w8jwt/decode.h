@@ -27,13 +27,13 @@
 extern "C" {
 #endif
 
+#include "algs.h"
+#include "claim.h"
+#include "version.h"
+#include "retcodes.h"
 #include <time.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "l8w8jwt/algs.h"
-#include "l8w8jwt/claim.h"
-#include "l8w8jwt/version.h"
-#include "l8w8jwt/retcodes.h"
 
 #ifndef L8W8JWT_MAX_KEY_SIZE
 #define L8W8JWT_MAX_KEY_SIZE 8192
@@ -42,12 +42,11 @@ extern "C" {
 /**
  * Enum containing the validation result flags.
  */
-enum l8w8jwt_validation_result
-{
+L8W8JWT_API enum l8w8jwt_validation_result {
     /**
      * The JWT is valid (according to the passed validation parameters).
      */
-    L8W8JWT_VALID = 0,
+    L8W8JWT_VALID = (unsigned)0,
 
     /**
      * The issuer claim is invalid.
@@ -87,13 +86,18 @@ enum l8w8jwt_validation_result
     /**
      * The token was potentially tampered with: its signature couldn't be verified.
      */
-    L8W8JWT_SIGNATURE_VERIFICATION_FAILURE = (unsigned)1 << (unsigned)7
+    L8W8JWT_SIGNATURE_VERIFICATION_FAILURE = (unsigned)1 << (unsigned)7,
+
+    /**
+     * The token's "typ" claim validation failed.
+     */
+    L8W8JWT_TYP_FAILURE = (unsigned)1 << (unsigned)8
 };
 
 /**
  * Struct containing the parameters to use for decoding and validating a JWT.
  */
-struct l8w8jwt_decoding_params
+L8W8JWT_API struct l8w8jwt_decoding_params
 {
     /**
      * The token to decode and validate.
@@ -211,6 +215,17 @@ struct l8w8jwt_decoding_params
      * Length of the {@link #verification_key}
      */
     size_t verification_key_length;
+
+    /**
+     * [OPTIONAL] The typ claim (what type is the token?). <p>
+     * Set to <code>NULL</code> if you don't want to validate the "typ" claim. <p>
+     */
+    char* validate_typ;
+
+    /**
+     * validate_typ string length.
+     */
+    size_t validate_typ_length;
 };
 
 /**

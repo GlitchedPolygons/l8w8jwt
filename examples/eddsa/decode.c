@@ -53,6 +53,9 @@ int main(void)
     params.validate_iat = 1;
     params.iat_tolerance_seconds = 60;
 
+    params.validate_typ = "jwt";
+    params.validate_typ_length = 3;
+
     enum l8w8jwt_validation_result validation_result;
     int r = l8w8jwt_decode(&params, &validation_result, NULL, NULL);
 

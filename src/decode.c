@@ -117,7 +117,7 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
         goto exit;
     }
 
-    for (size_t i = 1; i < r; i++)
+    for (size_t i = 1; i < r; ++i)
     {
         struct l8w8jwt_claim claim;
 
@@ -634,6 +634,15 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         if (c == NULL || ct + params->iat_tolerance_seconds < atoll(c->value))
         {
             validation_res |= (unsigned)L8W8JWT_IAT_FAILURE;
+        }
+    }
+
+    if (params->validate_typ)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "typ", 3);
+        if (c == NULL || l8w8jwt_strncmpic(c->value, params->validate_typ, params->validate_typ_length) != 0)
+        {
+            validation_res |= (unsigned)L8W8JWT_TYP_FAILURE;
         }
     }
 

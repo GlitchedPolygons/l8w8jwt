@@ -27,12 +27,12 @@
 extern "C" {
 #endif
 
+#include "algs.h"
+#include "claim.h"
+#include "version.h"
+#include "retcodes.h"
 #include <time.h>
 #include <stddef.h>
-#include "l8w8jwt/algs.h"
-#include "l8w8jwt/claim.h"
-#include "l8w8jwt/version.h"
-#include "l8w8jwt/retcodes.h"
 
 #ifndef L8W8JWT_MAX_KEY_SIZE
 #define L8W8JWT_MAX_KEY_SIZE 8192
@@ -41,7 +41,7 @@ extern "C" {
 /**
  * Struct containing the parameters to use for creating a JWT with l8w8jwt.
  */
-struct l8w8jwt_encoding_params
+L8W8JWT_API struct l8w8jwt_encoding_params
 {
     /**
      * The signature algorithm ID. <p>

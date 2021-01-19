@@ -27,8 +27,8 @@
 extern "C" {
 #endif
 
+#include "version.h"
 #include <stdlib.h>
-#include "l8w8jwt/version.h"
 
 // Forward declare chillbuff
 /** @private */
@@ -79,7 +79,7 @@ struct chillbuff;
  * If allocated on the heap by the decode function,
  * remember to call <code>l8w8jwt_claims_free()</code> on it once you're done using it.
  */
-struct l8w8jwt_claim
+L8W8JWT_API struct l8w8jwt_claim
 {
     /**
      * The token claim key (e.g. "iss", "iat", "sub", etc...). <p>

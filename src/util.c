@@ -15,6 +15,7 @@
 */
 
 #include "l8w8jwt/util.h"
+#include <ctype.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,6 +55,31 @@ int l8w8jwt_hexstr2bin(const char* hexstr, const size_t hexstr_length, unsigned 
     }
 
     return 0;
+}
+
+int l8w8jwt_strncmpic(const char* str1, const char* str2, size_t n)
+{
+    size_t cmp = 0;
+    int ret = -1;
+
+    if (str1 == NULL || str2 == NULL)
+    {
+        return ret;
+    }
+
+    while ((*str1 || *str2) && cmp < n)
+    {
+        if ((ret = tolower((int)(*str1)) - tolower((int)(*str2))) != 0)
+        {
+            break;
+        }
+        
+        cmp++;
+        str1++;
+        str2++;
+    }
+
+    return ret;
 }
 
 #ifdef __cplusplus

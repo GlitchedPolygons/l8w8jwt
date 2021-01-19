@@ -30,9 +30,9 @@
 extern "C" {
 #endif
 
+#include "version.h"
 #include <stdint.h>
 #include <string.h>
-#include "l8w8jwt/version.h"
 
 /**
  *  Encodes a byte array to a base-64 string. <p>

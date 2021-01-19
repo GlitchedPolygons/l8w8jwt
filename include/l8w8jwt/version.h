@@ -30,12 +30,12 @@ extern "C" {
 /**
  * Current l8w8jwt version number.
  */
-#define L8W8JWT_VERSION 110
+#define L8W8JWT_VERSION 200
 
 /**
  * Current l8w8jwt version number (as a human-readable string).
  */
-#define L8W8JWT_VERSION_STR "1.1.0"
+#define L8W8JWT_VERSION_STR "2.0.0"
 
 #if defined(_WIN32) && defined(L8W8JWT_DLL)
 #ifdef L8W8JWT_BUILD_DLL
