@@ -52,6 +52,15 @@ This command works on Windows too: just use the [Git Bash for Windows](https://g
 
 **NOTE:** If you use the l8w8jwt shared library in your project on Windows, remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! Maybe even set it as a pre-processor definition. Otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
 
+#### MinGW on Windows
+
+```bash
+bash build-mingw.sh
+```
+Run this using e.g. "Git Bash for Windows". Make sure that you have your MinGW installation directory inside your `PATH` - otherwise this script will fail when trying to call `mingw32-make.exe`.
+
+* Official release builds are made using `mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe`.
+
 #### Build static library
 
 ```bash
