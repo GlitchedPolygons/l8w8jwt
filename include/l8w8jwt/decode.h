@@ -42,7 +42,7 @@ extern "C" {
 /**
  * Enum containing the validation result flags.
  */
-L8W8JWT_API enum l8w8jwt_validation_result {
+enum l8w8jwt_validation_result {
     /**
      * The JWT is valid (according to the passed validation parameters).
      */
@@ -97,7 +97,7 @@ L8W8JWT_API enum l8w8jwt_validation_result {
 /**
  * Struct containing the parameters to use for decoding and validating a JWT.
  */
-L8W8JWT_API struct l8w8jwt_decoding_params
+struct l8w8jwt_decoding_params
 {
     /**
      * The token to decode and validate.
