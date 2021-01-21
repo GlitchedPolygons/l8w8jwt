@@ -230,7 +230,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">params</td><td>The parameters to use for decoding and validating the token.</td></tr>
     <tr><td class="paramname">out_validation_result</td><td>Where to write the validation result flags into (0 means success). In case of a decoding failure this is set to -1 (or <code>~L8W8JWT_VALID</code>)!</td></tr>
-    <tr><td class="paramname">out_claims</td><td>[OPTIONAL] Where the decoded claims (header + payload claims together) should be written into. This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer! If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...). REMEMBER to call <code><a class="el" href="version_8h.html#a2ae563b3a6a9cd00b7f27851b0e6a10a">l8w8jwt_free()</a></code> on it once you're done using it!</td></tr>
+    <tr><td class="paramname">out_claims</td><td>[OPTIONAL] Where the decoded claims (header + payload claims together) should be written into. This pointer will be dereferenced + allocated, so make sure to pass a fresh pointer! If you don't need the claims, set this to <code>NULL</code> (they will only be validated, e.g. signature, exp, etc...). Check the note down below for more infos!</td></tr>
     <tr><td class="paramname">out_claims_length</td><td>Where to write the decoded claims count into. This will receive the value of how many claims were written into "out_claims" (0 if you decided to set "out_claims" to <code>NULL</code>).</td></tr>
   </table>
   </dd>
