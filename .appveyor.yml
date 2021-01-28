@@ -1,14 +1,48 @@
 version: 1.0.{build}
-image: Ubuntu2004
-install:
-- sh: git submodule update --init --recursive
-- sh: export CC=clang
-- sh: export CXX=clang++
-before_build:
-- sh: bash -eo pipefail test.sh
-build_script:
-- sh: sudo rm -rf build
-- sh: bash -eo pipefail build.sh
-artifacts:
-- path: 'build\*.tar.gz'
-
+image: 
+  - Ubuntu2004
+  - macos
+  - Visual Studio 2017
+for:
+  -
+    matrix:
+      only:
+        - image: Ubuntu2004
+    install:
+    - sh: git submodule update --init --recursive
+    - sh: export CC=clang
+    - sh: export CXX=clang++
+    before_build:
+    - sh: bash -eo pipefail test.sh
+    build_script:
+    - sh: sudo rm -rf build
+    - sh: bash -eo pipefail build.sh
+    artifacts:
+    - path: 'build\*.tar.gz'
+  -
+    matrix:
+      only:
+        - image: macos
+    install:
+    - sh: git submodule update --init --recursive
+    - sh: export CC=clang
+    - sh: export CXX=clang++
+    before_build:
+    - sh: bash -eo pipefail test.sh
+    build_script:
+    - sh: sudo rm -rf build
+    - sh: bash -eo pipefail build.sh
+    artifacts:
+    - path: 'build\*.tar.gz'
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2017
+    install:
+    - cmd: git submodule update --init --recursive
+    before_build:
+    - cmd: call test.bat
+    build_script:
+    - cmd: call build.bat
+    artifacts:
+    - path: 'build\*.tar.gz'
