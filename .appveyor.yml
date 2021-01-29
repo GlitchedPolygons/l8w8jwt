@@ -2,6 +2,7 @@ version: 1.0.{build}
 image: 
   - Ubuntu2004
   - macos
+  - macos-mojave
   - Visual Studio 2017
 for:
   -
@@ -23,6 +24,21 @@ for:
     matrix:
       only:
         - image: macos
+    install:
+    - sh: git submodule update --init --recursive
+    - sh: export CC=clang
+    - sh: export CXX=clang++
+    before_build:
+    - sh: bash -eo pipefail test.sh
+    build_script:
+    - sh: sudo rm -rf build
+    - sh: bash -eo pipefail build.sh
+    artifacts:
+    - path: 'build\*.tar.gz'
+  -
+    matrix:
+      only:
+        - image: macos-mojave
     install:
     - sh: git submodule update --init --recursive
     - sh: export CC=clang
