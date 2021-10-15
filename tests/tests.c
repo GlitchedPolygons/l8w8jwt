@@ -443,7 +443,7 @@ static void test_l8w8jwt_decode_invalid_signature_hs256()
     TEST_ASSERT(r == L8W8JWT_VALID);
     TEST_ASSERT(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -496,7 +496,7 @@ static void test_l8w8jwt_decode_invalid_signature_hs384()
     TEST_ASSERT(r == L8W8JWT_VALID);
     TEST_ASSERT(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -549,7 +549,7 @@ static void test_l8w8jwt_decode_invalid_signature_hs512()
     TEST_ASSERT(r == L8W8JWT_SUCCESS);
     TEST_ASSERT(validation_result & L8W8JWT_SIGNATURE_VERIFICATION_FAILURE);
 
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -586,7 +586,7 @@ static void test_l8w8jwt_decode_invalid_signature_hs512()
 static void test_l8w8jwt_decode_invalid_signature_rs256()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -624,7 +624,7 @@ static void test_l8w8jwt_decode_invalid_signature_rs256()
 static void test_l8w8jwt_decode_invalid_signature_rs384()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -662,7 +662,7 @@ static void test_l8w8jwt_decode_invalid_signature_rs384()
 static void test_l8w8jwt_decode_invalid_signature_rs512()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -700,7 +700,7 @@ static void test_l8w8jwt_decode_invalid_signature_rs512()
 static void test_l8w8jwt_decode_invalid_signature_ps256()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -738,7 +738,7 @@ static void test_l8w8jwt_decode_invalid_signature_ps256()
 static void test_l8w8jwt_decode_invalid_signature_ps384()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -776,7 +776,7 @@ static void test_l8w8jwt_decode_invalid_signature_ps384()
 static void test_l8w8jwt_decode_invalid_signature_ps512()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -814,7 +814,7 @@ static void test_l8w8jwt_decode_invalid_signature_ps512()
 static void test_l8w8jwt_decode_invalid_signature_es256()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -852,7 +852,7 @@ static void test_l8w8jwt_decode_invalid_signature_es256()
 static void test_l8w8jwt_decode_invalid_signature_es256k()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -890,7 +890,7 @@ static void test_l8w8jwt_decode_invalid_signature_es256k()
 static void test_l8w8jwt_encode_es256_es256k_wrong_curve_alg()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -912,7 +912,7 @@ static void test_l8w8jwt_encode_es256_es256k_wrong_curve_alg()
 static void test_l8w8jwt_encode_es256k_es256_wrong_curve_alg()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -934,7 +934,7 @@ static void test_l8w8jwt_encode_es256k_es256_wrong_curve_alg()
 static void test_l8w8jwt_encode_es384_wrong_curve_alg()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -956,7 +956,7 @@ static void test_l8w8jwt_encode_es384_wrong_curve_alg()
 static void test_l8w8jwt_encode_es512_wrong_curve_alg()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -978,7 +978,7 @@ static void test_l8w8jwt_encode_es512_wrong_curve_alg()
 static void test_l8w8jwt_decode_invalid_signature_es384()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1016,7 +1016,7 @@ static void test_l8w8jwt_decode_invalid_signature_es384()
 static void test_l8w8jwt_decode_invalid_signature_es512()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1054,7 +1054,7 @@ static void test_l8w8jwt_decode_invalid_signature_es512()
 static void test_l8w8jwt_decode_invalid_signature_eddsa()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1092,7 +1092,7 @@ static void test_l8w8jwt_decode_invalid_signature_eddsa()
 static void test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1167,7 +1167,7 @@ static void test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type()
 static void test_l8w8jwt_decode_valid_signature_hs256()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1214,7 +1214,7 @@ static void test_l8w8jwt_decode_valid_signature_hs256()
 static void test_l8w8jwt_decode_valid_signature_hs384()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1252,7 +1252,7 @@ static void test_l8w8jwt_decode_valid_signature_hs384()
 static void test_l8w8jwt_decode_valid_signature_hs512()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1290,7 +1290,7 @@ static void test_l8w8jwt_decode_valid_signature_hs512()
 static void test_l8w8jwt_decode_valid_signature_rs256()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1328,7 +1328,7 @@ static void test_l8w8jwt_decode_valid_signature_rs256()
 static void test_l8w8jwt_decode_valid_signature_rs256_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1366,7 +1366,7 @@ static void test_l8w8jwt_decode_valid_signature_rs256_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_rs384()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1404,7 +1404,7 @@ static void test_l8w8jwt_decode_valid_signature_rs384()
 static void test_l8w8jwt_decode_valid_signature_rs384_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1442,7 +1442,7 @@ static void test_l8w8jwt_decode_valid_signature_rs384_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_rs512()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1480,7 +1480,7 @@ static void test_l8w8jwt_decode_valid_signature_rs512()
 static void test_l8w8jwt_decode_valid_signature_rs512_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1518,7 +1518,7 @@ static void test_l8w8jwt_decode_valid_signature_rs512_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_ps256()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1556,7 +1556,7 @@ static void test_l8w8jwt_decode_valid_signature_ps256()
 static void test_l8w8jwt_decode_valid_signature_ps256_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1594,7 +1594,7 @@ static void test_l8w8jwt_decode_valid_signature_ps256_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_ps384()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1632,7 +1632,7 @@ static void test_l8w8jwt_decode_valid_signature_ps384()
 static void test_l8w8jwt_decode_valid_signature_ps384_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1670,7 +1670,7 @@ static void test_l8w8jwt_decode_valid_signature_ps384_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_ps512()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1708,7 +1708,7 @@ static void test_l8w8jwt_decode_valid_signature_ps512()
 static void test_l8w8jwt_decode_valid_signature_ps512_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1746,7 +1746,7 @@ static void test_l8w8jwt_decode_valid_signature_ps512_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_eddsa()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1784,7 +1784,7 @@ static void test_l8w8jwt_decode_valid_signature_eddsa()
 static void test_l8w8jwt_decode_valid_signature_eddsa_alt()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1822,7 +1822,7 @@ static void test_l8w8jwt_decode_valid_signature_eddsa_alt()
 static void test_l8w8jwt_decode_valid_signature_es256()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1860,7 +1860,7 @@ static void test_l8w8jwt_decode_valid_signature_es256()
 static void test_l8w8jwt_decode_valid_signature_es256_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1898,7 +1898,7 @@ static void test_l8w8jwt_decode_valid_signature_es256_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_es384()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1936,7 +1936,7 @@ static void test_l8w8jwt_decode_valid_signature_es384()
 static void test_l8w8jwt_decode_valid_signature_es384_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -1974,7 +1974,7 @@ static void test_l8w8jwt_decode_valid_signature_es384_with_x509_certificate()
 static void test_l8w8jwt_decode_valid_signature_es512()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2012,7 +2012,7 @@ static void test_l8w8jwt_decode_valid_signature_es512()
 static void test_l8w8jwt_decode_valid_signature_es512_with_x509_certificate()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2052,7 +2052,7 @@ static void test_l8w8jwt_decode_valid_signature_es512_with_x509_certificate()
 static void test_l8w8jwt_decode_invalid_exp()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2092,7 +2092,7 @@ static void test_l8w8jwt_decode_invalid_exp()
 static void test_l8w8jwt_decode_invalid_nbf()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2133,7 +2133,7 @@ static void test_l8w8jwt_decode_invalid_nbf()
 static void test_l8w8jwt_decode_invalid_iat()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2173,7 +2173,7 @@ static void test_l8w8jwt_decode_invalid_iat()
 static void test_l8w8jwt_decode_invalid_sub()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2212,7 +2212,7 @@ static void test_l8w8jwt_decode_invalid_sub()
 static void test_l8w8jwt_decode_invalid_iss()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2251,7 +2251,7 @@ static void test_l8w8jwt_decode_invalid_iss()
 static void test_l8w8jwt_decode_invalid_aud()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2290,7 +2290,7 @@ static void test_l8w8jwt_decode_invalid_aud()
 static void test_l8w8jwt_decode_invalid_jti()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2329,7 +2329,7 @@ static void test_l8w8jwt_decode_invalid_jti()
 static void test_l8w8jwt_decode_invalid_typ()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2370,7 +2370,7 @@ static void test_l8w8jwt_decode_invalid_typ()
 static void test_l8w8jwt_decode_valid_exp()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2411,7 +2411,7 @@ static void test_l8w8jwt_decode_valid_exp()
 static void test_l8w8jwt_decode_valid_nbf()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2450,7 +2450,7 @@ static void test_l8w8jwt_decode_valid_nbf()
 static void test_l8w8jwt_decode_valid_iat()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2492,7 +2492,7 @@ static void test_l8w8jwt_decode_valid_iat()
 static void test_l8w8jwt_decode_valid_exp_tolerance()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2552,7 +2552,7 @@ static void test_l8w8jwt_decode_valid_exp_tolerance()
 static void test_l8w8jwt_decode_valid_nbf_tolerance()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2613,7 +2613,7 @@ static void test_l8w8jwt_decode_valid_nbf_tolerance()
 static void test_l8w8jwt_decode_valid_iat_tolerance()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2672,7 +2672,7 @@ static void test_l8w8jwt_decode_valid_iat_tolerance()
 static void test_l8w8jwt_decode_valid_sub()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2711,7 +2711,7 @@ static void test_l8w8jwt_decode_valid_sub()
 static void test_l8w8jwt_decode_valid_iss()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2750,7 +2750,7 @@ static void test_l8w8jwt_decode_valid_iss()
 static void test_l8w8jwt_decode_valid_aud()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2789,7 +2789,7 @@ static void test_l8w8jwt_decode_valid_aud()
 static void test_l8w8jwt_decode_valid_jti()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
@@ -2828,7 +2828,7 @@ static void test_l8w8jwt_decode_valid_jti()
 static void test_l8w8jwt_decode_valid_typ()
 {
     int r;
-    char* jwt;
+    char* jwt = NULL;
     size_t jwt_length;
     struct l8w8jwt_encoding_params encoding_params;
     l8w8jwt_encoding_params_init(&encoding_params);
