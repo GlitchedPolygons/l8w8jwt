@@ -273,6 +273,8 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
     }
 
+    int is_cert = 0; // If the validation PEM is a X.509 certificate, this will be set to 1.
+
     mbedtls_pk_context pk;
     mbedtls_pk_init(&pk);
 
@@ -355,7 +357,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     /* Signature verification. */
     if (signature != NULL && signature_length > 0 && alg != -1)
     {
-        const int is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----") != NULL;
+        is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----") != NULL;
         if (is_cert)
         {
             r = mbedtls_x509_crt_parse(&crt, key, key_length);
@@ -673,8 +675,15 @@ exit:
 
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
-    mbedtls_x509_crt_free(&crt);
-    mbedtls_pk_free(&pk);
+
+    if (is_cert)
+    {
+        mbedtls_x509_crt_free(&crt);
+    }
+    else
+    {
+        mbedtls_pk_free(&pk);
+    }
 
     return r;
 }
