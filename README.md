@@ -1,11 +1,10 @@
 # l8w8jwt
 
-[![Codacy](https://api.codacy.com/project/badge/Grade/28a58c3e4240456892dec1bd8895d5b6)](https://www.codacy.com/manual/GlitchedPolygons/l8w8jwt?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GlitchedPolygons/l8w8jwt&amp;utm_campaign=Badge_Grade)
-[![Codecov](https://codecov.io/gh/GlitchedPolygons/l8w8jwt/branch/master/graph/badge.svg)](https://codecov.io/gh/GlitchedPolygons/l8w8jwt)
 [![CircleCI](https://circleci.com/gh/GlitchedPolygons/l8w8jwt/tree/master.svg?style=shield)](https://circleci.com/gh/GlitchedPolygons/l8w8jwt/tree/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/bu9w6fbm1pg7pn1e/branch/master?svg=true)](https://ci.appveyor.com/project/GlitchedPolygons/l8w8jwt/branch/master)
+[![Codecov](https://codecov.io/gh/GlitchedPolygons/l8w8jwt/branch/master/graph/badge.svg)](https://codecov.io/gh/GlitchedPolygons/l8w8jwt)
 [![License Shield](https://img.shields.io/badge/license-Apache--2.0-orange)](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/LICENSE)
 [![API Docs](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/l8w8jwt/files.html)
-
 [![Icon](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/icon.png?raw=true)](https://jwt.io/)
 
 ### `l8w8jwt` (say "lightweight jawt") is a minimal, OpenSSL-less and super lightweight JWT library written in C. 
