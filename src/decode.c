@@ -30,11 +30,11 @@ extern "C" {
 #include <checknum.h>
 #include <chillbuff.h>
 #include <mbedtls/pk.h>
-#include <mbedtls/md_internal.h>
+#include <mbedtls/md.h>
 #include <mbedtls/platform_util.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
-#include <mbedtls/pk_internal.h>
+#include <mbedtls/pk.h>
 #include <mbedtls/x509_crt.h>
 
 #if L8W8JWT_ENABLE_EDDSA
@@ -52,7 +52,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_ES256K:
             *md_length = 32;
             *md_type = MBEDTLS_MD_SHA256;
-            *md_info = (mbedtls_md_info_t*)(&mbedtls_sha256_info);
+            *md_info = (mbedtls_md_info_t*)mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
             break;
 
         case L8W8JWT_ALG_HS384:
@@ -61,7 +61,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_ES384:
             *md_length = 48;
             *md_type = MBEDTLS_MD_SHA384;
-            *md_info = (mbedtls_md_info_t*)(&mbedtls_sha384_info);
+            *md_info = (mbedtls_md_info_t*)mbedtls_md_info_from_type(MBEDTLS_MD_SHA384);
             break;
 
         case L8W8JWT_ALG_HS512:
@@ -71,7 +71,7 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
         case L8W8JWT_ALG_ED25519:
             *md_length = 64;
             *md_type = MBEDTLS_MD_SHA512;
-            *md_info = (mbedtls_md_info_t*)(&mbedtls_sha512_info);
+            *md_info = (mbedtls_md_info_t*)mbedtls_md_info_from_type(MBEDTLS_MD_SHA512);
             break;
 
         default:
@@ -276,6 +276,9 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     mbedtls_pk_context pk;
     mbedtls_pk_init(&pk);
 
+    mbedtls_x509_crt crt;
+    mbedtls_x509_crt_init(&crt);
+
     mbedtls_entropy_context entropy;
     mbedtls_entropy_init(&entropy);
 
@@ -355,9 +358,6 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         const int is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----") != NULL;
         if (is_cert)
         {
-            mbedtls_x509_crt crt;
-            mbedtls_x509_crt_init(&crt);
-
             r = mbedtls_x509_crt_parse(&crt, key, key_length);
             if (r != 0)
             {
@@ -365,7 +365,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 goto exit;
             }
 
-            pk = crt.pk;
+            pk = crt.MBEDTLS_PRIVATE(pk);
         }
 
         size_t md_length;
@@ -464,10 +464,9 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 }
 
                 mbedtls_rsa_context* rsa = mbedtls_pk_rsa(pk);
-                rsa->hash_id = md_type;
-                rsa->padding = MBEDTLS_RSA_PKCS_V21;
+                mbedtls_rsa_set_padding(rsa, MBEDTLS_RSA_PKCS_V21, md_type);
 
-                r = mbedtls_rsa_rsassa_pss_verify(rsa, mbedtls_ctr_drbg_random, &ctr_drbg, MBEDTLS_RSA_PUBLIC, md_type, (unsigned int)md_length, hash, signature);
+                r = mbedtls_rsa_rsassa_pss_verify(rsa, md_type, md_length, hash, signature);
                 if (r != 0)
                 {
                     validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
@@ -501,6 +500,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 mbedtls_mpi_init(&sig_s);
 
                 r = mbedtls_ecdsa_from_keypair(&ecdsa, mbedtls_pk_ec(pk));
+
                 if (r != 0)
                 {
                     r = L8W8JWT_KEY_PARSE_FAILURE;
@@ -513,7 +513,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 mbedtls_mpi_read_binary(&sig_r, signature, half_signature_length);
                 mbedtls_mpi_read_binary(&sig_s, signature + half_signature_length, half_signature_length);
 
-                r = mbedtls_ecdsa_verify(&ecdsa.grp, hash, md_length, &ecdsa.Q, &sig_r, &sig_s);
+                r = mbedtls_ecdsa_verify(&ecdsa.MBEDTLS_PRIVATE(grp), hash, md_length, &ecdsa.MBEDTLS_PRIVATE(Q), &sig_r, &sig_s);
                 if (r != 0)
                 {
                     validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
@@ -522,6 +522,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 mbedtls_ecdsa_free(&ecdsa);
                 mbedtls_mpi_free(&sig_r);
                 mbedtls_mpi_free(&sig_s);
+
                 break;
             }
             case L8W8JWT_ALG_ED25519: {
@@ -613,7 +614,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_exp)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "exp", 3);
-        if (c == NULL || ct - params->exp_tolerance_seconds > atoll(c->value))
+        if (c == NULL || ct - params->exp_tolerance_seconds > strtoll(c->value, NULL, 10))
         {
             validation_res |= (unsigned)L8W8JWT_EXP_FAILURE;
         }
@@ -622,7 +623,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_nbf)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "nbf", 3);
-        if (c == NULL || ct + params->nbf_tolerance_seconds < atoll(c->value))
+        if (c == NULL || ct + params->nbf_tolerance_seconds < strtoll(c->value, NULL, 10))
         {
             validation_res |= (unsigned)L8W8JWT_NBF_FAILURE;
         }
@@ -631,7 +632,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     if (params->validate_iat)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "iat", 3);
-        if (c == NULL || ct + params->iat_tolerance_seconds < atoll(c->value))
+        if (c == NULL || ct + params->iat_tolerance_seconds < strtoll(c->value, NULL, 10))
         {
             validation_res |= (unsigned)L8W8JWT_IAT_FAILURE;
         }
@@ -672,6 +673,7 @@ exit:
 
     mbedtls_ctr_drbg_free(&ctr_drbg);
     mbedtls_entropy_free(&entropy);
+    mbedtls_x509_crt_free(&crt);
     mbedtls_pk_free(&pk);
 
     return r;
