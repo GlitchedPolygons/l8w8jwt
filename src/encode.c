@@ -327,7 +327,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
             }
 
             /* Sign the hash using the provided private key. */
-            r = mbedtls_pk_sign(&pk, md_type, hash, md_length, signature_bytes, sizeof(signature_bytes), &signature_bytes_length, mbedtls_ctr_drbg_random, &ctr_drbg);
+            r = mbedtls_pk_sign(&pk, md_type, hash, md_length, signature_bytes, 4096, &signature_bytes_length, mbedtls_ctr_drbg_random, &ctr_drbg);
             if (r != L8W8JWT_SUCCESS)
             {
                 r = L8W8JWT_SIGNATURE_CREATION_FAILURE;
