@@ -1,0 +1,18 @@
+digraph "include/l8w8jwt/version.h"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="include/l8w8jwt/version.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="include/l8w8jwt/base64.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$base64_8h.html",tooltip="Base-64 encode and decode strings/bytes. "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="include/l8w8jwt/claim.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$claim_8h.html",tooltip="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt-claims. "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="include/l8w8jwt/decode.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$decode_8h.html",tooltip="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT! "];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="include/l8w8jwt/encode.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$encode_8h.html",tooltip="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing..."];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="include/l8w8jwt/util.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$util_8h.html",tooltip="Useful utility functions. "];
+}
