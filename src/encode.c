@@ -191,7 +191,9 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
 
     if (params->additional_payload_claims_count > 0)
     {
-        chillbuff_push_back(&buff, ",", 1);
+        if (params->iat || params->exp || params->nbf || params->iss_length || params->sub_length || params->jti_length || params->aud_length)
+            chillbuff_push_back(&buff, ",", 1);
+
         l8w8jwt_write_claims(&buff, params->additional_payload_claims, params->additional_payload_claims_count);
     }
 
@@ -458,7 +460,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
                     break;
                 }
                 case L8W8JWT_ALG_ES512: {
-                    
+
                     if (ecdsa.MBEDTLS_PRIVATE(grp).id != MBEDTLS_ECP_DP_SECP521R1)
                     {
                         r = L8W8JWT_WRONG_KEY_TYPE;

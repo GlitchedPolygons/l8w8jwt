@@ -2924,7 +2924,9 @@ TEST_LIST = {
     { "test_l8w8jwt_decode_invalid_signature_es256k", test_l8w8jwt_decode_invalid_signature_es256k }, //
     { "test_l8w8jwt_decode_invalid_signature_es384", test_l8w8jwt_decode_invalid_signature_es384 }, //
     { "test_l8w8jwt_decode_invalid_signature_es512", test_l8w8jwt_decode_invalid_signature_es512 }, //
+#if L8W8JWT_ENABLE_EDDSA
     { "test_l8w8jwt_decode_invalid_signature_eddsa", test_l8w8jwt_decode_invalid_signature_eddsa }, //
+#endif
     { "test_l8w8jwt_encode_es256_es256k_wrong_curve_alg", test_l8w8jwt_encode_es256_es256k_wrong_curve_alg }, //
     { "test_l8w8jwt_encode_es256k_es256_wrong_curve_alg", test_l8w8jwt_encode_es256k_es256_wrong_curve_alg }, //
     { "test_l8w8jwt_encode_es384_wrong_curve_alg", test_l8w8jwt_encode_es384_wrong_curve_alg }, //
@@ -2938,8 +2940,10 @@ TEST_LIST = {
     { "test_l8w8jwt_decode_invalid_iss", test_l8w8jwt_decode_invalid_iss }, //
     { "test_l8w8jwt_decode_invalid_jti", test_l8w8jwt_decode_invalid_jti }, //
     { "test_l8w8jwt_decode_invalid_typ", test_l8w8jwt_decode_invalid_typ }, //
+#if L8W8JWT_ENABLE_EDDSA
     { "test_l8w8jwt_decode_valid_signature_eddsa", test_l8w8jwt_decode_valid_signature_eddsa }, //
     { "test_l8w8jwt_decode_valid_signature_eddsa_alt", test_l8w8jwt_decode_valid_signature_eddsa_alt }, //
+#endif
     { "test_l8w8jwt_decode_valid_signature_hs256", test_l8w8jwt_decode_valid_signature_hs256 }, //
     { "test_l8w8jwt_decode_valid_signature_hs384", test_l8w8jwt_decode_valid_signature_hs384 }, //
     { "test_l8w8jwt_decode_valid_signature_hs512", test_l8w8jwt_decode_valid_signature_hs512 }, //
