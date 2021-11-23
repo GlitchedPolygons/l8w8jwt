@@ -237,7 +237,7 @@ int l8w8jwt_base64_decode(const int url, const char* data, const size_t data_len
 
     for (i = 0; i < in_length; i++)
     {
-        if (dtable[data[i]] != 0x80)
+        if (dtable[(unsigned char)data[i]] != 0x80)
             count++;
     }
 
@@ -263,7 +263,7 @@ int l8w8jwt_base64_decode(const int url, const char* data, const size_t data_len
 
     for (i = 0; i < in_length + r; i++)
     {
-        const int c = i < in_length ? data[i] : '=';
+        const unsigned char c = i < in_length ? data[i] : '=';
 
         tmp = dtable[c];
 
