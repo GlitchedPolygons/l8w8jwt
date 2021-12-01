@@ -1206,7 +1206,8 @@ HTML_STYLESHEET        =
 # list). For an example see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  =
+GENERATE_TREEVIEW      = YES # optional. Also works without treeview
+HTML_EXTRA_STYLESHEET  = lib/doxygen-awesome/doxygen-awesome.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note

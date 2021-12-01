@@ -16,3 +16,6 @@
 [submodule "lib/ed25519"]
 	path = lib/ed25519
 	url = https://github.com/GlitchedPolygons/GlitchEd25519
+[submodule "lib/doxygen-awesome"]
+	path = lib/doxygen-awesome
+	url = https://github.com/GlitchedPolygons/doxygen-awesome-css.git
