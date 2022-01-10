@@ -367,7 +367,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
                 goto exit;
             }
 
-            pk = crt.MBEDTLS_PRIVATE(pk);
+            pk = crt.pk;
         }
 
         size_t md_length;
