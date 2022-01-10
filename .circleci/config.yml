@@ -9,7 +9,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake bash curl uuid-dev && rm -rf /var/lib/apt/lists/*'
+          command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake bash curl uuid-dev software-properties-common python && rm -rf /var/lib/apt/lists/*'
       - run:
           name: Fetch submodules
           command: 'git submodule update --init --recursive'
