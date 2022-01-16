@@ -20,7 +20,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 set(L8W8JWT_MAJOR 2)
 set(L8W8JWT_MINOR 1)
-set(L8W8JWT_PATCH 3)
+set(L8W8JWT_PATCH 4)
 set(L8W8JWT_VERSION_STRING "${L8W8JWT_MAJOR}.${L8W8JWT_MINOR}.${L8W8JWT_PATCH}")
 
 option(L8W8JWT_ENABLE_TESTS "Build l8w8jwt tests." OFF)
@@ -35,6 +35,10 @@ option(L8W8JWT_BUILD_DLL "Build l8w8jwt as a DLL." OFF)
 if (L8W8JWT_BUILD_DLL)
     add_compile_definitions("L8W8JWT_BUILD_DLL=1")
     set(L8W8JWT_DLL ON)
+
+    if (WIN32)
+        set(CMAKE_RELEASE_POSTFIX "${L8W8JWT_MAJOR}")
+    endif ()
 endif ()
 
 if (L8W8JWT_DLL)
