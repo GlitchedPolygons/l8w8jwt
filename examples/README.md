@@ -17,3 +17,5 @@ Here's a list of OpenSSL CLI commands to use for generating key pairs that are P
 
 * RS256, RS384, RS512, PS256, PS384, PS512
 * * `openssl genrsa -out private.pem 4096 && openssl rsa -in private.pem -outform PEM -pubout -out public.pem`
+
+All of the above commands will generate two files in the current working directory that your shell is in: `private.pem` and `public.pem`. These files contain the generated private and public key respectively, both PEM-formatted.
