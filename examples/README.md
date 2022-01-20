@@ -1,5 +1,8 @@
-# How to generate keys
+# How to generate keys that can be used in l8w8jwt
+
 ## Using OpenSSL
+
+Even though l8w8jwt itself does not use the OpenSSL library in any way, you may still use the OpenSSL CLI to generate key pairs that you can then use in l8w8jwt.
 
 Here's a list of OpenSSL CLI commands to use for generating key pairs that are PEM-formatted and ready for usage within `l8w8jwt`:
 
