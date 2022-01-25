@@ -16,6 +16,7 @@
 
 #include "l8w8jwt/version.h"
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +25,20 @@ extern "C" {
 void l8w8jwt_free(void* mem)
 {
     free(mem);
+}
+
+int l8w8jwt_get_version_number()
+{
+    return (int)L8W8JWT_VERSION;
+}
+
+void l8w8jwt_get_version_string(char out[32])
+{
+    const char version_string[] = L8W8JWT_VERSION_STR;
+    const size_t version_string_length = sizeof(version_string) - 1;
+
+    memcpy(out, version_string, version_string_length);
+    out[version_string_length] = '\0';
 }
 
 #ifdef __cplusplus

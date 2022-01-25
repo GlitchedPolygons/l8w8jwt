@@ -94,9 +94,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a4626940acbd108f82b61f3b099b653bd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a4626940acbd108f82b61f3b099b653bd">L8W8JWT_VERSION</a>&#160;&#160;&#160;212</td></tr>
+<tr class="memitem:a4626940acbd108f82b61f3b099b653bd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a4626940acbd108f82b61f3b099b653bd">L8W8JWT_VERSION</a>&#160;&#160;&#160;215</td></tr>
 <tr class="separator:a4626940acbd108f82b61f3b099b653bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a270a82a8994642435127efc0a59a9eb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a270a82a8994642435127efc0a59a9eb8">L8W8JWT_VERSION_STR</a>&#160;&#160;&#160;&quot;2.1.2&quot;</td></tr>
+<tr class="memitem:a270a82a8994642435127efc0a59a9eb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a270a82a8994642435127efc0a59a9eb8">L8W8JWT_VERSION_STR</a>&#160;&#160;&#160;&quot;2.1.5&quot;</td></tr>
 <tr class="separator:a270a82a8994642435127efc0a59a9eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b2ba8c808b82933cda9083e528be81a"><td class="memItemLeft" align="right" valign="top"><a id="a5b2ba8c808b82933cda9083e528be81a" name="a5b2ba8c808b82933cda9083e528be81a"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>L8W8JWT_API</b></td></tr>
@@ -108,6 +108,10 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a2ae563b3a6a9cd00b7f27851b0e6a10a"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a2ae563b3a6a9cd00b7f27851b0e6a10a">l8w8jwt_free</a> (void *mem)</td></tr>
 <tr class="separator:a2ae563b3a6a9cd00b7f27851b0e6a10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea978e4a682125d1385876dfb282a14e"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#aea978e4a682125d1385876dfb282a14e">l8w8jwt_get_version_number</a> ()</td></tr>
+<tr class="separator:aea978e4a682125d1385876dfb282a14e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9e8d88c939e9954f858dbfe017320c5"><td class="memItemLeft" align="right" valign="top">L8W8JWT_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#aa9e8d88c939e9954f858dbfe017320c5">l8w8jwt_get_version_string</a> (char out[32])</td></tr>
+<tr class="separator:aa9e8d88c939e9954f858dbfe017320c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >l8w8jwt version checking. </p>
@@ -135,7 +139,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define L8W8JWT_VERSION&#160;&#160;&#160;212</td>
+          <td class="memname">#define L8W8JWT_VERSION&#160;&#160;&#160;215</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -150,7 +154,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define L8W8JWT_VERSION_STR&#160;&#160;&#160;&quot;2.1.2&quot;</td>
+          <td class="memname">#define L8W8JWT_VERSION_STR&#160;&#160;&#160;&quot;2.1.5&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -177,6 +181,48 @@ Functions</h2></td></tr>
 <p >Free memory that was allocated by L8W8JWT. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mem</td><td>The memory to free. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aea978e4a682125d1385876dfb282a14e" name="aea978e4a682125d1385876dfb282a14e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea978e4a682125d1385876dfb282a14e">&#9670;&nbsp;</a></span>l8w8jwt_get_version_number()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">L8W8JWT_API int l8w8jwt_get_version_number </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the l8w8jwt version number as an integer. </p><dl class="section return"><dt>Returns</dt><dd>Version number (e.g. "2.1.4" =&gt; 214) </dd></dl>
+
+</div>
+</div>
+<a id="aa9e8d88c939e9954f858dbfe017320c5" name="aa9e8d88c939e9954f858dbfe017320c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9e8d88c939e9954f858dbfe017320c5">&#9670;&nbsp;</a></span>l8w8jwt_get_version_string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">L8W8JWT_API void l8w8jwt_get_version_string </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>out</em>[32]</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Gets the l8w8jwt version number as a nicely formatted string. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out</td><td>A writable <code>char</code> buffer of at least 32B where to write the version number string into. The string will be NUL-terminated, no worries! Passing <code>NULL</code> here is a very bad idea. Undefined, unpleasant, and just... just don't! </td></tr>
   </table>
   </dd>
 </dl>

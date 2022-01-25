@@ -33,6 +33,16 @@ static void null_test_success()
     TEST_ASSERT(true);
 }
 
+static void version_number_functions_test_success()
+{
+    TEST_ASSERT(l8w8jwt_get_version_number() == L8W8JWT_VERSION);
+
+    char version_nr_str[32] = { 0x00 };
+    l8w8jwt_get_version_string(version_nr_str);
+
+    TEST_ASSERT(strcmp(L8W8JWT_VERSION_STR, version_nr_str) == 0);
+}
+
 static void test_l8w8jwt_validate_encoding_params()
 {
     int r;
@@ -2893,6 +2903,7 @@ static void test_l8w8jwt_get_claim()
 TEST_LIST = {
     //
     { "nulltest", null_test_success }, //
+    { "version_number_functions_test_success", version_number_functions_test_success }, //
     { "test_l8w8jwt_validate_encoding_params", test_l8w8jwt_validate_encoding_params }, //
     { "test_l8w8jwt_validate_decoding_params", test_l8w8jwt_validate_decoding_params }, //
     { "test_l8w8jwt_decoding_params_init", test_l8w8jwt_decoding_params_init }, //
