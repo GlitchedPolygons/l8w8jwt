@@ -5,6 +5,7 @@
 [![Codecov](https://codecov.io/gh/GlitchedPolygons/l8w8jwt/branch/master/graph/badge.svg)](https://codecov.io/gh/GlitchedPolygons/l8w8jwt)
 [![License Shield](https://img.shields.io/badge/license-Apache--2.0-orange)](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/LICENSE)
 [![API Docs](https://img.shields.io/badge/api-docs-informational.svg)](https://glitchedpolygons.github.io/l8w8jwt/files.html)
+
 [![Icon](https://github.com/GlitchedPolygons/l8w8jwt/blob/master/icon.png?raw=true)](https://jwt.io/)
 
 ### `l8w8jwt` (say "lightweight jawt") is a minimal, OpenSSL-less and super lightweight JWT library written in C. 
@@ -236,6 +237,13 @@ For generating the keys, you should use the library that is also used by l8w8jwt
 
 To find out how you would go about generating these keys, check out the [`examples/`](https://github.com/GlitchedPolygons/l8w8jwt/tree/master/examples): there's comments at the top of those files containing the commands that were used for key generation.
 
----
-
 [![View on jwt.io](http://jwt.io/img/badge.svg)](https://jwt.io)
+
+## GUI
+
+There is also an official GUI application available for Linux, Windows and Mac that provides a relatively complete frontend to this library. <br>
+Check it out here on GitHub: https://github.com/GlitchedPolygons/l8w8jwtgui <br><br>
+Here's a neat screenshot of it in action: <br><br>
+    <a href="https://github.com/GlitchedPolygons/l8w8jwtgui"><img src="https://files.glitchedpolygons.com/api/v1/files/tqp0e8d6sjk9z2b8" alt="GUI Screenshot"></a>
+<br><br>
+It's very comfortable to have a visual representation and all the `l8w8jwt` functions exposed to a graphical interface when developing and testing web services/applications that make use of JWT auth protocols.
