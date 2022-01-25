@@ -48,6 +48,27 @@ void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count
     }
 }
 
+static inline void l8w8jwt_escape_claim_string(struct chillbuff* stringbuilder, const char* string, const size_t string_length)
+{
+    for (size_t i = 0; i < string_length; ++i)
+    {
+        const char c = string[i];
+
+        switch (c)
+        {
+            case '\\':
+                chillbuff_push_back(stringbuilder, "\\\\", 2);
+                break;
+            case '\"':
+                chillbuff_push_back(stringbuilder, "\\\"", 2);
+                break;
+            default:
+                chillbuff_push_back(stringbuilder, &c, 1);
+                break;
+        }
+    }
+}
+
 int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* claims, const size_t claims_count)
 {
     if (stringbuilder == NULL || claims == NULL)
@@ -58,6 +79,12 @@ int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* 
     if (claims_count == 0)
     {
         return L8W8JWT_INVALID_ARG;
+    }
+
+    struct chillbuff escape_buffer;
+    if (chillbuff_init(&escape_buffer, 256, sizeof(char), CHILLBUFF_GROW_LINEAR) != 0)
+    {
+        return L8W8JWT_OUT_OF_MEM;
     }
 
     int first = 1;
@@ -73,14 +100,23 @@ int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* 
             chillbuff_push_back(stringbuilder, ",", 1);
         }
 
+        const size_t key_length = claim->key_length ? claim->key_length : strlen(claim->key);
+        const size_t value_length = claim->value_length ? claim->value_length : strlen(claim->value);
+
+        chillbuff_clear(&escape_buffer);
+        l8w8jwt_escape_claim_string(&escape_buffer, claim->key, key_length);
+
         chillbuff_push_back(stringbuilder, "\"", 1);
-        chillbuff_push_back(stringbuilder, claim->key, claim->key_length ? claim->key_length : strlen(claim->key));
+        chillbuff_push_back(stringbuilder, escape_buffer.array, escape_buffer.length);
         chillbuff_push_back(stringbuilder, "\":", 2);
 
         if (claim->type == L8W8JWT_CLAIM_TYPE_STRING)
             chillbuff_push_back(stringbuilder, "\"", 1);
 
-        chillbuff_push_back(stringbuilder, claim->value, claim->value_length ? claim->value_length : strlen(claim->value));
+        chillbuff_clear(&escape_buffer);
+        l8w8jwt_escape_claim_string(&escape_buffer, claim->value, value_length);
+
+        chillbuff_push_back(stringbuilder, escape_buffer.array,escape_buffer.length);
 
         if (claim->type == L8W8JWT_CLAIM_TYPE_STRING)
             chillbuff_push_back(stringbuilder, "\"", 1);
@@ -88,6 +124,7 @@ int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* 
         first = 0;
     }
 
+    chillbuff_free(&escape_buffer);
     return L8W8JWT_SUCCESS;
 }
 
