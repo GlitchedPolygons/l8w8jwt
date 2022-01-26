@@ -1183,7 +1183,7 @@ static void test_l8w8jwt_decode_valid_signature_hs256()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     struct l8w8jwt_claim additional_header_claims[] = { { .key = "test", .key_length = 4, .value = "value", .value_length = 5, .type = L8W8JWT_CLAIM_TYPE_STRING } };
-    struct l8w8jwt_claim additional_payload_claims[] = { { .key = "test", .key_length = 4, .value = "value", .value_length = 5, .type = L8W8JWT_CLAIM_TYPE_STRING } };
+    struct l8w8jwt_claim additional_payload_claims[] = { { .key = "test \"bad chars that need escaping like \\ this \\ \\ one \\ omfg y \"\"", .key_length = strlen("test \"bad chars that need escaping like \\ this \\ \\ one \\ omfg y \"\""), .value = "value with hopefully \" escaped \\ backslashes \\ and double-quotes \" \" \" damn...", .value_length = strlen("value with hopefully \" escaped \\ backslashes \\ and double-quotes \" \" \" damn..."), .type = L8W8JWT_CLAIM_TYPE_STRING } };
 
     encoding_params.alg = L8W8JWT_ALG_HS256;
     encoding_params.iat = time(NULL);
