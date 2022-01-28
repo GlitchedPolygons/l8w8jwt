@@ -79,6 +79,66 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
+static int l8w8jwt_unescape_claim(struct l8w8jwt_claim* claim, const char* key, const size_t key_length, const char* value, const size_t value_length)
+{
+    claim->key_length = 0;
+    claim->key = calloc(sizeof(char), key_length + 1);
+
+    claim->value_length = 0;
+    claim->value = calloc(sizeof(char), value_length + 1);
+
+    if (claim->key == NULL || claim->value == NULL)
+    {
+        free(claim->key);
+        free(claim->value);
+        return L8W8JWT_OUT_OF_MEM;
+    }
+
+    char* out_key = claim->key;
+    char* out_value = claim->value;
+
+    for (size_t i = 0; i < key_length; ++i)
+    {
+        const char c = key[i];
+        *out_key = c;
+
+        if (c == '\\' && i != key_length - 1)
+        {
+            const char nc = key[i + 1];
+            if (nc == '\"')
+            {
+                *out_key = '\"';
+            }
+            ++i;
+        }
+
+        ++out_key;
+    }
+
+    for (size_t i = 0; i < value_length; ++i)
+    {
+        const char c = value[i];
+        *out_value = c;
+
+        if (c == '\\' && i != value_length - 1)
+        {
+            const char nc = value[i + 1];
+            if (nc == '\"')
+            {
+                *out_value = '\"';
+            }
+            ++i;
+        }
+
+        ++out_value;
+    }
+
+    claim->key_length = (size_t)(out_key - claim->key);
+    claim->value_length = (size_t)(out_value - claim->value);
+
+    return L8W8JWT_SUCCESS;
+}
+
 static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json_length)
 {
     jsmn_parser parser;
@@ -132,18 +192,22 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
 
         switch (value.type)
         {
-            case JSMN_UNDEFINED:
+            case JSMN_UNDEFINED: {
                 claim.type = L8W8JWT_CLAIM_TYPE_OTHER;
                 break;
-            case JSMN_OBJECT:
+            }
+            case JSMN_OBJECT: {
                 claim.type = L8W8JWT_CLAIM_TYPE_OBJECT;
                 break;
-            case JSMN_ARRAY:
+            }
+            case JSMN_ARRAY: {
                 claim.type = L8W8JWT_CLAIM_TYPE_ARRAY;
                 break;
-            case JSMN_STRING:
+            }
+            case JSMN_STRING: {
                 claim.type = L8W8JWT_CLAIM_TYPE_STRING;
                 break;
+            }
             case JSMN_PRIMITIVE: {
                 const int value_length = value.end - value.start;
 
@@ -161,33 +225,34 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
 
                 switch (checknum(json + value.start, value_length))
                 {
-                    case 1:
+                    case 1: {
                         claim.type = L8W8JWT_CLAIM_TYPE_INTEGER;
                         break;
-                    case 2:
+                    }
+                    case 2: {
                         claim.type = L8W8JWT_CLAIM_TYPE_NUMBER;
                         break;
-                    default:
+                    }
+                    default: {
                         r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
                         goto exit;
+                    }
                 }
 
                 break;
             }
-            default:
+            default: {
                 r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
                 goto exit;
+            }
         }
 
-        claim.key_length = (size_t)key.end - key.start;
-        claim.key = malloc(sizeof(char) * claim.key_length + 1);
-        claim.key[claim.key_length] = '\0';
-        memcpy(claim.key, json + key.start, claim.key_length);
-
-        claim.value_length = (size_t)value.end - value.start;
-        claim.value = malloc(sizeof(char) * claim.value_length + 1);
-        claim.value[claim.value_length] = '\0';
-        memcpy(claim.value, json + value.start, claim.value_length);
+        int ur = l8w8jwt_unescape_claim(&claim, json + key.start, (size_t)key.end - key.start, json + value.start, (size_t)value.end - value.start);
+        if (ur != L8W8JWT_SUCCESS)
+        {
+            r = ur;
+            goto exit;
+        }
 
         chillbuff_push_back(buffer, &claim, 1);
     }
