@@ -3,7 +3,7 @@ image:
   - Ubuntu2004
   - macos-mojave
   - macos
-  - Visual Studio 2017
+  - Visual Studio 2022
 for:
   -
     matrix:
@@ -53,7 +53,7 @@ for:
   -
     matrix:
       only:
-        - image: Visual Studio 2017
+        - image: Visual Studio 2022
     install:
     - cmd: git submodule update --init --recursive
     before_build:
