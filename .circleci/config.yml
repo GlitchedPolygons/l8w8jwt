@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Upload coverage reports
           when: on_success
-          command: cd build/CMakeFiles/run_tests.dir/src && bash <(curl -s https://codecov.io/bash)
+          command: cd build/CMakeFiles/run_tests.dir/tests && bash <(curl -s https://codecov.io/bash)
       - run:
           name: Build in release mode
           command: 'bash -eo pipefail build.sh && mkdir build/out && mv build/*.tar.gz build/out'
