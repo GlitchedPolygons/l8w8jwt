@@ -1,22 +1,51 @@
-version: 2
+version: 2.1
 jobs:
-  build:
-    docker:
-      - image: ubuntu:focal
-        environment:
-          DEBIAN_FRONTEND: noninteractive
+  build-x64:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: medium
     steps:
       - checkout
       - run:
           name: Install dependencies
-          command: 'apt-get update && apt-get install -y sudo git gcc g++ build-essential cmake bash curl uuid-dev software-properties-common python && rm -rf /var/lib/apt/lists/*'
+          command: 'sudo apt-get update && sudo apt-get install -y git gcc g++ build-essential cmake bash curl uuid-dev'
+      - run:
+          name: Fetch submodules
+          command: 'git submodule update --init --recursive'
+      - run:
+          name: Build and run tests with code coverage enabled
+          command: 'bash -eo pipefail test.sh cov'
+      - run:
+          name: Upload coverage reports
+          when: on_success
+          command: cd build/CMakeFiles/run_tests.dir/src && bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Build in release mode
+          command: 'bash -eo pipefail build.sh && mkdir build/out && mv build/*.tar.gz build/out'
+      - store_artifacts:
+          path: build/out
+  build-arm64:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: 'sudo apt-get update && sudo apt-get install -y git gcc g++ build-essential cmake bash curl uuid-dev'
       - run:
           name: Fetch submodules
           command: 'git submodule update --init --recursive'
       - run:
           name: Build and run tests
-          command: 'bash -eo pipefail test.sh cov'
+          command: 'bash -eo pipefail test.sh'
       - run:
-          name: Upload coverage reports
-          when: on_success
-          command: cd build/CMakeFiles/l8w8jwt.dir/src && bash <(curl -s https://codecov.io/bash)
+          name: Build in release mode
+          command: 'bash -eo pipefail build.sh && mkdir build/out && mv build/*.tar.gz build/out'
+      - store_artifacts:
+          path: build/out
+workflows:
+  build:
+    jobs:
+      - build-x64
+      - build-arm64
