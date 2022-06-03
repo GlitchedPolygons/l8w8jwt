@@ -244,6 +244,6 @@ To find out how you would go about generating these keys, check out the [`exampl
 There is also an official GUI application available for Linux, Windows and Mac that provides a relatively complete frontend to this library. <br>
 Check it out here on GitHub: https://github.com/GlitchedPolygons/l8w8jwtgui <br><br>
 Here's a neat screenshot of it in action: <br><br>
-    <a href="https://github.com/GlitchedPolygons/l8w8jwtgui"><img src="https://files.glitchedpolygons.com/api/v1/files/tqp0e8d6sjk9z2b8" alt="GUI Screenshot"></a>
+    <a href="https://github.com/GlitchedPolygons/l8w8jwtgui"><img src="https://api.files.glitchedpolygons.com/api/v1/files/tqp0e8d6sjk9z2b8" alt="GUI Screenshot"></a>
 <br><br>
 It's very comfortable to have a visual representation and all the `l8w8jwt` functions exposed to a graphical interface when developing and testing web services/applications that make use of JWT auth protocols.
