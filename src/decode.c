@@ -123,10 +123,19 @@ static int l8w8jwt_unescape_claim(struct l8w8jwt_claim* claim, const char* key, 
         if (c == '\\' && i != value_length - 1)
         {
             const char nc = value[i + 1];
-            if (nc == '\"')
+
+            switch (nc)
             {
-                *out_value = '\"';
+                case '\"':
+                    *out_value = '\"';
+                    break;
+                case '/':
+                    *out_value = '/';
+                    break;
+                default:
+                    break;
             }
+
             ++i;
         }
 

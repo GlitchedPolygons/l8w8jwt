@@ -2757,6 +2757,32 @@ static void test_l8w8jwt_decode_valid_iss()
     free(jwt);
 }
 
+static void test_l8w8jwt_decode_fwd_slashes_token_decode()
+{
+    int r;
+    char jwt[] = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkE3NHBUeDlIMDdMd1kyaGFrZVdPS0ZOZTNtaDhaNjZ3ZlFnQUhyME5OLUEiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE2NzAxNjM4MjQsImZsaWdodF9vcGVyYXRpb25faWQiOiIzNDA4YmNlOS1kYmFiLTQ2NjUtYWJmYy04ZWEwM2IwYWQ4NzEiLCJmbGlnaHRfcGxhbl9pZCI6IjEyODE4ZTg3LTRjOTYtNGU0Yy04YzYzLTgyYjhlMTJjM2I3MyIsImlhdCI6MTY3MDE2MDIyNCwiaXNzIjoiaHR0cHM6XC9cL3Rlc3RcL2RvbWFpblwvIiwicGxhbl9maWxlX2hhc2giOiJhMmEyMDFlZmExMTFkZGU1YWFhOGY0MmI3YjQ2ZDE3YjU5NWUzOWQ4NTA1MDBkYmFjZDlmNzlhZWYwYmJmNjhlIiwic2NvcGUiOiIiLCJzdWIiOiJnMzdsWGlmQVFvQmZWdVFaeFQzVkpGalhJTWdkZlhJT3BhMkxkV0JRQGNsaWVudHMiLCJ0eXAiOiJCZWFyZXIifQ.erPylOUbAxVz03P6f5dCyjWgRA1RDUW-5pC49OGTfDEEmM9HElXx2lH5_7-C-l0HoUjypaix_s2PC9jYUUIGBsdL_2Mfary2-cxOMDyGrbfP39rD-Fq7CWrvSlqz8k9dPEEhW06Jjq2ujvcY6277Po7pXrC7PyhL3En7B3b3sUC6gk-FXVAI9XzTpxnSN5w3g7vxEi1JgI8EyfeWT1usAST8UdKYrJEzmJOvIaloq1zz1oJb9jXFGj3hCABU4Ky58ibvaiveucf5Fq8essC2jIKUBfnAy43gsj6h6kPTy5PEugSLXoomNAXthnUFckmJjY0hNwQc5yLLRa--f9ObsgFO0dKquqwGlU0BbuBZU0Dyh5-IUqNfMEG76nnr5TlzjgMusVDjCSEdDBB2ef6xdBcMiWMA-8Po2Qyd9wsKhg4ud_Hxzmutp-sEb1fhH7QcSfdeNRWnhmuGgNPaYQtx46TN8sm0IWfcVa9EUTC7IdUBAOX-o0Ob8uHjFzq97YjHawZyosj5ajgHzc8gQDIyykXO1a45r0hdMOXw7eGQ_oOC_ZWHolvNmYg38mkbpErXTUHt_Wzl3B3xuMAwMPeBskI4l_zrvmgEcGzuM1B1Igqk3pbLqJIbRBHx-VcenwevId-kGIHzfKVYmtPRO9Y6k4_njvYFYc6TcvpscmPmfGM";
+    size_t jwt_length = strlen(jwt);
+
+    struct l8w8jwt_decoding_params decoding_params;
+    l8w8jwt_decoding_params_init(&decoding_params);
+
+    decoding_params.alg = L8W8JWT_ALG_RS256;
+    decoding_params.jwt = jwt;
+    decoding_params.jwt_length = jwt_length;
+    decoding_params.verification_key = (unsigned char*)RSA_PUBLIC_KEY;
+    decoding_params.verification_key_length = strlen(RSA_PUBLIC_KEY);
+
+    struct l8w8jwt_claim claims;
+    struct l8w8jwt_claim* ref = &claims;
+    size_t claims_count;
+
+    enum l8w8jwt_validation_result validation_result;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, &ref, &claims_count);
+
+    struct l8w8jwt_claim* iss_claim = l8w8jwt_get_claim(ref, claims_count, "iss", 3);
+    TEST_ASSERT(strcmp(iss_claim->value, "https://test/domain/") == 0);
+}
+
 static void test_l8w8jwt_decode_valid_aud()
 {
     int r;
@@ -2935,6 +2961,7 @@ TEST_LIST = {
     { "test_l8w8jwt_decode_invalid_signature_es256k", test_l8w8jwt_decode_invalid_signature_es256k }, //
     { "test_l8w8jwt_decode_invalid_signature_es384", test_l8w8jwt_decode_invalid_signature_es384 }, //
     { "test_l8w8jwt_decode_invalid_signature_es512", test_l8w8jwt_decode_invalid_signature_es512 }, //
+    { "test_l8w8jwt_decode_fwd_slashes_token_decode", test_l8w8jwt_decode_fwd_slashes_token_decode }, //
 #if L8W8JWT_ENABLE_EDDSA
     { "test_l8w8jwt_decode_invalid_signature_eddsa", test_l8w8jwt_decode_invalid_signature_eddsa }, //
 #endif
