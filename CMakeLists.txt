@@ -185,7 +185,7 @@ target_link_libraries(${PROJECT_NAME}
         )
 
 if ((${CMAKE_SYSTEM_NAME} STREQUAL "Linux") OR (${CYGWIN}))
-    target_link_libraries(${PROJECT_NAME} PRIVATE -luuid -lm)
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lm)
 endif ()
 
 if (WIN32)
