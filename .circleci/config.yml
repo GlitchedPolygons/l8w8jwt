@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: 'sudo apt-get update && sudo apt-get install -y git gcc g++ build-essential cmake bash curl uuid-dev'
+          command: 'sudo apt-get update && sudo apt-get install -y git gcc g++ build-essential cmake bash curl'
       - run:
           name: Fetch submodules
           command: 'git submodule update --init --recursive'
@@ -32,7 +32,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: 'sudo apt-get update && sudo apt-get install -y git gcc g++ build-essential cmake bash curl uuid-dev'
+          command: 'sudo apt-get update && sudo apt-get install -y git gcc g++ build-essential cmake bash curl'
       - run:
           name: Fetch submodules
           command: 'git submodule update --init --recursive'
