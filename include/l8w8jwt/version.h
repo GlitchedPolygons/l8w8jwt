@@ -65,7 +65,7 @@ L8W8JWT_API void l8w8jwt_free(void* mem);
  * Gets the l8w8jwt version number as an integer.
  * @return Version number (e.g. "2.1.4" => 214)
  */
-L8W8JWT_API int l8w8jwt_get_version_number();
+L8W8JWT_API int l8w8jwt_get_version_number(void);
 
 /**
  * Gets the l8w8jwt version number as a nicely formatted string.
