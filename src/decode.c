@@ -165,7 +165,7 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
     }
 
     jsmntok_t _tokens[64];
-    jsmntok_t* tokens = r <= sizeof(_tokens) ? _tokens : malloc(r * sizeof(jsmntok_t));
+    jsmntok_t* tokens = r <= (sizeof(_tokens) / sizeof(_tokens[0])) ? _tokens : malloc(r * sizeof(jsmntok_t));
 
     if (tokens == NULL)
     {
