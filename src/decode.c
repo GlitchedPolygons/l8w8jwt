@@ -32,8 +32,6 @@ extern "C" {
 #include <mbedtls/pk.h>
 #include <mbedtls/md.h>
 #include <mbedtls/platform_util.h>
-#include <mbedtls/entropy.h>
-#include <mbedtls/ctr_drbg.h>
 #include <mbedtls/pk.h>
 #include <mbedtls/x509_crt.h>
 
@@ -354,12 +352,6 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
 
     mbedtls_x509_crt crt;
     mbedtls_x509_crt_init(&crt);
-
-    mbedtls_entropy_context entropy;
-    mbedtls_entropy_init(&entropy);
-
-    mbedtls_ctr_drbg_context ctr_drbg;
-    mbedtls_ctr_drbg_init(&ctr_drbg);
 
 #if L8W8JWT_SMALL_STACK
     unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
@@ -746,9 +738,6 @@ exit:
 #if L8W8JWT_SMALL_STACK
     l8w8jwt_free(key);
 #endif
-
-    mbedtls_ctr_drbg_free(&ctr_drbg);
-    mbedtls_entropy_free(&entropy);
 
     if (is_cert)
     {
