@@ -41,7 +41,7 @@ If you use GCC, [check out this issue's log here](https://github.com/GlitchedPol
 
 For devices with a particularly small stack, please define the `L8W8JWT_SMALL_STACK` pre-processor definition and set it to `1`.
 
-For devices which do not support system time via standard C `time` API, please define the `MBEDTLS_PLATFORM_TIME_ALT` pre-processor definition and set it to `1`. Additionally, you would also need to provide the alternate time API via function pointer `l8w8jwt_time` defined in [decode.h](include/l8w8jwt/timehelper.h)
+For devices which do not support system time via standard C `time` API, please define the `MBEDTLS_PLATFORM_TIME_ALT` pre-processor definition and set it to `1`. Additionally, you would also need to provide the alternate time API via function pointer `l8w8jwt_time` defined in [timehelper.h](include/l8w8jwt/timehelper.h)
 
 #### Build shared library/DLL
 
