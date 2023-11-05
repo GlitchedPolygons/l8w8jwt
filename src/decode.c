@@ -436,9 +436,9 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
             pk = crt.pk;
         }
 
-        size_t md_length;
-        mbedtls_md_type_t md_type;
-        mbedtls_md_info_t* md_info;
+        size_t md_length = 0;
+        mbedtls_md_type_t md_type = MBEDTLS_MD_NONE;
+        mbedtls_md_info_t* md_info = NULL;
 
         md_info_from_alg(alg, &md_info, &md_type, &md_length);
 
