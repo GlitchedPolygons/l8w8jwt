@@ -31,7 +31,7 @@ extern "C" {
 #include "claim.h"
 #include "version.h"
 #include "retcodes.h"
-#include <time.h>
+#include "timehelper.h"
 #include <stddef.h>
 #include <stdint.h>
 

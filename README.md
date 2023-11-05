@@ -41,6 +41,8 @@ If you use GCC, [check out this issue's log here](https://github.com/GlitchedPol
 
 For devices with a particularly small stack, please define the `L8W8JWT_SMALL_STACK` pre-processor definition and set it to `1`.
 
+For devices which do not support system time via standard C `time` API, please define the `MBEDTLS_PLATFORM_TIME_ALT` pre-processor definition and set it to `1`. Additionally, you would also need to provide the alternate time API via function pointer `l8w8jwt_time` defined in [decode.h](include/l8w8jwt/timehelper.h)
+
 #### Build shared library/DLL
 
 ```bash
@@ -92,8 +94,8 @@ int main(void)
     params.iss = "Black Mesa";
     params.aud = "Administrator";
 
-    params.iat = time(NULL);
-    params.exp = time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
+    params.iat = l8w8jwt_time(NULL);
+    params.exp = l8w8jwt_time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
 
     params.secret_key = (unsigned char*)"YoUR sUpEr S3krEt 1337 HMAC kEy HeRE";
     params.secret_key_length = strlen(params.secret_key);

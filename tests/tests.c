@@ -27,6 +27,11 @@
 #include <acutest.h>
 #include <chillbuff.h>
 
+/* Use system time if L8W8JWT_PLATFORM_TIME_ALT is set for tests*/
+#if L8W8JWT_PLATFORM_TIME_ALT
+l8w8jwt_time_t (*l8w8jwt_time)( l8w8jwt_time_t* time ) = time;
+#endif 
+
 /* A test case that does nothing and succeeds. */
 static void null_test_success()
 {
@@ -265,8 +270,8 @@ static void test_l8w8jwt_encode_invalid_alg_arg_err()
     params.secret_key_length = strlen(params.secret_key);
     params.out = &out;
     params.out_length = &out_length;
-    params.iat = time(NULL);
-    params.exp = time(NULL) + 600;
+    params.iat = l8w8jwt_time(NULL);
+    params.exp = l8w8jwt_time(NULL) + 600;
     params.iss = "test iss";
     params.aud = "test sub";
     params.alg = -3;
@@ -290,8 +295,8 @@ static void test_l8w8jwt_encode_creates_nul_terminated_valid_string()
     params.secret_key_length = strlen(params.secret_key);
     params.out = &out;
     params.out_length = &out_length;
-    params.iat = time(NULL);
-    params.exp = time(NULL) + 600;
+    params.iat = l8w8jwt_time(NULL);
+    params.exp = l8w8jwt_time(NULL) + 600;
     params.iss = "test iss";
     params.aud = "test sub";
     params.alg = L8W8JWT_ALG_HS256;
@@ -462,8 +467,8 @@ static void test_l8w8jwt_decode_invalid_signature_hs256()
     encoding_params.sub = "Gordon Freeman";
     encoding_params.iss = "Black Mesa";
     encoding_params.aud = "Administrator";
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
     encoding_params.secret_key = (unsigned char*)"YoUR sUpEr S3krEt 1337 HMAC kEy HeRE";
     encoding_params.secret_key_length = strlen(encoding_params.secret_key);
 
@@ -515,8 +520,8 @@ static void test_l8w8jwt_decode_invalid_signature_hs384()
     encoding_params.sub = "Gordon Freeman";
     encoding_params.iss = "Black Mesa";
     encoding_params.aud = "Administrator";
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
     encoding_params.secret_key = (unsigned char*)"YoUR sUpEr S3krEt 1337 HMAC kEy HeRE";
     encoding_params.secret_key_length = strlen(encoding_params.secret_key);
 
@@ -568,8 +573,8 @@ static void test_l8w8jwt_decode_invalid_signature_hs512()
     encoding_params.sub = "Gordon Freeman";
     encoding_params.iss = "Black Mesa";
     encoding_params.aud = "Administrator";
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; /* Set to expire after 10 minutes (600 seconds). */
     encoding_params.secret_key = (unsigned char*)"YoUR sUpEr S3krEt 1337 HMAC kEy HeRE";
     encoding_params.secret_key_length = strlen(encoding_params.secret_key);
 
@@ -602,8 +607,8 @@ static void test_l8w8jwt_decode_invalid_signature_rs256()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -640,8 +645,8 @@ static void test_l8w8jwt_decode_invalid_signature_rs384()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -678,8 +683,8 @@ static void test_l8w8jwt_decode_invalid_signature_rs512()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -716,8 +721,8 @@ static void test_l8w8jwt_decode_invalid_signature_ps256()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -754,8 +759,8 @@ static void test_l8w8jwt_decode_invalid_signature_ps384()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -792,8 +797,8 @@ static void test_l8w8jwt_decode_invalid_signature_ps512()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -830,8 +835,8 @@ static void test_l8w8jwt_decode_invalid_signature_es256()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES256_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES256_PRIVATE_KEY);
@@ -868,8 +873,8 @@ static void test_l8w8jwt_decode_invalid_signature_es256k()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES256K;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES256K_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES256K_PRIVATE_KEY);
@@ -906,8 +911,8 @@ static void test_l8w8jwt_encode_es256_es256k_wrong_curve_alg()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES256K;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES256_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES256_PRIVATE_KEY);
@@ -928,8 +933,8 @@ static void test_l8w8jwt_encode_es256k_es256_wrong_curve_alg()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES256K_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES256K_PRIVATE_KEY);
@@ -950,8 +955,8 @@ static void test_l8w8jwt_encode_es384_wrong_curve_alg()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES256_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES256_PRIVATE_KEY);
@@ -972,8 +977,8 @@ static void test_l8w8jwt_encode_es512_wrong_curve_alg()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES384_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES384_PRIVATE_KEY);
@@ -994,8 +999,8 @@ static void test_l8w8jwt_decode_invalid_signature_es384()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES384_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES384_PRIVATE_KEY);
@@ -1032,8 +1037,8 @@ static void test_l8w8jwt_decode_invalid_signature_es512()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES512_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES512_PRIVATE_KEY);
@@ -1070,8 +1075,8 @@ static void test_l8w8jwt_decode_invalid_signature_eddsa()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ED25519;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ED25519_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ED25519_PRIVATE_KEY);
@@ -1141,8 +1146,8 @@ static void test_l8w8jwt_decode_invalid_signature_because_wrong_alg_type()
         }
 
         encoding_params.alg = encoding_alg;
-        encoding_params.iat = time(NULL);
-        encoding_params.exp = time(NULL) + 600;
+        encoding_params.iat = l8w8jwt_time(NULL);
+        encoding_params.exp = l8w8jwt_time(NULL) + 600;
 
         encoding_params.secret_key = key;
         encoding_params.secret_key_length = strlen(key);
@@ -1186,8 +1191,8 @@ static void test_l8w8jwt_decode_valid_signature_hs256()
     struct l8w8jwt_claim additional_payload_claims[] = { { .key = "test \"bad chars that need escaping like \\ this \\ \\ one \\ omfg y \"\"", .key_length = strlen("test \"bad chars that need escaping like \\ this \\ \\ one \\ omfg y \"\""), .value = "value with hopefully \" escaped \\ backslashes \\ and double-quotes \" \" \" damn...", .value_length = strlen("value with hopefully \" escaped \\ backslashes \\ and double-quotes \" \" \" damn..."), .type = L8W8JWT_CLAIM_TYPE_STRING } };
 
     encoding_params.alg = L8W8JWT_ALG_HS256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)"the cake is a lie";
     encoding_params.secret_key_length = strlen(encoding_params.secret_key);
@@ -1230,8 +1235,8 @@ static void test_l8w8jwt_decode_valid_signature_hs384()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_HS384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)"the cake is a lie";
     encoding_params.secret_key_length = strlen(encoding_params.secret_key);
@@ -1268,8 +1273,8 @@ static void test_l8w8jwt_decode_valid_signature_hs512()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_HS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)"the cake is a lie";
     encoding_params.secret_key_length = strlen(encoding_params.secret_key);
@@ -1306,8 +1311,8 @@ static void test_l8w8jwt_decode_valid_signature_rs256()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -1344,8 +1349,8 @@ static void test_l8w8jwt_decode_valid_signature_rs256_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_TEST_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_TEST_PRIVATE_KEY);
@@ -1382,8 +1387,8 @@ static void test_l8w8jwt_decode_valid_signature_rs384()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -1420,8 +1425,8 @@ static void test_l8w8jwt_decode_valid_signature_rs384_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_TEST_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_TEST_PRIVATE_KEY);
@@ -1458,8 +1463,8 @@ static void test_l8w8jwt_decode_valid_signature_rs512()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -1496,8 +1501,8 @@ static void test_l8w8jwt_decode_valid_signature_rs512_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_RS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
 
     encoding_params.secret_key = (unsigned char*)X509_TEST_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_TEST_PRIVATE_KEY);
@@ -1534,8 +1539,8 @@ static void test_l8w8jwt_decode_valid_signature_ps256()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -1572,8 +1577,8 @@ static void test_l8w8jwt_decode_valid_signature_ps256_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_TEST_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_TEST_PRIVATE_KEY);
@@ -1610,8 +1615,8 @@ static void test_l8w8jwt_decode_valid_signature_ps384()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -1648,8 +1653,8 @@ static void test_l8w8jwt_decode_valid_signature_ps384_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_TEST_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_TEST_PRIVATE_KEY);
@@ -1686,8 +1691,8 @@ static void test_l8w8jwt_decode_valid_signature_ps512()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -1724,8 +1729,8 @@ static void test_l8w8jwt_decode_valid_signature_ps512_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_TEST_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_TEST_PRIVATE_KEY);
@@ -1762,8 +1767,8 @@ static void test_l8w8jwt_decode_valid_signature_eddsa()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ED25519;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ED25519_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ED25519_PRIVATE_KEY);
@@ -1800,8 +1805,8 @@ static void test_l8w8jwt_decode_valid_signature_eddsa_alt()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ED25519;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ED25519_PRIVATE_KEY_2;
     encoding_params.secret_key_length = strlen(ED25519_PRIVATE_KEY_2) + 1;
@@ -1838,8 +1843,8 @@ static void test_l8w8jwt_decode_valid_signature_es256()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES256_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES256_PRIVATE_KEY);
@@ -1876,8 +1881,8 @@ static void test_l8w8jwt_decode_valid_signature_es256_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES256;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_PRIME256v1_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_PRIME256v1_PRIVATE_KEY);
@@ -1914,8 +1919,8 @@ static void test_l8w8jwt_decode_valid_signature_es384()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES384_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES384_PRIVATE_KEY);
@@ -1952,8 +1957,8 @@ static void test_l8w8jwt_decode_valid_signature_es384_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES384;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_secp384r1_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_secp384r1_PRIVATE_KEY);
@@ -1990,8 +1995,8 @@ static void test_l8w8jwt_decode_valid_signature_es512()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)ES512_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(ES512_PRIVATE_KEY);
@@ -2028,8 +2033,8 @@ static void test_l8w8jwt_decode_valid_signature_es512_with_x509_certificate()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_ES512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     encoding_params.secret_key = (unsigned char*)X509_secp521r1_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(X509_secp521r1_PRIVATE_KEY);
@@ -2068,8 +2073,8 @@ static void test_l8w8jwt_decode_invalid_exp()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL) - 300;
-    encoding_params.exp = time(NULL) - 180;
+    encoding_params.iat = l8w8jwt_time(NULL) - 300;
+    encoding_params.exp = l8w8jwt_time(NULL) - 180;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2108,9 +2113,9 @@ static void test_l8w8jwt_decode_invalid_nbf()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
-    encoding_params.nbf = time(NULL) + 300;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
+    encoding_params.nbf = l8w8jwt_time(NULL) + 300;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2149,8 +2154,8 @@ static void test_l8w8jwt_decode_invalid_iat()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL) + 600;
-    encoding_params.exp = time(NULL) + 900;
+    encoding_params.iat = l8w8jwt_time(NULL) + 600;
+    encoding_params.exp = l8w8jwt_time(NULL) + 900;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2189,8 +2194,8 @@ static void test_l8w8jwt_decode_invalid_sub()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.sub = "test subject";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2228,8 +2233,8 @@ static void test_l8w8jwt_decode_invalid_iss()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.iss = "test issuer";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2267,8 +2272,8 @@ static void test_l8w8jwt_decode_invalid_aud()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.aud = "test audience";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2306,8 +2311,8 @@ static void test_l8w8jwt_decode_invalid_jti()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.jti = "test jti";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2345,8 +2350,8 @@ static void test_l8w8jwt_decode_invalid_typ()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
 
@@ -2386,8 +2391,8 @@ static void test_l8w8jwt_decode_valid_exp()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2427,7 +2432,7 @@ static void test_l8w8jwt_decode_valid_nbf()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.nbf = time(NULL) - 300;
+    encoding_params.nbf = l8w8jwt_time(NULL) - 300;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2466,8 +2471,8 @@ static void test_l8w8jwt_decode_valid_iat()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL) - 60;
-    encoding_params.exp = time(NULL) + 900;
+    encoding_params.iat = l8w8jwt_time(NULL) - 60;
+    encoding_params.exp = l8w8jwt_time(NULL) + 900;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2508,8 +2513,8 @@ static void test_l8w8jwt_decode_valid_exp_tolerance()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL) - 60;
-    encoding_params.exp = time(NULL) - 30;
+    encoding_params.iat = l8w8jwt_time(NULL) - 60;
+    encoding_params.exp = l8w8jwt_time(NULL) - 30;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2568,9 +2573,9 @@ static void test_l8w8jwt_decode_valid_nbf_tolerance()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
-    encoding_params.nbf = time(NULL) + 60;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
+    encoding_params.nbf = l8w8jwt_time(NULL) + 60;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2629,8 +2634,8 @@ static void test_l8w8jwt_decode_valid_iat_tolerance()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL) + 60;
-    encoding_params.exp = time(NULL) + 900;
+    encoding_params.iat = l8w8jwt_time(NULL) + 60;
+    encoding_params.exp = l8w8jwt_time(NULL) + 900;
 
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2688,8 +2693,8 @@ static void test_l8w8jwt_decode_valid_sub()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.sub = "test subject";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2727,8 +2732,8 @@ static void test_l8w8jwt_decode_valid_iss()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.iss = "test issuer";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2792,8 +2797,8 @@ static void test_l8w8jwt_decode_valid_aud()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.aud = "test audience";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2831,8 +2836,8 @@ static void test_l8w8jwt_decode_valid_jti()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.jti = "test jti";
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
@@ -2870,8 +2875,8 @@ static void test_l8w8jwt_decode_valid_typ()
     l8w8jwt_encoding_params_init(&encoding_params);
 
     encoding_params.alg = L8W8JWT_ALG_PS512;
-    encoding_params.iat = time(NULL);
-    encoding_params.exp = time(NULL) + 600;
+    encoding_params.iat = l8w8jwt_time(NULL);
+    encoding_params.exp = l8w8jwt_time(NULL) + 600;
     encoding_params.secret_key = (unsigned char*)RSA_PRIVATE_KEY;
     encoding_params.secret_key_length = strlen(RSA_PRIVATE_KEY);
 

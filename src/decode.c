@@ -677,7 +677,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         }
     }
 
-    const time_t ct = time(NULL);
+    const l8w8jwt_time_t ct = l8w8jwt_time(NULL);
 
     if (params->validate_exp)
     {

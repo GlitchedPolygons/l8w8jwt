@@ -108,8 +108,8 @@ int main(void)
     params.aud = "Administrator";
     params.aud_length = strlen("Administrator");
 
-    params.iat = time(NULL);
-    params.exp = time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
+    params.iat = l8w8jwt_time(NULL);
+    params.exp = l8w8jwt_time(NULL) + 600; // Set to expire after 10 minutes (600 seconds).
 
     params.additional_header_claims = header_claims;
     params.additional_header_claims_count = sizeof(header_claims) / sizeof(struct l8w8jwt_claim);
