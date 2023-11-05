@@ -3,7 +3,7 @@
 	url = https://github.com/ARMmbed/mbedtls
 [submodule "lib/chillbuff"]
 	path = lib/chillbuff
-	url = https://github.com/GlitchedPolygons/chillbuff
+	url = https://github.com/rhythmize/chillbuff
 [submodule "lib/jsmn"]
 	path = lib/jsmn
 	url = https://github.com/zserge/jsmn
