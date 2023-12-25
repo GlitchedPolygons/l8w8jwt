@@ -55,6 +55,14 @@ extern "C" {
 #define L8W8JWT_SMALL_STACK 0
 #endif
 
+#ifndef L8W8JWT_PLATFORM_TIME_ALT
+/**
+ * Set this pre-processor definition to \c 1 if you need to 
+ * provide custom implementation of system time API.
+ */
+#define L8W8JWT_PLATFORM_TIME_ALT 0
+#endif
+
 /**
  * Free memory that was allocated by L8W8JWT.
  * @param mem The memory to free.

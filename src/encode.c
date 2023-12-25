@@ -263,9 +263,9 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
         goto exit;
     }
 
-    size_t md_length;
-    mbedtls_md_type_t md_type;
-    mbedtls_md_info_t* md_info;
+    size_t md_length = 0;
+    mbedtls_md_type_t md_type = MBEDTLS_MD_NONE;
+    mbedtls_md_info_t* md_info = NULL;
 
     md_info_from_alg(alg, &md_info, &md_type, &md_length);
 
