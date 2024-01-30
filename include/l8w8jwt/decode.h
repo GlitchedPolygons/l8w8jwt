@@ -296,6 +296,8 @@ L8W8JWT_API int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8
  */
 L8W8JWT_API int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_payload_json);
 
+L8W8JWT_API int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_payload_json);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

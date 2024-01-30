@@ -146,6 +146,69 @@ static int l8w8jwt_unescape_claim(struct l8w8jwt_claim* claim, const char* key, 
     return L8W8JWT_SUCCESS;
 }
 
+static int l8w8jwt_decode_segments(const struct l8w8jwt_decoding_params* params, uint8_t** out_header, size_t* out_header_length, uint8_t** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length)
+{
+    int r = L8W8JWT_SUCCESS;
+
+    const int alg = params->alg;
+
+    char* current = params->jwt;
+    char* next = strchr(params->jwt, '.');
+
+    if (next == NULL) /* No payload. */
+    {
+        return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+    }
+
+    size_t current_length = next - current;
+
+    r = l8w8jwt_base64_decode(true, current, current_length, out_header, out_header_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        if (r != L8W8JWT_OUT_OF_MEM)
+            r = L8W8JWT_BASE64_FAILURE;
+        goto exit;
+    }
+
+    current = next + 1;
+    next = strchr(current, '.');
+
+    if (next == NULL && alg != -1) /* No signature. */
+    {
+        r = L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE;
+        goto exit;
+    }
+
+    current_length = (next != NULL ? next : params->jwt + params->jwt_length) - current;
+
+    r = l8w8jwt_base64_decode(true, current, current_length, out_payload, out_payload_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        if (r != L8W8JWT_OUT_OF_MEM)
+            r = L8W8JWT_BASE64_FAILURE;
+        goto exit;
+    }
+
+    if (next != NULL)
+    {
+        current = next + 1;
+        current_length = (params->jwt + params->jwt_length) - current;
+
+        r = l8w8jwt_base64_decode(true, current, current_length, out_signature, out_signature_length);
+        if (r != L8W8JWT_SUCCESS)
+        {
+            if (r != L8W8JWT_OUT_OF_MEM)
+                r = L8W8JWT_BASE64_FAILURE;
+            goto exit;
+        }
+    }
+
+    r = L8W8JWT_SUCCESS;
+
+exit:
+    return r;
+}
+
 static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json_length)
 {
     jsmn_parser parser;
@@ -273,7 +336,84 @@ exit:
     return r;
 }
 
-static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char* iterator, enum l8w8jwt_validation_result* out_validation_res, uint8_t* signature, size_t signature_length)
+static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params, const chillbuff* claims, enum l8w8jwt_validation_result* out_validation_result)
+{
+    if (params->validate_sub != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "sub", 3);
+        if (c == NULL || strncmp(c->value, params->validate_sub, params->validate_sub_length ? params->validate_sub_length : strlen(params->validate_sub)) != 0)
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_SUB_FAILURE;
+        }
+    }
+
+    if (params->validate_aud != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "aud", 3);
+        if (c == NULL || strncmp(c->value, params->validate_aud, params->validate_aud_length ? params->validate_aud_length : strlen(params->validate_aud)) != 0)
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_AUD_FAILURE;
+        }
+    }
+
+    if (params->validate_iss != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "iss", 3);
+        if (c == NULL || strncmp(c->value, params->validate_iss, params->validate_iss_length ? params->validate_iss_length : strlen(params->validate_iss)) != 0)
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_ISS_FAILURE;
+        }
+    }
+
+    if (params->validate_jti != NULL)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "jti", 3);
+        if (c == NULL || strncmp(c->value, params->validate_jti, params->validate_jti_length ? params->validate_jti_length : strlen(params->validate_jti)) != 0)
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_JTI_FAILURE;
+        }
+    }
+
+    const l8w8jwt_time_t ct = l8w8jwt_time(NULL);
+
+    if (params->validate_exp)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "exp", 3);
+        if (c == NULL || ct - params->exp_tolerance_seconds > strtoll(c->value, NULL, 10))
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_EXP_FAILURE;
+        }
+    }
+
+    if (params->validate_nbf)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "nbf", 3);
+        if (c == NULL || ct + params->nbf_tolerance_seconds < strtoll(c->value, NULL, 10))
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_NBF_FAILURE;
+        }
+    }
+
+    if (params->validate_iat)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "iat", 3);
+        if (c == NULL || ct + params->iat_tolerance_seconds < strtoll(c->value, NULL, 10))
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_IAT_FAILURE;
+        }
+    }
+
+    if (params->validate_typ)
+    {
+        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "typ", 3);
+        if (c == NULL || l8w8jwt_strncmpic(c->value, params->validate_typ, params->validate_typ_length) != 0)
+        {
+            *out_validation_result |= (unsigned)L8W8JWT_TYP_FAILURE;
+        }
+    }
+}
+
+static int l8w8jwt_verify_signature(const struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_res, const uint8_t* signature, const size_t signature_length)
 {
     int r = L8W8JWT_SUCCESS;
 
@@ -324,6 +464,22 @@ static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char
 
     unsigned char hash[64] = { 0x00 };
 
+    char* signature_segment = strchr(params->jwt, '.');
+
+    if (signature_segment == NULL) /* No payload. */
+    {
+        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        goto exit;
+    }
+
+    signature_segment = strchr(signature_segment + 1, '.');
+
+    if (signature_segment == NULL) /* No signature. */
+    {
+        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        goto exit;
+    }
+
     switch (alg)
     {
         case L8W8JWT_ALG_ES256:
@@ -337,7 +493,7 @@ static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char
         case L8W8JWT_ALG_PS512:
         case L8W8JWT_ALG_ES256K: {
 
-            r = mbedtls_md(md_info, (const unsigned char*)params->jwt, (iterator - 1) - params->jwt, hash);
+            r = mbedtls_md(md_info, (const unsigned char*)params->jwt, signature_segment - params->jwt, hash);
             if (r != L8W8JWT_SUCCESS)
             {
                 r = L8W8JWT_SHA2_FAILURE;
@@ -358,7 +514,7 @@ static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char
             unsigned char signature_cmp[64];
             memset(signature_cmp, '\0', sizeof(signature_cmp));
 
-            r = mbedtls_md_hmac(md_info, key, key_length - 1, (const unsigned char*)params->jwt, (iterator - 1) - params->jwt, signature_cmp);
+            r = mbedtls_md_hmac(md_info, key, key_length - 1, (const unsigned char*)params->jwt, signature_segment - params->jwt, signature_cmp);
             if (r != 0)
             {
                 *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
@@ -490,7 +646,7 @@ static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char
                 goto exit;
             }
 
-            if (!ed25519_verify(signature, (const unsigned char*)params->jwt, (iterator - 1) - params->jwt, public_key))
+            if (!ed25519_verify(signature, (const unsigned char*)params->jwt, signature_segment - params->jwt, public_key))
             {
                 *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
                 break;
@@ -591,14 +747,6 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     uint8_t* signature = NULL;
     size_t signature_length = 0;
 
-    char* current = params->jwt;
-    char* next = strchr(params->jwt, '.');
-
-    if (next == NULL) /* No payload. */
-    {
-        return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
-    }
-
     chillbuff claims;
     r = chillbuff_init(&claims, 16, sizeof(struct l8w8jwt_claim), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
@@ -607,53 +755,16 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         goto exit;
     }
 
-    size_t current_length = next - current;
-
-    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)&header, &header_length);
+    r = l8w8jwt_decode_segments(params, (uint8_t**)&header, &header_length, (uint8_t**)&payload, &payload_length, (uint8_t**)&signature, &signature_length);
     if (r != L8W8JWT_SUCCESS)
     {
-        if (r != L8W8JWT_OUT_OF_MEM)
-            r = L8W8JWT_BASE64_FAILURE;
         goto exit;
-    }
-
-    current = next + 1;
-    next = strchr(current, '.');
-
-    if (next == NULL && alg != -1) /* No signature. */
-    {
-        r = L8W8JWT_DECODE_FAILED_MISSING_SIGNATURE;
-        goto exit;
-    }
-
-    current_length = (next != NULL ? next : params->jwt + params->jwt_length) - current;
-
-    r = l8w8jwt_base64_decode(true, current, current_length, (uint8_t**)&payload, &payload_length);
-    if (r != L8W8JWT_SUCCESS)
-    {
-        if (r != L8W8JWT_OUT_OF_MEM)
-            r = L8W8JWT_BASE64_FAILURE;
-        goto exit;
-    }
-
-    if (next != NULL)
-    {
-        current = next + 1;
-        current_length = (params->jwt + params->jwt_length) - current;
-
-        r = l8w8jwt_base64_decode(true, current, current_length, &signature, &signature_length);
-        if (r != L8W8JWT_SUCCESS)
-        {
-            if (r != L8W8JWT_OUT_OF_MEM)
-                r = L8W8JWT_BASE64_FAILURE;
-            goto exit;
-        }
     }
 
     /* Signature verification. */
     if (signature != NULL && signature_length > 0 && alg != -1)
     {
-        r = l8w8jwt_verify_signature(params, current, &validation_res, signature, signature_length);
+        r = l8w8jwt_verify_signature(params, &validation_res, signature, signature_length);
 
         if (r != L8W8JWT_SUCCESS)
             goto exit;
@@ -673,79 +784,7 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         goto exit;
     }
 
-    if (params->validate_sub != NULL)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "sub", 3);
-        if (c == NULL || strncmp(c->value, params->validate_sub, params->validate_sub_length ? params->validate_sub_length : strlen(params->validate_sub)) != 0)
-        {
-            validation_res |= (unsigned)L8W8JWT_SUB_FAILURE;
-        }
-    }
-
-    if (params->validate_aud != NULL)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "aud", 3);
-        if (c == NULL || strncmp(c->value, params->validate_aud, params->validate_aud_length ? params->validate_aud_length : strlen(params->validate_aud)) != 0)
-        {
-            validation_res |= (unsigned)L8W8JWT_AUD_FAILURE;
-        }
-    }
-
-    if (params->validate_iss != NULL)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "iss", 3);
-        if (c == NULL || strncmp(c->value, params->validate_iss, params->validate_iss_length ? params->validate_iss_length : strlen(params->validate_iss)) != 0)
-        {
-            validation_res |= (unsigned)L8W8JWT_ISS_FAILURE;
-        }
-    }
-
-    if (params->validate_jti != NULL)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "jti", 3);
-        if (c == NULL || strncmp(c->value, params->validate_jti, params->validate_jti_length ? params->validate_jti_length : strlen(params->validate_jti)) != 0)
-        {
-            validation_res |= (unsigned)L8W8JWT_JTI_FAILURE;
-        }
-    }
-
-    const l8w8jwt_time_t ct = l8w8jwt_time(NULL);
-
-    if (params->validate_exp)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "exp", 3);
-        if (c == NULL || ct - params->exp_tolerance_seconds > strtoll(c->value, NULL, 10))
-        {
-            validation_res |= (unsigned)L8W8JWT_EXP_FAILURE;
-        }
-    }
-
-    if (params->validate_nbf)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "nbf", 3);
-        if (c == NULL || ct + params->nbf_tolerance_seconds < strtoll(c->value, NULL, 10))
-        {
-            validation_res |= (unsigned)L8W8JWT_NBF_FAILURE;
-        }
-    }
-
-    if (params->validate_iat)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "iat", 3);
-        if (c == NULL || ct + params->iat_tolerance_seconds < strtoll(c->value, NULL, 10))
-        {
-            validation_res |= (unsigned)L8W8JWT_IAT_FAILURE;
-        }
-    }
-
-    if (params->validate_typ)
-    {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims.array, claims.length, "typ", 3);
-        if (c == NULL || l8w8jwt_strncmpic(c->value, params->validate_typ, params->validate_typ_length) != 0)
-        {
-            validation_res |= (unsigned)L8W8JWT_TYP_FAILURE;
-        }
-    }
+    l8w8jwt_validate_claims(params, &claims, &validation_res);
 
     r = L8W8JWT_SUCCESS;
     *out_validation_result = validation_res;
@@ -768,6 +807,18 @@ exit:
 
     return r;
 }
+
+/*
+int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_header, char** out_payload, char** out_signature)
+{
+
+}
+
+int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_payload_json)
+{
+
+}
+*/
 
 #undef JSMN_STATIC
 
