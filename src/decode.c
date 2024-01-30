@@ -277,6 +277,8 @@ static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char
 {
     int r = L8W8JWT_SUCCESS;
 
+    int is_cert = 0; // If the validation PEM is a X.509 certificate, this will be set to 1.
+
     const int alg = params->alg;
 
     mbedtls_pk_context pk;
@@ -300,8 +302,6 @@ static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char
     memcpy(key, params->verification_key, key_length);
 
     key_length += key[key_length - 1] != '\0';
-
-    int is_cert = 0; // If the validation PEM is a X.509 certificate, this will be set to 1.
 
     is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----") != NULL;
     if (is_cert)
@@ -510,6 +510,10 @@ static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char
 
 exit:
     mbedtls_platform_zeroize(key, L8W8JWT_MAX_KEY_SIZE);
+
+#if L8W8JWT_SMALL_STACK
+    l8w8jwt_free(key);
+#endif
 
     if (is_cert)
     {
@@ -761,10 +765,6 @@ exit:
     {
         l8w8jwt_free_claims((struct l8w8jwt_claim*)claims.array, claims.length);
     }
-
-#if L8W8JWT_SMALL_STACK
-    l8w8jwt_free(key);
-#endif
 
     return r;
 }
