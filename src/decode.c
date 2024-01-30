@@ -273,6 +273,256 @@ exit:
     return r;
 }
 
+static int l8w8jwt_verify_signature(struct l8w8jwt_decoding_params* params, char* iterator, enum l8w8jwt_validation_result* out_validation_res, uint8_t* signature, size_t signature_length)
+{
+    int r = L8W8JWT_SUCCESS;
+
+    const int alg = params->alg;
+
+    mbedtls_pk_context pk;
+    mbedtls_pk_init(&pk);
+
+    mbedtls_x509_crt crt;
+    mbedtls_x509_crt_init(&crt);
+
+#if L8W8JWT_SMALL_STACK
+    unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
+    if (key == NULL)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
+    }
+#else
+    unsigned char key[L8W8JWT_MAX_KEY_SIZE] = { 0x00 };
+#endif
+
+    size_t key_length = params->verification_key_length;
+    memcpy(key, params->verification_key, key_length);
+
+    key_length += key[key_length - 1] != '\0';
+
+    int is_cert = 0; // If the validation PEM is a X.509 certificate, this will be set to 1.
+
+    is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----") != NULL;
+    if (is_cert)
+    {
+        r = mbedtls_x509_crt_parse(&crt, key, key_length);
+        if (r != 0)
+        {
+            r = L8W8JWT_KEY_PARSE_FAILURE;
+            goto exit;
+        }
+
+        pk = crt.pk;
+    }
+
+    size_t md_length = 0;
+    mbedtls_md_type_t md_type = MBEDTLS_MD_NONE;
+    mbedtls_md_info_t* md_info = NULL;
+
+    md_info_from_alg(alg, &md_info, &md_type, &md_length);
+
+    unsigned char hash[64] = { 0x00 };
+
+    switch (alg)
+    {
+        case L8W8JWT_ALG_ES256:
+        case L8W8JWT_ALG_ES384:
+        case L8W8JWT_ALG_ES512:
+        case L8W8JWT_ALG_RS256:
+        case L8W8JWT_ALG_RS384:
+        case L8W8JWT_ALG_RS512:
+        case L8W8JWT_ALG_PS256:
+        case L8W8JWT_ALG_PS384:
+        case L8W8JWT_ALG_PS512:
+        case L8W8JWT_ALG_ES256K: {
+
+            r = mbedtls_md(md_info, (const unsigned char*)params->jwt, (iterator - 1) - params->jwt, hash);
+            if (r != L8W8JWT_SUCCESS)
+            {
+                r = L8W8JWT_SHA2_FAILURE;
+                goto exit;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+    switch (alg)
+    {
+        case L8W8JWT_ALG_HS256:
+        case L8W8JWT_ALG_HS384:
+        case L8W8JWT_ALG_HS512: {
+
+            unsigned char signature_cmp[64];
+            memset(signature_cmp, '\0', sizeof(signature_cmp));
+
+            r = mbedtls_md_hmac(md_info, key, key_length - 1, (const unsigned char*)params->jwt, (iterator - 1) - params->jwt, signature_cmp);
+            if (r != 0)
+            {
+                *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                break;
+            }
+
+            r = memcmp(signature, signature_cmp, 32 + (16 * alg));
+            if (r != 0)
+            {
+                *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                break;
+            }
+
+            break;
+        }
+        case L8W8JWT_ALG_RS256:
+        case L8W8JWT_ALG_RS384:
+        case L8W8JWT_ALG_RS512: {
+
+            if (!is_cert)
+            {
+                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                if (r != 0)
+                {
+                    r = L8W8JWT_KEY_PARSE_FAILURE;
+                    goto exit;
+                }
+            }
+
+            r = mbedtls_pk_verify(&pk, md_type, hash, md_length, (const unsigned char*)signature, signature_length);
+            if (r != 0)
+            {
+                *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                break;
+            }
+
+            break;
+        }
+        case L8W8JWT_ALG_PS256:
+        case L8W8JWT_ALG_PS384:
+        case L8W8JWT_ALG_PS512: {
+
+            if (!is_cert)
+            {
+                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                if (r != 0)
+                {
+                    r = L8W8JWT_KEY_PARSE_FAILURE;
+                    goto exit;
+                }
+            }
+
+            mbedtls_rsa_context* rsa = mbedtls_pk_rsa(pk);
+            mbedtls_rsa_set_padding(rsa, MBEDTLS_RSA_PKCS_V21, md_type);
+
+            r = mbedtls_rsa_rsassa_pss_verify(rsa, md_type, md_length, hash, signature);
+            if (r != 0)
+            {
+                *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                break;
+            }
+
+            break;
+        }
+        case L8W8JWT_ALG_ES256:
+        case L8W8JWT_ALG_ES256K:
+        case L8W8JWT_ALG_ES384:
+        case L8W8JWT_ALG_ES512: {
+
+            if (!is_cert)
+            {
+                r = mbedtls_pk_parse_public_key(&pk, key, key_length);
+                if (r != 0)
+                {
+                    r = L8W8JWT_KEY_PARSE_FAILURE;
+                    goto exit;
+                }
+            }
+
+            const size_t half_signature_length = signature_length / 2;
+
+            mbedtls_ecdsa_context ecdsa;
+            mbedtls_ecdsa_init(&ecdsa);
+
+            mbedtls_mpi sig_r, sig_s;
+            mbedtls_mpi_init(&sig_r);
+            mbedtls_mpi_init(&sig_s);
+
+            r = mbedtls_ecdsa_from_keypair(&ecdsa, mbedtls_pk_ec(pk));
+
+            if (r != 0)
+            {
+                r = L8W8JWT_KEY_PARSE_FAILURE;
+                mbedtls_ecdsa_free(&ecdsa);
+                mbedtls_mpi_free(&sig_r);
+                mbedtls_mpi_free(&sig_s);
+                goto exit;
+            }
+
+            mbedtls_mpi_read_binary(&sig_r, signature, half_signature_length);
+            mbedtls_mpi_read_binary(&sig_s, signature + half_signature_length, half_signature_length);
+
+            r = mbedtls_ecdsa_verify(&ecdsa.MBEDTLS_PRIVATE(grp), hash, md_length, &ecdsa.MBEDTLS_PRIVATE(Q), &sig_r, &sig_s);
+            if (r != 0)
+            {
+                *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+            }
+
+            mbedtls_ecdsa_free(&ecdsa);
+            mbedtls_mpi_free(&sig_r);
+            mbedtls_mpi_free(&sig_s);
+
+            break;
+        }
+        case L8W8JWT_ALG_ED25519: {
+
+#if L8W8JWT_ENABLE_EDDSA
+            if (key_length != 64 && !(key_length == 65 && key[64] == 0x00))
+            {
+                r = L8W8JWT_WRONG_KEY_TYPE;
+                goto exit;
+            }
+
+            unsigned char public_key[32 + 1] = { 0x00 };
+
+            if (l8w8jwt_hexstr2bin((const char*)key, key_length, public_key, sizeof(public_key), NULL) != 0)
+            {
+                r = L8W8JWT_WRONG_KEY_TYPE;
+                goto exit;
+            }
+
+            if (!ed25519_verify(signature, (const unsigned char*)params->jwt, (iterator - 1) - params->jwt, public_key))
+            {
+                *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
+                break;
+            }
+
+            break;
+#else
+            r = L8W8JWT_UNSUPPORTED_ALG;
+            goto exit;
+#endif
+        }
+        default:
+            break;
+    }
+
+    r = L8W8JWT_SUCCESS;
+
+exit:
+    mbedtls_platform_zeroize(key, L8W8JWT_MAX_KEY_SIZE);
+
+    if (is_cert)
+    {
+        mbedtls_x509_crt_free(&crt);
+    }
+    else
+    {
+        mbedtls_pk_free(&pk);
+    }
+
+    return r;
+}
+
 void l8w8jwt_decoding_params_init(struct l8w8jwt_decoding_params* params)
 {
     if (params == NULL)
@@ -345,30 +595,6 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         return L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
     }
 
-    int is_cert = 0; // If the validation PEM is a X.509 certificate, this will be set to 1.
-
-    mbedtls_pk_context pk;
-    mbedtls_pk_init(&pk);
-
-    mbedtls_x509_crt crt;
-    mbedtls_x509_crt_init(&crt);
-
-#if L8W8JWT_SMALL_STACK
-    unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
-    if (key == NULL)
-    {
-        r = L8W8JWT_OUT_OF_MEM;
-        goto exit;
-    }
-#else
-    unsigned char key[L8W8JWT_MAX_KEY_SIZE] = { 0x00 };
-#endif
-
-    size_t key_length = params->verification_key_length;
-    memcpy(key, params->verification_key, key_length);
-
-    key_length += key[key_length - 1] != '\0';
-
     chillbuff claims;
     r = chillbuff_init(&claims, 16, sizeof(struct l8w8jwt_claim), CHILLBUFF_GROW_DUPLICATIVE);
     if (r != CHILLBUFF_SUCCESS)
@@ -423,208 +649,10 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
     /* Signature verification. */
     if (signature != NULL && signature_length > 0 && alg != -1)
     {
-        is_cert = strstr((const char*)key, "-----BEGIN CERTIFICATE-----") != NULL;
-        if (is_cert)
-        {
-            r = mbedtls_x509_crt_parse(&crt, key, key_length);
-            if (r != 0)
-            {
-                r = L8W8JWT_KEY_PARSE_FAILURE;
-                goto exit;
-            }
+        r = l8w8jwt_verify_signature(params, current, &validation_res, signature, signature_length);
 
-            pk = crt.pk;
-        }
-
-        size_t md_length = 0;
-        mbedtls_md_type_t md_type = MBEDTLS_MD_NONE;
-        mbedtls_md_info_t* md_info = NULL;
-
-        md_info_from_alg(alg, &md_info, &md_type, &md_length);
-
-        unsigned char hash[64] = { 0x00 };
-
-        switch (alg)
-        {
-            case L8W8JWT_ALG_ES256:
-            case L8W8JWT_ALG_ES384:
-            case L8W8JWT_ALG_ES512:
-            case L8W8JWT_ALG_RS256:
-            case L8W8JWT_ALG_RS384:
-            case L8W8JWT_ALG_RS512:
-            case L8W8JWT_ALG_PS256:
-            case L8W8JWT_ALG_PS384:
-            case L8W8JWT_ALG_PS512:
-            case L8W8JWT_ALG_ES256K: {
-
-                r = mbedtls_md(md_info, (const unsigned char*)params->jwt, (current - 1) - params->jwt, hash);
-                if (r != L8W8JWT_SUCCESS)
-                {
-                    r = L8W8JWT_SHA2_FAILURE;
-                    goto exit;
-                }
-                break;
-            }
-            default:
-                break;
-        }
-
-        switch (alg)
-        {
-            case L8W8JWT_ALG_HS256:
-            case L8W8JWT_ALG_HS384:
-            case L8W8JWT_ALG_HS512: {
-
-                unsigned char signature_cmp[64];
-                memset(signature_cmp, '\0', sizeof(signature_cmp));
-
-                r = mbedtls_md_hmac(md_info, key, key_length - 1, (const unsigned char*)params->jwt, (current - 1) - params->jwt, signature_cmp);
-                if (r != 0)
-                {
-                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
-                }
-
-                r = memcmp(signature, signature_cmp, 32 + (16 * alg));
-                if (r != 0)
-                {
-                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
-                }
-
-                break;
-            }
-            case L8W8JWT_ALG_RS256:
-            case L8W8JWT_ALG_RS384:
-            case L8W8JWT_ALG_RS512: {
-
-                if (!is_cert)
-                {
-                    r = mbedtls_pk_parse_public_key(&pk, key, key_length);
-                    if (r != 0)
-                    {
-                        r = L8W8JWT_KEY_PARSE_FAILURE;
-                        goto exit;
-                    }
-                }
-
-                r = mbedtls_pk_verify(&pk, md_type, hash, md_length, (const unsigned char*)signature, signature_length);
-                if (r != 0)
-                {
-                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
-                }
-
-                break;
-            }
-            case L8W8JWT_ALG_PS256:
-            case L8W8JWT_ALG_PS384:
-            case L8W8JWT_ALG_PS512: {
-
-                if (!is_cert)
-                {
-                    r = mbedtls_pk_parse_public_key(&pk, key, key_length);
-                    if (r != 0)
-                    {
-                        r = L8W8JWT_KEY_PARSE_FAILURE;
-                        goto exit;
-                    }
-                }
-
-                mbedtls_rsa_context* rsa = mbedtls_pk_rsa(pk);
-                mbedtls_rsa_set_padding(rsa, MBEDTLS_RSA_PKCS_V21, md_type);
-
-                r = mbedtls_rsa_rsassa_pss_verify(rsa, md_type, md_length, hash, signature);
-                if (r != 0)
-                {
-                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
-                }
-
-                break;
-            }
-            case L8W8JWT_ALG_ES256:
-            case L8W8JWT_ALG_ES256K:
-            case L8W8JWT_ALG_ES384:
-            case L8W8JWT_ALG_ES512: {
-
-                if (!is_cert)
-                {
-                    r = mbedtls_pk_parse_public_key(&pk, key, key_length);
-                    if (r != 0)
-                    {
-                        r = L8W8JWT_KEY_PARSE_FAILURE;
-                        goto exit;
-                    }
-                }
-
-                const size_t half_signature_length = signature_length / 2;
-
-                mbedtls_ecdsa_context ecdsa;
-                mbedtls_ecdsa_init(&ecdsa);
-
-                mbedtls_mpi sig_r, sig_s;
-                mbedtls_mpi_init(&sig_r);
-                mbedtls_mpi_init(&sig_s);
-
-                r = mbedtls_ecdsa_from_keypair(&ecdsa, mbedtls_pk_ec(pk));
-
-                if (r != 0)
-                {
-                    r = L8W8JWT_KEY_PARSE_FAILURE;
-                    mbedtls_ecdsa_free(&ecdsa);
-                    mbedtls_mpi_free(&sig_r);
-                    mbedtls_mpi_free(&sig_s);
-                    goto exit;
-                }
-
-                mbedtls_mpi_read_binary(&sig_r, signature, half_signature_length);
-                mbedtls_mpi_read_binary(&sig_s, signature + half_signature_length, half_signature_length);
-
-                r = mbedtls_ecdsa_verify(&ecdsa.MBEDTLS_PRIVATE(grp), hash, md_length, &ecdsa.MBEDTLS_PRIVATE(Q), &sig_r, &sig_s);
-                if (r != 0)
-                {
-                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                }
-
-                mbedtls_ecdsa_free(&ecdsa);
-                mbedtls_mpi_free(&sig_r);
-                mbedtls_mpi_free(&sig_s);
-
-                break;
-            }
-            case L8W8JWT_ALG_ED25519: {
-
-#if L8W8JWT_ENABLE_EDDSA
-                if (key_length != 64 && !(key_length == 65 && key[64] == 0x00))
-                {
-                    r = L8W8JWT_WRONG_KEY_TYPE;
-                    goto exit;
-                }
-
-                unsigned char public_key[32 + 1] = { 0x00 };
-
-                if (l8w8jwt_hexstr2bin((const char*)key, key_length, public_key, sizeof(public_key), NULL) != 0)
-                {
-                    r = L8W8JWT_WRONG_KEY_TYPE;
-                    goto exit;
-                }
-
-                if (!ed25519_verify(signature, (const unsigned char*)params->jwt, (current - 1) - params->jwt, public_key))
-                {
-                    validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;
-                    break;
-                }
-
-                break;
-#else
-                r = L8W8JWT_UNSUPPORTED_ALG;
-                goto exit;
-#endif
-            }
-            default:
-                break;
-        }
+        if (r != L8W8JWT_SUCCESS)
+            goto exit;
     }
 
     r = l8w8jwt_parse_claims(&claims, header, header_length);
@@ -734,19 +762,9 @@ exit:
         l8w8jwt_free_claims((struct l8w8jwt_claim*)claims.array, claims.length);
     }
 
-    mbedtls_platform_zeroize(key, L8W8JWT_MAX_KEY_SIZE);
 #if L8W8JWT_SMALL_STACK
     l8w8jwt_free(key);
 #endif
-
-    if (is_cert)
-    {
-        mbedtls_x509_crt_free(&crt);
-    }
-    else
-    {
-        mbedtls_pk_free(&pk);
-    }
 
     return r;
 }
