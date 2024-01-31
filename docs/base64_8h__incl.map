@@ -1,6 +1,9 @@
 <map id="include/l8w8jwt/base64.h" name="include/l8w8jwt/base64.h">
-<area shape="rect" id="node1" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="52,5,219,32"/>
-<area shape="rect" id="node2" href="$version_8h.html" title="l8w8jwt version checking." alt="" coords="5,80,79,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="103,80,168,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="192,80,257,107"/>
+<area shape="rect" id="Node000001" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="51,5,216,32"/>
+<area shape="rect" id="Node000002" href="$version_8h.html" title="l8w8jwt version checking." alt="" coords="5,80,78,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,35,71,73,67,68,116,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="101,80,166,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,33,136,64,131,64,131,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="189,80,254,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="151,30,196,68,193,72,147,35"/>
 </map>
