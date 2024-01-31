@@ -26,7 +26,7 @@ rm -rf "$REPO"/out
 rm -rf "$REPO"/build-mingw
 mkdir -p "$REPO"/build-mingw/include && cd "$REPO"/build-mingw || exit
 
-cmake -G "MinGW Makefiles" -DL8W8JWT_SYSNAME="mingw-w64" -DBUILD_SHARED_LIBS=On -DUSE_SHARED_MBEDTLS_LIBRARY=Off "-D${PROJECT_NAME}_BUILD_DLL=On" "-D${PROJECT_NAME}_PACKAGE=On" -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "MinGW Makefiles" -DL8W8JWT_SYSNAME="mingw-w64" -DUSE_SHARED_MBEDTLS_LIBRARY=Off "-D${PROJECT_NAME}_BUILD_DLL=On" "-D${PROJECT_NAME}_PACKAGE=On" -DCMAKE_BUILD_TYPE=Release ..
 
 mingw32-make.exe
 

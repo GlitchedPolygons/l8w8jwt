@@ -36,7 +36,7 @@ rm -rf "$REPO"/out
 rm -rf "$REPO"/build
 mkdir -p "$REPO"/build/include && cd "$REPO"/build || exit
 
-cmake -DBUILD_SHARED_LIBS=On -DUSE_SHARED_MBEDTLS_LIBRARY=Off "-D${PROJECT_NAME}_BUILD_DLL=On" "-D${PROJECT_NAME}_PACKAGE=On" -DCMAKE_BUILD_TYPE=Release ..
+cmake -DUSE_SHARED_MBEDTLS_LIBRARY=Off "-D${PROJECT_NAME}_BUILD_DLL=On" "-D${PROJECT_NAME}_PACKAGE=On" -DCMAKE_BUILD_TYPE=Release ..
 
 cmake --build . --config Release
 

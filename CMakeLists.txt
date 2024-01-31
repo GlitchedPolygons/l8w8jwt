@@ -126,16 +126,18 @@ else ()
     set(l8w8jwt_sources_eddsa "")
 endif ()
 
-add_library(${PROJECT_NAME} ${l8w8jwt_headers} ${l8w8jwt_sources} ${l8w8jwt_sources_eddsa})
-
 if (L8W8JWT_BUILD_DLL OR BUILD_SHARED_LIBS)
+    add_library(${PROJECT_NAME} SHARED ${l8w8jwt_headers} ${l8w8jwt_sources} ${l8w8jwt_sources_eddsa})
     set_property(TARGET mbedtls PROPERTY POSITION_INDEPENDENT_CODE ON)
     set_property(TARGET mbedx509 PROPERTY POSITION_INDEPENDENT_CODE ON)
     set_property(TARGET mbedcrypto PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET ${everest_target} PROPERTY POSITION_INDEPENDENT_CODE ON)
     set_target_properties(${PROJECT_NAME} PROPERTIES
             VERSION ${L8W8JWT_VERSION_STRING}
             SOVERSION ${L8W8JWT_MAJOR}
             )
+else ()
+    add_library(${PROJECT_NAME} ${l8w8jwt_headers} ${l8w8jwt_sources} ${l8w8jwt_sources_eddsa})
 endif ()
 
 if (L8W8JWT_PACKAGE)
