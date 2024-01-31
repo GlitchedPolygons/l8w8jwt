@@ -80,10 +80,10 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
 static int l8w8jwt_unescape_claim(struct l8w8jwt_claim* claim, const char* key, const size_t key_length, const char* value, const size_t value_length)
 {
     claim->key_length = 0;
-    claim->key = calloc(sizeof(char), key_length + 1);
+    claim->key = l8w8jwt_calloc(sizeof(char), key_length + 1);
 
     claim->value_length = 0;
-    claim->value = calloc(sizeof(char), value_length + 1);
+    claim->value = l8w8jwt_calloc(sizeof(char), value_length + 1);
 
     if (claim->key == NULL || claim->value == NULL)
     {
@@ -226,7 +226,7 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
     }
 
     jsmntok_t _tokens[64];
-    jsmntok_t* tokens = r <= (sizeof(_tokens) / sizeof(_tokens[0])) ? _tokens : malloc(r * sizeof(jsmntok_t));
+    jsmntok_t* tokens = r <= (sizeof(_tokens) / sizeof(_tokens[0])) ? _tokens : l8w8jwt_malloc(r * sizeof(jsmntok_t));
 
     if (tokens == NULL)
     {
@@ -433,7 +433,7 @@ static int l8w8jwt_verify_signature(const struct l8w8jwt_decoding_params* params
     mbedtls_x509_crt_init(&crt);
 
 #if L8W8JWT_SMALL_STACK
-    unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
+    unsigned char* key = l8w8jwt_calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
     if (key == NULL)
     {
         r = L8W8JWT_OUT_OF_MEM;

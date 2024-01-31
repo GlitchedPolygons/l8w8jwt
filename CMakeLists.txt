@@ -30,6 +30,10 @@ option(L8W8JWT_SMALL_STACK "Build the library for a device that has a particular
 option(L8W8JWT_PLATFORM_TIME_ALT "Build the library with alternate `time` API implementation." OFF)
 option(L8W8JWT_ENABLE_EDDSA "Build the library with EdDSA support (this will include a dependency for lib/ed25519)." OFF)
 
+option(L8W8JWT_PLATFORM_MALLOC_ALT "Build the library with alternate `malloc` implementation." OFF)
+option(L8W8JWT_PLATFORM_CALLOC_ALT "Build the library with alternate `calloc` implementation." OFF)
+option(L8W8JWT_PLATFORM_REALLOC_ALT "Build the library with alternate `realloc` implementation." OFF)
+
 option(L8W8JWT_DLL "Use l8w8jwt as a DLL." OFF)
 option(L8W8JWT_BUILD_DLL "Build l8w8jwt as a DLL." OFF)
 
