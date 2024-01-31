@@ -290,13 +290,42 @@ L8W8JWT_API int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8
  *
  * @param out_validation_result Where to write the validation result flags into (0 means success). In case of a decoding failure this is set to -1 (or <code>~L8W8JWT_VALID</code>)!
  *
- * @param payload_json Where to write the decoded JWT's payload JSON string into, so that it can be parsed externally instead of by l8w8jwt directly.
+ * @param out_header Where to write the decoded JWT header JSON string into.
  *
- * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the out_validation_result argument; the returned int describes whether the actual parsing/decoding part failed).
+ * @param out_header_length Where to write the length of {@link out_header} into.
+ *
+ * @param out_payload Where to write the decoded JWT's payload JSON string into, so that it can be parsed externally instead of by l8w8jwt directly.
+ *
+ * @param out_payload_length Where to write the length of {@link out_payload} into.
+ *
+ * @param out_signature Where to write the JWT's signature into.
+ *
+ * @param out_signature_length Where to write the length of {@link out_signature} into.
+ *
+ * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the {@link out_validation_result} argument; the returned int describes whether the actual parsing/decoding part failed).
  */
-L8W8JWT_API int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_payload_json);
+L8W8JWT_API int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length);
 
-L8W8JWT_API int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_payload_json);
+/**
+ * Decodes a JWT without validating anything: neither claims nor signature. Just raw decoding, no validation!
+ *
+ * @param params The parameters to use for decoding and validating the token.
+ *
+ * @param out_header Where to write the decoded JWT header JSON string into.
+ *
+ * @param out_header_length Where to write the length of {@link out_header} into.
+ *
+ * @param out_payload Where to write the decoded JWT's payload JSON string into, so that it can be parsed externally instead of by l8w8jwt directly.
+ *
+ * @param out_payload_length Where to write the length of {@link out_payload} into.
+ *
+ * @param out_signature Where to write the JWT's signature into.
+ *
+ * @param out_signature_length Where to write the length of {@link out_signature} into.
+ *
+ * @return Return code as defined in retcodes.h
+ */
+L8W8JWT_API int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length);
 
 #ifdef __cplusplus
 } // extern "C"

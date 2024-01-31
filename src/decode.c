@@ -727,7 +727,6 @@ int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validati
         return L8W8JWT_NULL_ARG;
     }
 
-    const int alg = params->alg;
     enum l8w8jwt_validation_result validation_res = L8W8JWT_VALID;
 
     int r = l8w8jwt_validate_decoding_params(params);
@@ -810,17 +809,192 @@ exit:
     return r;
 }
 
-/*
-int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_header, char** out_payload, char** out_signature)
+int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length)
 {
+    if
+    (
+            params == NULL
+            ||
+            out_validation_result == NULL
+            ||
+            (out_header != NULL && out_header_length == NULL)
+            ||
+            (out_payload != NULL && out_payload_length == NULL)
+            ||
+            (out_signature != NULL && out_signature_length == NULL)
+    )
+    {
+        return L8W8JWT_NULL_ARG;
+    }
 
+    enum l8w8jwt_validation_result validation_res = L8W8JWT_VALID;
+
+    int r = l8w8jwt_validate_decoding_params(params);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        return r;
+    }
+
+    *out_validation_result = ~L8W8JWT_VALID;
+
+    char* header = NULL;
+    size_t header_length = 0;
+
+    char* payload = NULL;
+    size_t payload_length = 0;
+
+    uint8_t* signature = NULL;
+    size_t signature_length = 0;
+
+    chillbuff claims;
+    r = chillbuff_init(&claims, 16, sizeof(struct l8w8jwt_claim), CHILLBUFF_GROW_DUPLICATIVE);
+    if (r != CHILLBUFF_SUCCESS)
+    {
+        r = L8W8JWT_OUT_OF_MEM;
+        goto exit;
+    }
+
+    r = l8w8jwt_decode_segments(params, (uint8_t**)&header, &header_length, (uint8_t**)&payload, &payload_length, (uint8_t**)&signature, &signature_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        goto exit;
+    }
+
+    r = l8w8jwt_verify_signature(params, &validation_res, signature, signature_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        goto exit;
+    }
+
+    r = l8w8jwt_parse_claims(&claims, header, header_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        goto exit;
+    }
+
+    r = l8w8jwt_parse_claims(&claims, payload, payload_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
+        goto exit;
+    }
+
+    l8w8jwt_validate_claims(params, &claims, &validation_res);
+
+    r = L8W8JWT_SUCCESS;
+    *out_validation_result = validation_res;
+
+exit:
+    if (out_header != NULL)
+    {
+        *out_header = header;
+        *out_header_length = header_length;
+    }
+    else
+    {
+        l8w8jwt_free(header);
+    }
+
+    if (out_payload != NULL)
+    {
+        *out_payload = payload;
+        *out_payload_length = payload_length;
+    }
+    else
+    {
+        l8w8jwt_free(payload);
+    }
+
+    if (out_signature != NULL)
+    {
+        *out_signature = signature;
+        *out_signature_length = signature_length;
+    }
+    else
+    {
+        l8w8jwt_free(signature);
+    }
+
+    l8w8jwt_free_claims((struct l8w8jwt_claim*)claims.array, claims.length);
+
+    return r;
 }
 
-int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_payload_json)
+int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length)
 {
+    if
+        (
+            params == NULL
+            ||
+            (out_header == NULL && out_payload == NULL && out_signature == NULL)
+            ||
+            (out_header != NULL && out_header_length == NULL)
+            ||
+            (out_payload != NULL && out_payload_length == NULL)
+            ||
+            (out_signature != NULL && out_signature_length == NULL)
+        )
+    {
+        return L8W8JWT_NULL_ARG;
+    }
 
+    int r = l8w8jwt_validate_decoding_params(params);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        return r;
+    }
+
+    char* header = NULL;
+    size_t header_length = 0;
+
+    char* payload = NULL;
+    size_t payload_length = 0;
+
+    uint8_t* signature = NULL;
+    size_t signature_length = 0;
+
+    r = l8w8jwt_decode_segments(params, (uint8_t**)&header, &header_length, (uint8_t**)&payload, &payload_length, (uint8_t**)&signature, &signature_length);
+    if (r != L8W8JWT_SUCCESS)
+    {
+        goto exit;
+    }
+
+    r = L8W8JWT_SUCCESS;
+
+exit:
+    if (out_header != NULL)
+    {
+        *out_header = header;
+        *out_header_length = header_length;
+    }
+    else
+    {
+        l8w8jwt_free(header);
+    }
+
+    if (out_payload != NULL)
+    {
+        *out_payload = payload;
+        *out_payload_length = payload_length;
+    }
+    else
+    {
+        l8w8jwt_free(payload);
+    }
+
+    if (out_signature != NULL)
+    {
+        *out_signature = signature;
+        *out_signature_length = signature_length;
+    }
+    else
+    {
+        l8w8jwt_free(signature);
+    }
+
+    return r;
 }
-*/
 
 #undef JSMN_STATIC
 
