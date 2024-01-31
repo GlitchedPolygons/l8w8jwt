@@ -24,24 +24,29 @@ Make sure to do a recursive clone, otherwise you need to `git submodule update -
 
 ### How to use
 
-Just add l8w8jwt as a git submodule to your project (e.g. into some `lib/` or `deps/` folder inside your project's repo; `{repo_root}/lib/` is used here in the following example). 
+Just add l8w8jwt as a git submodule to your project (e.g. into some `lib/` or `deps/` folder 
+inside your project's repo; `{repo_root}/lib/` is used here in the following example). 
 
 ```
 git submodule add https://github.com/GlitchedPolygons/l8w8jwt.git lib/l8w8jwt
 git submodule update --init --recursive
 ```
 
-If you don't want to use git submodules, you can also start vendoring a specific version of l8w8jwt by copying its full repo content into the folder where you keep your project's external libraries/dependencies.
+If you don't want to use git submodules, you can also start vendoring a specific version of l8w8jwt 
+by copying its full repo content into the folder where you keep your project's external libraries/dependencies.
 
 ### Building and linking 
 
-If you use CMake you can just `add_subdirectory(path_to_git_submodule)` and then `target_link_libraries(your_project PRIVATE l8w8jwt)` inside your **CMakeLists.txt** file.
+If you use CMake you can just `add_subdirectory(path_to_git_submodule)` 
+and then `target_link_libraries(your_project PRIVATE l8w8jwt)` inside your **CMakeLists.txt** file.
 
 If you use GCC, [check out this issue's log here](https://github.com/GlitchedPolygons/l8w8jwt/issues/2).
 
 For devices with a particularly small stack, please define the `L8W8JWT_SMALL_STACK` pre-processor definition and set it to `1`.
 
-For devices which do not support system time via standard C `time` API, please define the `MBEDTLS_PLATFORM_TIME_ALT` pre-processor definition and set it to `1`. Additionally, you would also need to provide the alternate time API via function pointer `l8w8jwt_time` defined in [timehelper.h](include/l8w8jwt/timehelper.h)
+For devices which do not support system time via standard C `time` API, please define the `MBEDTLS_PLATFORM_TIME_ALT` 
+pre-processor definition and set it to `1`. 
+Additionally, you would also need to provide the alternate time API via function pointer `l8w8jwt_time` defined in [timehelper.h](include/l8w8jwt/timehelper.h)
 
 #### Build shared library/DLL
 
@@ -52,14 +57,17 @@ If the build succeeds, you should have a new _.tar.gz_ file inside the `build/` 
 
 This command works on Windows too: just use the [Git Bash for Windows](https://git-scm.com/download/win) CLI!
 
-**NOTE:** If you use the l8w8jwt shared library in your project on Windows, remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! Maybe even set it as a pre-processor definition. Otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
+**NOTE:** If you use the l8w8jwt shared library in your project on Windows, 
+remember to `#define L8W8JWT_DLL 1` before including any of the l8w8jwt headers! 
+Maybe even set it as a pre-processor definition, otherwise the headers won't have the necessary `__declspec(dllimport)` declarations!
 
 #### MinGW on Windows
 
 ```bash
 bash build-mingw.sh
 ```
-Run this using e.g. "Git Bash for Windows". Make sure that you have your MinGW installation directory inside your `PATH` - otherwise this script will fail when trying to call `mingw32-make.exe`.
+Run this using e.g. "Git Bash for Windows". 
+Make sure that you have your MinGW installation directory inside your `PATH` - otherwise this script will fail when trying to call `mingw32-make.exe`.
 
 Official release builds are made using `mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe`.
 
@@ -71,7 +79,21 @@ cmake -DBUILD_SHARED_LIBS=Off -DL8W8JWT_PACKAGE=On -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --config Release
 ```
 
-**NOTE:** When compiling l8w8jwt as a static lib, remember to link against the MbedTLS libs too! Those will be placed inside the `build/mbedtls/library/` directory after successful compilation.
+**NOTE:** When compiling l8w8jwt as a static lib, remember to link against the MbedTLS libs too! 
+Those will be placed inside the `build/mbedtls/library/` directory after successful compilation.
+
+### Custom allocators
+
+If you want to provide some custom implementation of `malloc`, `calloc` or `realloc`, 
+please define the below pre-processor definitions and set their corresponding value to `1`. 
+Additionally, you would also need to provide the alternate implementation for the API 
+via function pointer defined in [utils.h](include/l8w8jwt/util.h)
+
+|   Method  |           Pre-processor           | Function pointer    |
+|-----------|-----------------------------------|---------------------|
+|   malloc  |   L8W8JWT_PLATFORM_MALLOC_ALT     | l8w8jwt_malloc      |
+|   calloc  |   L8W8JWT_PLATFORM_CALLOC_ALT     | l8w8jwt_calloc      |
+|   realloc |   L8W8JWT_PLATFORM_REALLOC_ALT    | l8w8jwt_realloc     |
 
 ## Examples
 
