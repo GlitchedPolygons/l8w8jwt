@@ -117,5 +117,37 @@ int main(void)
 
     printf("\nl8w8jwt_decode_rs256 function returned %s (code %d).\n\nValidation result: \n%d\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result);
 
+    char* header = NULL;
+    char* payload = NULL;
+    uint8_t* signature = NULL;
+
+    size_t header_length = 0;
+    size_t payload_length = 0;
+    size_t signature_length = 0;
+
+    r = l8w8jwt_decode_raw_no_validation(&params, &header, &header_length, &payload, &payload_length, &signature, &signature_length);
+
+    printf("\nl8w8jwt_decode_raw_no_validation_rs256 function returned %s (code %d).\n\nValidation result: \nN.A.\n\nHeader: %s\n\nPayload: %s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, header, payload);
+
+    l8w8jwt_free(header);
+    l8w8jwt_free(payload);
+    l8w8jwt_free(signature);
+
+    header_length = 0;
+    payload_length = 0;
+    signature_length = 0;
+
+    r = l8w8jwt_decode_raw(&params, &validation_result, &header, &header_length, &payload, &payload_length, &signature, &signature_length);
+
+    printf("\nl8w8jwt_decode_raw_rs256 function returned %s (code %d).\n\nValidation result: \n%d\n\nHeader: %s\n\nPayload: %s\n", r == L8W8JWT_SUCCESS ? "successfully" : "", r, validation_result, header, payload);
+
+    l8w8jwt_free(header);
+    l8w8jwt_free(payload);
+    l8w8jwt_free(signature);
+
+    header_length = 0;
+    payload_length = 0;
+    signature_length = 0;
+
     return 0;
 }

@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build-x64:
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2024.01.1
     resource_class: medium
     steps:
       - checkout

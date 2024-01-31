@@ -19,8 +19,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 set(L8W8JWT_MAJOR 2)
-set(L8W8JWT_MINOR 2)
-set(L8W8JWT_PATCH 1)
+set(L8W8JWT_MINOR 3)
+set(L8W8JWT_PATCH 0)
 set(L8W8JWT_VERSION_STRING "${L8W8JWT_MAJOR}.${L8W8JWT_MINOR}.${L8W8JWT_PATCH}")
 
 option(L8W8JWT_ENABLE_TESTS "Build l8w8jwt tests." OFF)
@@ -29,6 +29,10 @@ option(L8W8JWT_PACKAGE "Build the library and package it into a .tar.gz after su
 option(L8W8JWT_SMALL_STACK "Build the library for a device that has a particularly small stack." OFF)
 option(L8W8JWT_PLATFORM_TIME_ALT "Build the library with alternate `time` API implementation." OFF)
 option(L8W8JWT_ENABLE_EDDSA "Build the library with EdDSA support (this will include a dependency for lib/ed25519)." OFF)
+
+option(L8W8JWT_PLATFORM_MALLOC_ALT "Build the library with alternate `malloc` implementation." OFF)
+option(L8W8JWT_PLATFORM_CALLOC_ALT "Build the library with alternate `calloc` implementation." OFF)
+option(L8W8JWT_PLATFORM_REALLOC_ALT "Build the library with alternate `realloc` implementation." OFF)
 
 option(L8W8JWT_DLL "Use l8w8jwt as a DLL." OFF)
 option(L8W8JWT_BUILD_DLL "Build l8w8jwt as a DLL." OFF)
@@ -122,16 +126,18 @@ else ()
     set(l8w8jwt_sources_eddsa "")
 endif ()
 
-add_library(${PROJECT_NAME} ${l8w8jwt_headers} ${l8w8jwt_sources} ${l8w8jwt_sources_eddsa})
-
 if (L8W8JWT_BUILD_DLL OR BUILD_SHARED_LIBS)
+    add_library(${PROJECT_NAME} SHARED ${l8w8jwt_headers} ${l8w8jwt_sources} ${l8w8jwt_sources_eddsa})
     set_property(TARGET mbedtls PROPERTY POSITION_INDEPENDENT_CODE ON)
     set_property(TARGET mbedx509 PROPERTY POSITION_INDEPENDENT_CODE ON)
     set_property(TARGET mbedcrypto PROPERTY POSITION_INDEPENDENT_CODE ON)
+    set_property(TARGET ${everest_target} PROPERTY POSITION_INDEPENDENT_CODE ON)
     set_target_properties(${PROJECT_NAME} PROPERTIES
             VERSION ${L8W8JWT_VERSION_STRING}
             SOVERSION ${L8W8JWT_MAJOR}
             )
+else ()
+    add_library(${PROJECT_NAME} ${l8w8jwt_headers} ${l8w8jwt_sources} ${l8w8jwt_sources_eddsa})
 endif ()
 
 if (L8W8JWT_PACKAGE)

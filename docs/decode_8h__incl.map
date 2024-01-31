@@ -1,11 +1,23 @@
 <map id="include/l8w8jwt/decode.h" name="include/l8w8jwt/decode.h">
-<area shape="rect" id="node1" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="184,5,351,32"/>
-<area shape="rect" id="node2" href="$algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="5,80,63,107"/>
-<area shape="rect" id="node3" href="$claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="138,80,202,107"/>
-<area shape="rect" id="node4" href="$version_8h.html" title="l8w8jwt version checking." alt="" coords="64,155,137,181"/>
-<area shape="rect" id="node6" href="$retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="226,80,309,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="333,80,391,107"/>
-<area shape="rect" id="node8" title=" " alt="" coords="416,80,484,107"/>
-<area shape="rect" id="node9" title=" " alt="" coords="508,80,573,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="162,155,226,181"/>
+<area shape="rect" id="Node000001" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="183,5,348,32"/>
+<area shape="rect" id="Node000002" href="$algs_8h.html" title="JWT algorithms as defined in https://tools.ietf.org/html/rfc7518#section&#45;3.1." alt="" coords="5,80,62,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,35,77,81,76,76,224,30"/>
+<area shape="rect" id="Node000003" href="$claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="86,80,149,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,35,158,75,156,70,239,30"/>
+<area shape="rect" id="Node000004" href="$version_8h.html" title="l8w8jwt version checking." alt="" coords="163,155,235,181"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="252,34,232,55,215,81,205,111,202,140,196,139,200,109,210,79,228,52,248,31"/>
+<area shape="rect" id="Node000006" href="$retcodes_8h.html" title="Macros for possible integer codes returned by the various l8w8jwt functions." alt="" coords="224,80,307,107"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="268,33,268,64,263,64,263,33"/>
+<area shape="rect" id="Node000007" href="$timehelper_8h_source.html" title=" " alt="" coords="331,80,424,107"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="286,30,347,69,344,74,284,35"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="448,80,515,107"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="304,30,434,73,432,78,302,35"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="539,80,603,107"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="324,30,524,77,523,82,323,35"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="133,105,175,142,172,146,130,109"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="75,155,139,181"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="118,108,114,140,108,139,113,107"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="347,110,245,151,243,146,345,105"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="349,155,406,181"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="380,107,380,139,375,139,375,107"/>
 </map>

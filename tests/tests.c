@@ -329,7 +329,33 @@ static void test_l8w8jwt_decode_null_arg_err()
     TEST_ASSERT(r == L8W8JWT_NULL_ARG);
 
     l8w8jwt_decoding_params_init(&params);
+
     r = l8w8jwt_decode(&params, &validation_result, &claims, NULL);
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    r = l8w8jwt_decode_raw(&params, &validation_result, NULL, NULL, NULL, NULL, NULL, NULL);
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    r = l8w8jwt_decode_raw_no_validation(&params, NULL, NULL, NULL, NULL, NULL, NULL);
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    char* header_without_length_variable = NULL;
+
+    r = l8w8jwt_decode_raw(&params, &validation_result, &header_without_length_variable, NULL, NULL, NULL, NULL, NULL);
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    r = l8w8jwt_decode_raw(&params, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    r = l8w8jwt_decode_raw(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    char* h;
+    size_t hl;
+    r = l8w8jwt_decode_raw_no_validation(NULL, &h, &hl, NULL, NULL, NULL, NULL);
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    r = l8w8jwt_decode_raw_no_validation(&params, &header_without_length_variable, NULL, NULL, NULL, NULL, NULL);
     TEST_ASSERT(r == L8W8JWT_NULL_ARG);
 
     TEST_ASSERT(validation_result != L8W8JWT_VALID);
@@ -1332,6 +1358,36 @@ static void test_l8w8jwt_decode_valid_signature_rs256()
 
     TEST_ASSERT(r == L8W8JWT_SUCCESS);
     TEST_ASSERT(validation_result == L8W8JWT_VALID);
+
+    char* header = NULL;
+    char* payload = NULL;
+    uint8_t* signature = NULL;
+
+    size_t header_length = 0;
+    size_t payload_length = 0;
+    size_t signature_length = 0;
+
+    r = l8w8jwt_decode_raw_no_validation(&decoding_params, &header, &header_length, &payload, &payload_length, &signature, &signature_length);
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(*header == '{');
+    TEST_ASSERT(*payload == '{');
+    TEST_ASSERT(signature_length != 0);
+
+    free(header);
+    free(payload);
+    free(signature);
+
+    r = l8w8jwt_decode_raw(&decoding_params, &validation_result, &header, &header_length, &payload, &payload_length, &signature, &signature_length);
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result == L8W8JWT_VALID);
+    TEST_ASSERT(*header == '{');
+    TEST_ASSERT(*payload == '{');
+    TEST_ASSERT(signature_length != 0);
+
+    free(header);
+    free(payload);
+    free(signature);
+
     free(jwt);
 }
 

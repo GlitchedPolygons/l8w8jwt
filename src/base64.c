@@ -104,6 +104,7 @@ after February 11, 2012 is no longer under the GPL v2 option.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "l8w8jwt/util.h"
 #include "l8w8jwt/base64.h"
 #include "l8w8jwt/version.h"
 #include "l8w8jwt/retcodes.h"
@@ -133,7 +134,7 @@ int l8w8jwt_base64_encode(const int url, const uint8_t* data, const size_t data_
         return L8W8JWT_OVERFLOW;
     }
 
-    *out = malloc(olen);
+    *out = l8w8jwt_malloc(olen);
     if (*out == NULL)
     {
         return L8W8JWT_OUT_OF_MEM;
@@ -249,7 +250,7 @@ int l8w8jwt_base64_decode(const int url, const char* data, const size_t data_len
     if (r == 3)
         r = 1;
 
-    *out = calloc(count / 4 * 3 + 16, sizeof(uint8_t));
+    *out = l8w8jwt_calloc(count / 4 * 3 + 16, sizeof(uint8_t));
     if (*out == NULL)
     {
         return L8W8JWT_OUT_OF_MEM;

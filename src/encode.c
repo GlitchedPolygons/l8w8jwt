@@ -233,8 +233,8 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     mbedtls_ctr_drbg_init(&ctr_drbg);
 
 #if L8W8JWT_SMALL_STACK
-    unsigned char* signature_bytes = calloc(sizeof(unsigned char), 4096);
-    unsigned char* key = calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
+    unsigned char* signature_bytes = l8w8jwt_calloc(sizeof(unsigned char), 4096);
+    unsigned char* key = l8w8jwt_calloc(sizeof(unsigned char), L8W8JWT_MAX_KEY_SIZE);
 
     if (signature_bytes == NULL || key == NULL)
     {
@@ -560,7 +560,7 @@ static int write_signature(chillbuff* stringbuilder, struct l8w8jwt_encoding_par
     }
 
     /*
-     * If this succeeds, it mallocs "signature" and assigns the resulting string length to "signature_length".
+     * If this succeeds, it mallocs "signature" (using l8w8jwt_malloc) and assigns the resulting string length to "signature_length".
      */
     r = l8w8jwt_base64_encode(1, (uint8_t*)signature_bytes, signature_bytes_length, &signature, &signature_length);
     if (r != L8W8JWT_SUCCESS)
@@ -589,7 +589,7 @@ exit:
 /* Step 3: finalize the token by writing it into the "out" string defined in the l8w8jwt_encoding_params argument. */
 static int write_token(chillbuff* stringbuilder, struct l8w8jwt_encoding_params* params)
 {
-    *(params->out) = malloc(stringbuilder->length + 1);
+    *(params->out) = l8w8jwt_malloc(stringbuilder->length + 1);
     if (*(params->out) == NULL)
     {
         return L8W8JWT_OUT_OF_MEM;

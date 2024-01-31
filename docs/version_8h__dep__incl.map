@@ -1,8 +1,19 @@
 <map id="include/l8w8jwt/version.h" name="include/l8w8jwt/version.h">
-<area shape="rect" id="node1" title="l8w8jwt version checking." alt="" coords="243,5,407,32"/>
-<area shape="rect" id="node2" href="$base64_8h.html" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="5,80,172,107"/>
-<area shape="rect" id="node3" href="$claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="247,80,402,107"/>
-<area shape="rect" id="node4" href="$decode_8h.html" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="145,155,312,181"/>
-<area shape="rect" id="node5" href="$encode_8h.html" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="345,155,512,181"/>
-<area shape="rect" id="node6" href="$util_8h.html" title="Useful utility functions." alt="" coords="477,80,618,107"/>
+<area shape="rect" id="Node000001" title="l8w8jwt version checking." alt="" coords="337,5,500,32"/>
+<area shape="rect" id="Node000002" href="$base64_8h.html" title="Base&#45;64 encode and decode strings/bytes." alt="" coords="5,80,171,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,38,146,82,145,77,345,33"/>
+<area shape="rect" id="Node000003" href="$claim_8h.html" title="JWT claims as described in https://auth0.com/docs/tokens/concepts/jwt&#45;claims." alt="" coords="246,80,400,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="392,44,341,82,338,77,389,39"/>
+<area shape="rect" id="Node000004" href="$decode_8h.html" title="Core DECODE function for l8w8jwt. Use this to decode and validate a JWT!" alt="" coords="240,155,405,181"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="323,31,274,49,253,63,236,81,231,92,231,101,244,121,267,138,294,152,291,157,265,142,240,124,226,103,226,91,231,79,249,59,272,44,321,26"/>
+<area shape="rect" id="Node000005" href="$encode_8h.html" title="Core ENCODE function for l8w8jwt. Use this to encode a JWT header + payload WITHOUT signing." alt="" coords="433,155,599,181"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="516,22,546,29,575,40,601,57,622,78,628,91,627,104,612,125,584,143,554,157,552,152,582,138,608,121,622,102,623,92,618,82,597,61,572,45,544,34,515,27"/>
+<area shape="rect" id="Node000006" href="$timehelper_8h_source.html" title=" " alt="" coords="424,80,608,107"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="449,39,501,77,498,82,446,44"/>
+<area shape="rect" id="Node000007" href="$util_8h.html" title="Useful utility functions." alt="" coords="683,80,824,107"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="493,33,695,77,694,82,492,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="325,122,325,154,320,154,320,122"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="371,110,483,152,481,157,369,115"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="469,115,358,157,356,152,467,110"/>
+<area shape="poly" id="edge9_Node000006_Node000005" title=" " alt="" coords="519,122,519,154,513,154,513,122"/>
 </map>

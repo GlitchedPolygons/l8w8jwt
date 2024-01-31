@@ -1,5 +1,9 @@
 <map id="include/l8w8jwt/util.h" name="include/l8w8jwt/util.h">
-<area shape="rect" id="node1" title="Useful utility functions." alt="" coords="15,5,157,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,73,107"/>
-<area shape="rect" id="node3" href="$version_8h.html" title="l8w8jwt version checking." alt="" coords="97,80,171,107"/>
+<area shape="rect" id="Node000001" title="Useful utility functions." alt="" coords="56,5,197,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,69,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,35,66,72,63,68,109,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="93,80,160,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,33,129,64,124,64,124,33"/>
+<area shape="rect" id="Node000004" href="$version_8h.html" title="l8w8jwt version checking." alt="" coords="184,80,256,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,30,193,68,190,73,141,35"/>
 </map>
