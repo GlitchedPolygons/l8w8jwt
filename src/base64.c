@@ -229,14 +229,14 @@ int l8w8jwt_base64_decode(const int url, const char* data, const size_t data_len
 
     memset(dtable, 0x80, 256);
 
-    for (i = 0; i < 64; i++)
+    for (i = 0; i < 64; ++i)
     {
         dtable[table[i]] = (uint8_t)i;
     }
 
     dtable['='] = 0;
 
-    for (i = 0; i < in_length; i++)
+    for (i = 0; i < in_length; ++i)
     {
         if (dtable[(unsigned char)data[i]] != 0x80)
             count++;
@@ -262,7 +262,7 @@ int l8w8jwt_base64_decode(const int url, const char* data, const size_t data_len
     uint8_t block[4];
     uint8_t* pos = *out;
 
-    for (i = 0; i < in_length + r; i++)
+    for (i = 0; i < in_length + r; ++i)
     {
         const unsigned char c = i < in_length ? data[i] : '=';
 

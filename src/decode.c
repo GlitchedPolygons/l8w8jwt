@@ -262,23 +262,40 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
 
         switch (value.type)
         {
-            case JSMN_UNDEFINED: {
+            case JSMN_UNDEFINED:
+            {
                 claim.type = L8W8JWT_CLAIM_TYPE_OTHER;
                 break;
             }
-            case JSMN_OBJECT: {
-                claim.type = L8W8JWT_CLAIM_TYPE_OBJECT;
-                break;
-            }
-            case JSMN_ARRAY: {
-                claim.type = L8W8JWT_CLAIM_TYPE_ARRAY;
-                break;
-            }
-            case JSMN_STRING: {
+            case JSMN_STRING:
+            {
                 claim.type = L8W8JWT_CLAIM_TYPE_STRING;
                 break;
             }
-            case JSMN_PRIMITIVE: {
+            case JSMN_OBJECT:
+            {
+                claim.type = L8W8JWT_CLAIM_TYPE_OBJECT;
+
+                while (tokens[i + 1].end <= value.end && i < r)
+                {
+                    ++i;
+                }
+
+                break;
+            }
+            case JSMN_ARRAY:
+            {
+                claim.type = L8W8JWT_CLAIM_TYPE_ARRAY;
+
+                while (tokens[i + 1].end <= value.end && i < r)
+                {
+                    ++i;
+                }
+
+                break;
+            }
+            case JSMN_PRIMITIVE:
+            {
                 const int value_length = value.end - value.start;
 
                 if (value_length <= 5 && (strncmp(json + value.start, "true", 4) == 0 || strncmp(json + value.start, "false", 5) == 0))
@@ -311,7 +328,8 @@ static int l8w8jwt_parse_claims(chillbuff* buffer, char* json, const size_t json
 
                 break;
             }
-            default: {
+            default:
+            {
                 r = L8W8JWT_DECODE_FAILED_INVALID_TOKEN_FORMAT;
                 goto exit;
             }
