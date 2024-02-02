@@ -111,15 +111,20 @@ int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* 
         chillbuff_push_back(stringbuilder, "\":", 2);
 
         if (claim->type == L8W8JWT_CLAIM_TYPE_STRING)
+        {
             chillbuff_push_back(stringbuilder, "\"", 1);
 
-        chillbuff_clear(&escape_buffer);
-        l8w8jwt_escape_claim_string(&escape_buffer, claim->value, value_length);
+            chillbuff_clear(&escape_buffer);
+            l8w8jwt_escape_claim_string(&escape_buffer, claim->value, value_length);
 
-        chillbuff_push_back(stringbuilder, escape_buffer.array,escape_buffer.length);
+            chillbuff_push_back(stringbuilder, escape_buffer.array, escape_buffer.length);
 
-        if (claim->type == L8W8JWT_CLAIM_TYPE_STRING)
             chillbuff_push_back(stringbuilder, "\"", 1);
+        }
+        else
+        {
+            chillbuff_push_back(stringbuilder, claim->value, value_length);
+        }
 
         first = 0;
     }
