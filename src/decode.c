@@ -77,6 +77,56 @@ static inline void md_info_from_alg(const int alg, mbedtls_md_info_t** md_info, 
     }
 }
 
+static char* l8w8jwt_unescape_string(char* out, const char* in, const size_t n)
+{
+    for (size_t i = 0; i < n; ++i)
+    {
+        char c = in[i];
+        if (c == '\\' && i + 1 < n)
+        {
+            switch (in[i + 1])
+            {
+                case '"':
+                    c = '"';
+                    ++i;
+                    break;
+                case '\\':
+                    c = '\\';
+                    ++i;
+                    break;
+                case '/':
+                    c = '/';
+                    ++i;
+                    break;
+                case 'b':
+                    c = '\b';
+                    ++i;
+                    break;
+                case 'f':
+                    c = '\f';
+                    ++i;
+                    break;
+                case 'n':
+                    c = '\n';
+                    ++i;
+                    break;
+                case 'r':
+                    c = '\r';
+                    ++i;
+                    break;
+                case 't':
+                    c = '\t';
+                    ++i;
+                    break;
+                default:
+                    break;
+            }
+        }
+        *(out++) = c;
+    }
+    return out;
+}
+
 static int l8w8jwt_unescape_claim(struct l8w8jwt_claim* claim, const char* key, const size_t key_length, const char* value, const size_t value_length)
 {
     claim->key_length = 0;
@@ -92,56 +142,22 @@ static int l8w8jwt_unescape_claim(struct l8w8jwt_claim* claim, const char* key, 
         return L8W8JWT_OUT_OF_MEM;
     }
 
-    char* out_key = claim->key;
-    char* out_value = claim->value;
+    char* end_key = l8w8jwt_unescape_string(claim->key, key, key_length);
+    *end_key = '\0';
+    claim->key_length = (size_t)(end_key - claim->key);
 
-    for (size_t i = 0; i < key_length; ++i)
+    if (claim->type == L8W8JWT_CLAIM_TYPE_STRING)
     {
-        const char c = key[i];
-        *out_key = c;
-
-        if (c == '\\' && i != key_length - 1)
-        {
-            const char nc = key[i + 1];
-            if (nc == '\"')
-            {
-                *out_key = '\"';
-            }
-            ++i;
-        }
-
-        ++out_key;
+        char* end_value = l8w8jwt_unescape_string(claim->value, value, value_length);
+        *end_value = '\0';
+        claim->value_length = (size_t)(end_value - claim->value);
     }
-
-    for (size_t i = 0; i < value_length; ++i)
+    else
     {
-        const char c = value[i];
-        *out_value = c;
-
-        if (c == '\\' && i != value_length - 1)
-        {
-            const char nc = value[i + 1];
-
-            switch (nc)
-            {
-                case '\"':
-                    *out_value = '\"';
-                    break;
-                case '/':
-                    *out_value = '/';
-                    break;
-                default:
-                    break;
-            }
-
-            ++i;
-        }
-
-        ++out_value;
+        strncpy(claim->value, value, value_length);
+        claim->value[value_length] = '\0';
+        claim->value_length = value_length;
     }
-
-    claim->key_length = (size_t)(out_key - claim->key);
-    claim->value_length = (size_t)(out_value - claim->value);
 
     return L8W8JWT_SUCCESS;
 }
