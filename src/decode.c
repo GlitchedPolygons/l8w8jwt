@@ -372,10 +372,15 @@ exit:
 
 static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params, const chillbuff* claims, enum l8w8jwt_validation_result* out_validation_result)
 {
+    size_t validation_length;
+
     if (params->validate_sub != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "sub", 3);
-        if (c == NULL || strncmp(c->value, params->validate_sub, params->validate_sub_length ? params->validate_sub_length : strlen(params->validate_sub)) != 0)
+
+        validation_length = params->validate_sub_length ? params->validate_sub_length : strlen(params->validate_sub);
+
+        if (c == NULL || c->value_length != validation_length || strncmp(c->value, params->validate_sub, validation_length) != 0)
         {
             *out_validation_result |= (unsigned)L8W8JWT_SUB_FAILURE;
         }
@@ -384,7 +389,10 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
     if (params->validate_aud != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "aud", 3);
-        if (c == NULL || strncmp(c->value, params->validate_aud, params->validate_aud_length ? params->validate_aud_length : strlen(params->validate_aud)) != 0)
+
+        validation_length = params->validate_aud_length ? params->validate_aud_length : strlen(params->validate_aud);
+
+        if (c == NULL || c->value_length != validation_length || strncmp(c->value, params->validate_aud, validation_length) != 0)
         {
             *out_validation_result |= (unsigned)L8W8JWT_AUD_FAILURE;
         }
@@ -393,7 +401,10 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
     if (params->validate_iss != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "iss", 3);
-        if (c == NULL || strncmp(c->value, params->validate_iss, params->validate_iss_length ? params->validate_iss_length : strlen(params->validate_iss)) != 0)
+
+        validation_length = params->validate_iss_length ? params->validate_iss_length : strlen(params->validate_iss);
+
+        if (c == NULL || c->value_length != validation_length || strncmp(c->value, params->validate_iss, validation_length) != 0)
         {
             *out_validation_result |= (unsigned)L8W8JWT_ISS_FAILURE;
         }
@@ -402,7 +413,10 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
     if (params->validate_jti != NULL)
     {
         struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "jti", 3);
-        if (c == NULL || strncmp(c->value, params->validate_jti, params->validate_jti_length ? params->validate_jti_length : strlen(params->validate_jti)) != 0)
+
+        validation_length = params->validate_jti_length ? params->validate_jti_length : strlen(params->validate_jti);
+
+        if (c == NULL || c->value_length != validation_length || strncmp(c->value, params->validate_jti, validation_length) != 0)
         {
             *out_validation_result |= (unsigned)L8W8JWT_JTI_FAILURE;
         }

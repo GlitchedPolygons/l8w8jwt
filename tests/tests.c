@@ -2272,6 +2272,16 @@ static void test_l8w8jwt_decode_invalid_sub()
 
     TEST_ASSERT(r == L8W8JWT_SUCCESS);
     TEST_ASSERT(validation_result & L8W8JWT_SUB_FAILURE);
+
+    // Test incomplete validation operand:
+
+    decoding_params.validate_sub = "test ";
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result & L8W8JWT_SUB_FAILURE);
+
     free(jwt);
 }
 
@@ -2311,6 +2321,16 @@ static void test_l8w8jwt_decode_invalid_iss()
 
     TEST_ASSERT(r == L8W8JWT_SUCCESS);
     TEST_ASSERT(validation_result & L8W8JWT_ISS_FAILURE);
+
+    // Test incomplete validation operand:
+
+    decoding_params.validate_iss = "test ";
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result & L8W8JWT_ISS_FAILURE);
+
     free(jwt);
 }
 
@@ -2350,6 +2370,16 @@ static void test_l8w8jwt_decode_invalid_aud()
 
     TEST_ASSERT(r == L8W8JWT_SUCCESS);
     TEST_ASSERT(validation_result & L8W8JWT_AUD_FAILURE);
+
+    // Test incomplete validation operand:
+
+    decoding_params.validate_aud = "test au";
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result & L8W8JWT_AUD_FAILURE);
+
     free(jwt);
 }
 
@@ -2389,6 +2419,16 @@ static void test_l8w8jwt_decode_invalid_jti()
 
     TEST_ASSERT(r == L8W8JWT_SUCCESS);
     TEST_ASSERT(validation_result & L8W8JWT_JTI_FAILURE);
+
+    // Test incomplete validation operand:
+
+    decoding_params.validate_jti = "test j";
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_SUCCESS);
+    TEST_ASSERT(validation_result & L8W8JWT_JTI_FAILURE);
+
     free(jwt);
 }
 
