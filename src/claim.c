@@ -29,23 +29,31 @@ extern "C" {
 
 void l8w8jwt_free_claims(struct l8w8jwt_claim* claims, const size_t claims_count)
 {
-    if (claims != NULL && claims_count > 0)
+    if (claims == NULL)
     {
-        for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
+        return;
+    }
+
+    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
+    {
+        if (claim == NULL)
         {
-            if (claim == NULL)
-                continue;
-
-            mbedtls_platform_zeroize(claim->key, claim->key_length);
-            mbedtls_platform_zeroize(claim->value, claim->value_length);
-
-            l8w8jwt_free(claim->key);
-            l8w8jwt_free(claim->value);
+            continue;
         }
 
-        mbedtls_platform_zeroize(claims, claims_count * sizeof(struct l8w8jwt_claim));
-        l8w8jwt_free(claims);
+        mbedtls_platform_zeroize(claim->key, claim->key_length);
+        mbedtls_platform_zeroize(claim->value, claim->value_length);
+
+        l8w8jwt_free(claim->key);
+        l8w8jwt_free(claim->value);
     }
+
+    if (claims_count != 0)
+    {
+        mbedtls_platform_zeroize(claims, claims_count * sizeof(struct l8w8jwt_claim));
+    }
+
+    l8w8jwt_free(claims);
 }
 
 static inline void l8w8jwt_escape_claim_string(struct chillbuff* stringbuilder, const char* string, const size_t string_length)
