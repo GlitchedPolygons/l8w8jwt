@@ -2875,7 +2875,7 @@ static void test_l8w8jwt_decode_fwd_slashes_token_decode()
     enum l8w8jwt_validation_result validation_result;
     r = l8w8jwt_decode(&decoding_params, &validation_result, &ref, &claims_count);
 
-    struct l8w8jwt_claim* iss_claim = l8w8jwt_get_claim(ref, claims_count, "iss", 3);
+    const struct l8w8jwt_claim* iss_claim = l8w8jwt_get_claim(ref, claims_count, "iss", 3);
     TEST_ASSERT(strcmp(iss_claim->value, "https://test/domain/") == 0);
 }
 
@@ -3015,7 +3015,7 @@ static void test_l8w8jwt_get_claim()
     TEST_ASSERT(NULL == l8w8jwt_get_claim(NULL, 5, "alive", 5));
     TEST_ASSERT(NULL == l8w8jwt_get_claim(claims, 0, "alive", 5));
     TEST_ASSERT(NULL == l8w8jwt_get_claim(claims, 5, "test", 4));
-    struct l8w8jwt_claim* claim = l8w8jwt_get_claim(claims, sizeof(claims) / sizeof(struct l8w8jwt_claim), "alive", 5);
+    const struct l8w8jwt_claim* claim = l8w8jwt_get_claim(claims, sizeof(claims) / sizeof(struct l8w8jwt_claim), "alive", 5);
     TEST_ASSERT(strcmp(claim->key, "alive") == 0);
     TEST_ASSERT(strcmp(claim->value, "true") == 0);
 }

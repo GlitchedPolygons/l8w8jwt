@@ -168,8 +168,8 @@ static int l8w8jwt_decode_segments(const struct l8w8jwt_decoding_params* params,
 
     const int alg = params->alg;
 
-    char* current = params->jwt;
-    char* next = strchr(params->jwt, '.');
+    const char* current = params->jwt;
+    const char* next = strchr(params->jwt, '.');
 
     if (next == NULL) /* No payload. */
     {
@@ -376,7 +376,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_sub != NULL)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "sub", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "sub", 3);
 
         validation_length = params->validate_sub_length ? params->validate_sub_length : strlen(params->validate_sub);
 
@@ -388,7 +388,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_aud != NULL)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "aud", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "aud", 3);
 
         validation_length = params->validate_aud_length ? params->validate_aud_length : strlen(params->validate_aud);
 
@@ -400,7 +400,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_iss != NULL)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "iss", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "iss", 3);
 
         validation_length = params->validate_iss_length ? params->validate_iss_length : strlen(params->validate_iss);
 
@@ -412,7 +412,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_jti != NULL)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "jti", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "jti", 3);
 
         validation_length = params->validate_jti_length ? params->validate_jti_length : strlen(params->validate_jti);
 
@@ -426,7 +426,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_exp)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "exp", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "exp", 3);
         if (c == NULL || ct - params->exp_tolerance_seconds > strtoll(c->value, NULL, 10))
         {
             *out_validation_result |= (unsigned)L8W8JWT_EXP_FAILURE;
@@ -435,7 +435,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_nbf)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "nbf", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "nbf", 3);
         if (c == NULL || ct + params->nbf_tolerance_seconds < strtoll(c->value, NULL, 10))
         {
             *out_validation_result |= (unsigned)L8W8JWT_NBF_FAILURE;
@@ -444,7 +444,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_iat)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "iat", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "iat", 3);
         if (c == NULL || ct + params->iat_tolerance_seconds < strtoll(c->value, NULL, 10))
         {
             *out_validation_result |= (unsigned)L8W8JWT_IAT_FAILURE;
@@ -453,7 +453,7 @@ static void l8w8jwt_validate_claims(const struct l8w8jwt_decoding_params* params
 
     if (params->validate_typ)
     {
-        struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "typ", 3);
+        const struct l8w8jwt_claim* c = l8w8jwt_get_claim(claims->array, claims->length, "typ", 3);
         if (c == NULL || l8w8jwt_strncmpic(c->value, params->validate_typ, params->validate_typ_length) != 0)
         {
             *out_validation_result |= (unsigned)L8W8JWT_TYP_FAILURE;
@@ -746,7 +746,7 @@ void l8w8jwt_decoding_params_init(struct l8w8jwt_decoding_params* params)
     params->alg = -2;
 }
 
-int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
+int l8w8jwt_validate_decoding_params(const struct l8w8jwt_decoding_params* params)
 {
     if (params == NULL || params->jwt == NULL || params->verification_key == NULL)
     {
@@ -768,7 +768,7 @@ int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
     return L8W8JWT_SUCCESS;
 }
 
-int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length)
+int l8w8jwt_decode(const struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length)
 {
     if (params == NULL || (out_claims != NULL && out_claims_length == NULL))
     {
@@ -857,7 +857,7 @@ exit:
     return r;
 }
 
-int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length)
+int l8w8jwt_decode_raw(const struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length)
 {
     if
     (
@@ -969,7 +969,7 @@ exit:
     return r;
 }
 
-int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length)
+int l8w8jwt_decode_raw_no_validation(const struct l8w8jwt_decoding_params* params, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length)
 {
     if
         (

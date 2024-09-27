@@ -102,7 +102,7 @@ struct l8w8jwt_decoding_params
     /**
      * The token to decode and validate.
      */
-    char* jwt;
+    const char* jwt;
 
     /**
      * The jwt string length.
@@ -122,7 +122,7 @@ struct l8w8jwt_decoding_params
      * The JWT will only pass verification if its <code>iss</code> claim matches this string.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.1
      */
-    char* validate_iss;
+    const char* validate_iss;
 
     /**
      * validate_iss string length.
@@ -135,7 +135,7 @@ struct l8w8jwt_decoding_params
      * The JWT will only pass verification if its <code>sub</code> matches this string.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.2
      */
-    char* validate_sub;
+    const char* validate_sub;
 
     /**
      * validate_sub string length.
@@ -148,7 +148,7 @@ struct l8w8jwt_decoding_params
      * The JWT will only pass verification if its <code>aud</code> matches this string.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.3
      */
-    char* validate_aud;
+    const char* validate_aud;
 
     /**
      * validate_aud string length.
@@ -161,7 +161,7 @@ struct l8w8jwt_decoding_params
      * The JWT will only pass verification if its <code>jti</code> matches this string.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.7
      */
-    char* validate_jti;
+    const char* validate_jti;
 
     /**
      * validate_jti claim length.
@@ -209,7 +209,7 @@ struct l8w8jwt_decoding_params
      * The key to use for verifying the token's signature
      * (e.g. if you chose HS256 as algorithm, this will be the HMAC secret; for RS512 this will be the PEM-formatted public RSA key string, etc...).
      */
-    unsigned char* verification_key;
+    const unsigned char* verification_key;
 
     /**
      * Length of the {@link #verification_key}
@@ -220,7 +220,7 @@ struct l8w8jwt_decoding_params
      * [OPTIONAL] The typ claim (what type is the token?). <p>
      * Set to <code>NULL</code> if you don't want to validate the "typ" claim. <p>
      */
-    char* validate_typ;
+    const char* validate_typ;
 
     /**
      * validate_typ string length.
@@ -239,7 +239,7 @@ L8W8JWT_API void l8w8jwt_decoding_params_init(struct l8w8jwt_decoding_params* pa
  * @param params The l8w8jwt_decoding_params to validate.
  * @return Return code as defined in retcodes.h
  */
-L8W8JWT_API int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params);
+L8W8JWT_API int l8w8jwt_validate_decoding_params(const struct l8w8jwt_decoding_params* params);
 
 /**
  * Decode (and validate) a JWT using specific parameters. <p>
@@ -268,7 +268,7 @@ L8W8JWT_API int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params*
  *
  * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the out_validation_result argument; the returned int describes whether the actual parsing/decoding part failed).
  */
-L8W8JWT_API int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length);
+L8W8JWT_API int l8w8jwt_decode(const struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, struct l8w8jwt_claim** out_claims, size_t* out_claims_length);
 
 /**
  * Decode (and validate) a JWT using specific parameters,
@@ -304,7 +304,7 @@ L8W8JWT_API int l8w8jwt_decode(struct l8w8jwt_decoding_params* params, enum l8w8
  *
  * @return Return code as defined in retcodes.h (this is NOT the validation result that's written into the {@link out_validation_result} argument; the returned int describes whether the actual parsing/decoding part failed).
  */
-L8W8JWT_API int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length);
+L8W8JWT_API int l8w8jwt_decode_raw(const struct l8w8jwt_decoding_params* params, enum l8w8jwt_validation_result* out_validation_result, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length);
 
 /**
  * Decodes a JWT without validating anything: neither claims nor signature. Just raw decoding, no validation!
@@ -325,7 +325,7 @@ L8W8JWT_API int l8w8jwt_decode_raw(struct l8w8jwt_decoding_params* params, enum 
  *
  * @return Return code as defined in retcodes.h
  */
-L8W8JWT_API int l8w8jwt_decode_raw_no_validation(struct l8w8jwt_decoding_params* params, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length);
+L8W8JWT_API int l8w8jwt_decode_raw_no_validation(const struct l8w8jwt_decoding_params* params, char** out_header, size_t* out_header_length, char** out_payload, size_t* out_payload_length, uint8_t** out_signature, size_t* out_signature_length);
 
 #ifdef __cplusplus
 } // extern "C"

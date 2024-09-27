@@ -109,7 +109,7 @@ static inline void l8w8jwt_escape_claim_string(struct chillbuff* stringbuilder, 
     }
 }
 
-int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* claims, const size_t claims_count)
+int l8w8jwt_write_claims(struct chillbuff* stringbuilder, const struct l8w8jwt_claim* claims, const size_t claims_count)
 {
     if (stringbuilder == NULL || claims == NULL)
     {
@@ -128,7 +128,7 @@ int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* 
     }
 
     int first = 1;
-    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
+    for (const struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
     {
         if (claim->key == NULL)
         {
@@ -173,12 +173,12 @@ int l8w8jwt_write_claims(struct chillbuff* stringbuilder, struct l8w8jwt_claim* 
     return L8W8JWT_SUCCESS;
 }
 
-struct l8w8jwt_claim* l8w8jwt_get_claim(struct l8w8jwt_claim* claims, const size_t claims_count, const char* key, const size_t key_length)
+const struct l8w8jwt_claim* l8w8jwt_get_claim(const struct l8w8jwt_claim* claims, const size_t claims_count, const char* key, const size_t key_length)
 {
     if (claims == NULL || key == NULL || claims_count == 0 || key_length == 0)
         return NULL;
 
-    for (struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
+    for (const struct l8w8jwt_claim* claim = claims; claim < claims + claims_count; ++claim)
     {
         if (strncmp(claim->key, key, key_length) == 0)
             return claim;

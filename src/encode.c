@@ -179,10 +179,11 @@ static int write_header_and_payload(chillbuff* stringbuilder, struct l8w8jwt_enc
         { .key = *(iatnbfexp + 00) ? "iat" : NULL, .key_length = 3, .value = iatnbfexp + 00, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
         { .key = *(iatnbfexp + 21) ? "nbf" : NULL, .key_length = 3, .value = iatnbfexp + 21, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
         { .key = *(iatnbfexp + 42) ? "exp" : NULL, .key_length = 3, .value = iatnbfexp + 42, .value_length = 0, .type = L8W8JWT_CLAIM_TYPE_INTEGER },
-        { .key = params->sub ? "sub" : NULL, .key_length = 3, .value = params->sub, .value_length = params->sub_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
-        { .key = params->iss ? "iss" : NULL, .key_length = 3, .value = params->iss, .value_length = params->iss_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
-        { .key = params->aud ? "aud" : NULL, .key_length = 3, .value = params->aud, .value_length = params->aud_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
-        { .key = params->jti ? "jti" : NULL, .key_length = 3, .value = params->jti, .value_length = params->jti_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
+        // Here we do an explicit cast that remove the const has we know further step will not touch the data
+        { .key = params->sub ? "sub" : NULL, .key_length = 3, .value = (char*)params->sub, .value_length = params->sub_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
+        { .key = params->iss ? "iss" : NULL, .key_length = 3, .value = (char*)params->iss, .value_length = params->iss_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
+        { .key = params->aud ? "aud" : NULL, .key_length = 3, .value = (char*)params->aud, .value_length = params->aud_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
+        { .key = params->jti ? "jti" : NULL, .key_length = 3, .value = (char*)params->jti, .value_length = params->jti_length, .type = L8W8JWT_CLAIM_TYPE_STRING },
     };
 
     chillbuff_push_back(&buff, "{", 1);
@@ -612,7 +613,7 @@ void l8w8jwt_encoding_params_init(struct l8w8jwt_encoding_params* params)
     params->alg = -2;
 }
 
-int l8w8jwt_validate_encoding_params(struct l8w8jwt_encoding_params* params)
+int l8w8jwt_validate_encoding_params(const struct l8w8jwt_encoding_params* params)
 {
     if (params == NULL || params->secret_key == NULL || params->out == NULL || params->out_length == NULL)
     {

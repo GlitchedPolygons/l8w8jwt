@@ -53,7 +53,7 @@ L8W8JWT_API struct l8w8jwt_encoding_params
      * [OPTIONAL] The issuer claim (who issued the JWT?). Can be omitted by setting this to <code>NULL</code>.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.1
      */
-    char* iss;
+    const char* iss;
 
     /**
      * iss claim string length.
@@ -64,7 +64,7 @@ L8W8JWT_API struct l8w8jwt_encoding_params
      * [OPTIONAL] The subject claim (who is the JWT about?). Set to <code>NULL</code> if you don't want it in your token.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.2
      */
-    char* sub;
+    const char* sub;
 
     /**
      * sub claim string length.
@@ -76,7 +76,7 @@ L8W8JWT_API struct l8w8jwt_encoding_params
      * Set this to <code>NULL</code> if you don't wish to add this claim to the token.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.3
      */
-    char* aud;
+    const char* aud;
 
     /**
      * aud claim string length.
@@ -87,7 +87,7 @@ L8W8JWT_API struct l8w8jwt_encoding_params
      * [OPTIONAL] The JWT ID. Provides a unique identifier for the token. Can be omitted by setting this to <code>NULL</code>.
      * @see https://tools.ietf.org/html/rfc7519#section-4.1.7
      */
-    char* jti;
+    const char* jti;
 
     /**
      * jti claim string length.
@@ -146,7 +146,7 @@ L8W8JWT_API struct l8w8jwt_encoding_params
      * The secret key to use for signing the token
      * (e.g. if you chose HS256 as algorithm, this will be the HMAC secret; for RS512 this will be the private PEM-formatted RSA key string, and so on...).
      */
-    unsigned char* secret_key;
+    const unsigned char* secret_key;
 
     /**
      * Length of the secret_key
@@ -158,7 +158,7 @@ L8W8JWT_API struct l8w8jwt_encoding_params
      * You can only omit this when using JWT algorithms "HS256", "HS384" or "HS512" (it's ignored in that case actually). <p>
      * Every other algorithm requires you to at least set this to <code>NULL</code> if the {@link #secret_key} isn't password-protected.
      */
-    unsigned char* secret_key_pw;
+    const unsigned char* secret_key_pw;
 
     /**
      * The secret key's password length (if there is any). If there's none, set this to zero!
@@ -188,7 +188,7 @@ L8W8JWT_API void l8w8jwt_encoding_params_init(struct l8w8jwt_encoding_params* pa
  * @param params The l8w8jwt_encoding_params to validate.
  * @return Return code as defined in retcodes.h
  */
-L8W8JWT_API int l8w8jwt_validate_encoding_params(struct l8w8jwt_encoding_params* params);
+L8W8JWT_API int l8w8jwt_validate_encoding_params(const struct l8w8jwt_encoding_params* params);
 
 /**
  * Creates, signs and encodes a Json-Web-Token. <p>
