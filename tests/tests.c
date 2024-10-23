@@ -138,25 +138,12 @@ static void test_l8w8jwt_validate_decoding_params()
     r = l8w8jwt_validate_decoding_params(&params);
     TEST_ASSERT(r == L8W8JWT_NULL_ARG);
 
-    l8w8jwt_decoding_params_init(&params);
-    params.jwt = "test jwt";
-    params.verification_key = NULL;
-    r = l8w8jwt_validate_decoding_params(&params);
-    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
 
     l8w8jwt_decoding_params_init(&params);
     params.jwt = "test jwt";
     params.jwt_length = 0;
     params.verification_key = "test key";
     params.verification_key_length = strlen(params.verification_key);
-    r = l8w8jwt_validate_decoding_params(&params);
-    TEST_ASSERT(r == L8W8JWT_INVALID_ARG);
-
-    l8w8jwt_decoding_params_init(&params);
-    params.jwt = "test jwt";
-    params.jwt_length = strlen(params.jwt);
-    params.verification_key = "test key";
-    params.verification_key_length = 0;
     r = l8w8jwt_validate_decoding_params(&params);
     TEST_ASSERT(r == L8W8JWT_INVALID_ARG);
 
@@ -1244,6 +1231,19 @@ static void test_l8w8jwt_decode_valid_signature_hs256()
 
     TEST_ASSERT(r == L8W8JWT_SUCCESS);
     TEST_ASSERT(validation_result == L8W8JWT_VALID);
+
+    decoding_params.verification_key = NULL;
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_NULL_ARG);
+
+    decoding_params.verification_key = "test key";
+    decoding_params.verification_key_length = 0;
+
+    r = l8w8jwt_decode(&decoding_params, &validation_result, NULL, NULL);
+
+    TEST_ASSERT(r == L8W8JWT_INVALID_ARG);
+
     free(jwt);
 }
 

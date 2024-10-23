@@ -472,6 +472,16 @@ static int l8w8jwt_verify_signature(const struct l8w8jwt_decoding_params* params
         return r;
     }
 
+    if (params->verification_key == NULL)
+    {
+        return L8W8JWT_NULL_ARG;
+    }
+
+    if (params->verification_key_length == 0 || params->verification_key_length > L8W8JWT_MAX_KEY_SIZE)
+    {
+        return L8W8JWT_INVALID_ARG;
+    }
+
     int is_cert = 0; // If the validation PEM is a X.509 certificate, this will be set to 1.
 
     mbedtls_pk_context pk;
@@ -748,12 +758,12 @@ void l8w8jwt_decoding_params_init(struct l8w8jwt_decoding_params* params)
 
 int l8w8jwt_validate_decoding_params(struct l8w8jwt_decoding_params* params)
 {
-    if (params == NULL || params->jwt == NULL || params->verification_key == NULL)
+    if (params == NULL || params->jwt == NULL)
     {
         return L8W8JWT_NULL_ARG;
     }
 
-    if (params->jwt_length == 0 || params->verification_key_length == 0 || params->verification_key_length > L8W8JWT_MAX_KEY_SIZE)
+    if (params->jwt_length == 0)
     {
         return L8W8JWT_INVALID_ARG;
     }
