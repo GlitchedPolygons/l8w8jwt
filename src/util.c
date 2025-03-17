@@ -237,7 +237,7 @@ int l8w8jwt_memcmp(const void* mem1, const void* mem2, size_t n)
      *
      */
     return (/*e*/ int)(/*d*/
-        (/*c*/ int32_t)(/*b*/ unsigned short)(/*a*/ (unsigned int)r + 0x8000) - 0x8000);
+        (/*c*/ int)(/*b*/ unsigned short)(/*a*/ (unsigned int)r + 0x8000) - 0x8000);
 }
 
 #ifdef __cplusplus
