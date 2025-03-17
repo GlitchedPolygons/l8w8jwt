@@ -584,7 +584,7 @@ static int l8w8jwt_verify_signature(const struct l8w8jwt_decoding_params* params
                 break;
             }
 
-            r = memcmp(signature, signature_cmp, 32 + (16 * alg));
+            r = l8w8jwt_memcmp(signature, signature_cmp, 32 + (16 * alg));
             if (r != 0)
             {
                 *out_validation_res |= (unsigned)L8W8JWT_SIGNATURE_VERIFICATION_FAILURE;

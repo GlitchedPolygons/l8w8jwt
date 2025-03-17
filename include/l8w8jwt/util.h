@@ -52,6 +52,15 @@ L8W8JWT_API int l8w8jwt_hexstr2bin(const char* hexstr, size_t hexstr_length, uns
  */
 L8W8JWT_API int l8w8jwt_strncmpic(const char* str1, const char* str2, size_t n);
 
+/**
+ * Compares two blocks of memory against equality in a cryptographically safe manner (time-safe impl./constant-time comparison).
+ * @param mem1 Memory block 1 to compare.
+ * @param mem2 Memory block 2 to compare.
+ * @param n How many bytes to compare.
+ * @return Returns <code>0</code> if the two memory blocks are equal for the passed amount of bytes.
+ */
+L8W8JWT_API int l8w8jwt_memcmp(const void* mem1, const void* mem2, size_t n);
+
 #ifndef L8W8JWT_PLATFORM_MALLOC_ALT
 /**
  * Set this pre-processor definition to \c 1 if you need to
