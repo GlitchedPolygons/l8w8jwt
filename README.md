@@ -1,3 +1,10 @@
+> [!IMPORTANT]  
+> # **NOTICE:**
+>
+> ## Development of this project has been migrated to: https://codeberg.org/GlitchedPolygons/l8w8jwt
+>
+> ## All pull requests and issues on GitHub will be ignored from 16th of August, 2025 onward.
+
 # l8w8jwt
 
 [![CircleCI](https://circleci.com/gh/GlitchedPolygons/l8w8jwt/tree/master.svg?style=shield)](https://circleci.com/gh/GlitchedPolygons/l8w8jwt/tree/master)
